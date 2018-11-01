@@ -1,3 +1,5 @@
+https://travis-ci.com/mmoriniere/SiegPy.svg?branch=master
+
 # SiegPy: "Siegert states with Python"
 
 This module provides the tools to find the numerical Siegert (or resonant)
