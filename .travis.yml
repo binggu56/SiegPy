@@ -13,3 +13,6 @@ install:
 # command to run tests
 script:
   - pytest
+after_success:
+  - pip install --user codecov
+  - codecov -t 55a7aa09-3763-45cf-ad06-df0f26f5168c
