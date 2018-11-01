@@ -1,0 +1,1096 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Multiple Gaussian potentials &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Defining a new symbolic potential" href="other_symbolic_potentials.html" />
+    <link rel="prev" title="Symbolic Woods-Saxon potential" href="woods-saxon_potential.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../notebooks.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-analytical-case">1D Square-Well Potential: the analytical case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-numerical-case">1D Square-Well Potential: the numerical case</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../notebooks.html#other-numerical-potentials">Other numerical potentials</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="woods-saxon_potential.html">Symbolic Woods-Saxon potential</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Multiple Gaussian potentials</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Initialization">Initialization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Two-identical-Gaussian-wells">Two identical Gaussian wells</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Increase-of-the-separation-between-both-potentials">Increase of the separation between both potentials</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Gaussian-barriers-around-the-two-Gaussian-wells">Gaussian barriers around the two Gaussian wells</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Comparison-of-the-eigenstates">Comparison of the eigenstates</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="other_symbolic_potentials.html">Defining a new symbolic potential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="numerical_strength_function.html">Strength function from numerical basis sets</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../notebooks.html">Tutorial</a> &raquo;</li>
+        
+      <li>Multiple Gaussian potentials</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/gaussian_potentials.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Multiple-Gaussian-potentials">
+<h1>Multiple Gaussian potentials<a class="headerlink" href="#Multiple-Gaussian-potentials" title="Permalink to this headline">¶</a></h1>
+<p>In this notebook, we will present another type of potentials, made of
+Gaussian functions. There will be two or four Gaussian functions used to
+define each potential.</p>
+<p>The initial potential to be studied in this notebook is made of two
+Gaussian wells, and we will see the influence of two parameters on the
+obtained spectra:</p>
+<ul class="simple">
+<li>the addition of two Gaussian barriers (one on each side of the two
+initial Gaussian wells)</li>
+<li>the distance between the two Gaussian wells</li>
+</ul>
+<div class="section" id="Initialization">
+<h2>Initialization<a class="headerlink" href="#Initialization" title="Permalink to this headline">¶</a></h2>
+<p>The same initialization is required than for the notebook about the
+Woods-Saxon potential, the two difference being that two other classes
+of symbolic potentials are imported: <code class="docutils literal notranslate"><span class="pre">TwoGaussianPotential</span></code> and
+<code class="docutils literal notranslate"><span class="pre">FourGaussianPotential</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cm</span>
+<span class="kn">from</span> <span class="nn">siegpy</span> <span class="k">import</span> <span class="p">(</span><span class="n">Hamiltonian</span><span class="p">,</span> <span class="n">ErfKGCoordMap</span><span class="p">,</span> <span class="n">BasisSet</span><span class="p">,</span>
+                    <span class="n">TwoGaussianPotential</span><span class="p">,</span> <span class="n">FourGaussianPotential</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Two-identical-Gaussian-wells">
+<h2>Two identical Gaussian wells<a class="headerlink" href="#Two-identical-Gaussian-wells" title="Permalink to this headline">¶</a></h2>
+<p>The first potential is made of two identical Gaussian wells that are not
+too broadly separated:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define a grid</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mf">11.5</span>
+<span class="n">xgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span><span class="mi">1201</span><span class="p">)</span>
+<span class="c1"># Define a depth, sigma and center for the Gaussian potential</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">xc</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">V0</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="c1"># Define a Potential with two Gaussian functions</span>
+<span class="n">sym_pot1</span> <span class="o">=</span> <span class="n">TwoGaussianPotential</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="o">-</span><span class="n">xc</span><span class="p">,</span> <span class="o">-</span><span class="n">V0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">xc</span><span class="p">,</span> <span class="o">-</span><span class="n">V0</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+<span class="n">sym_pot1</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_6_0.png" src="../_images/notebooks_gaussian_potentials_6_0.png" />
+</div>
+</div>
+<p>The depth and sigma defined here will be used throughout this notebook.</p>
+<p>The potential is then used to define a Hamiltonian, that is finally
+solved in order to create a basis set:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">cm_g</span> <span class="o">=</span> <span class="n">ErfKGCoordMap</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">ham1</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">sym_pot1</span><span class="p">,</span> <span class="n">cm_g</span><span class="p">)</span>
+<span class="n">basis1</span> <span class="o">=</span> <span class="n">ham1</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">max_virial</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>Finally, let us show some plots:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Definition of all the parameters to get consistent plots for</span>
+<span class="c1"># all the potentials considered throughout this notebook</span>
+<span class="n">re_e_max</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">im_e_min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">6</span>
+<span class="n">im_k_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">V0</span><span class="p">)</span>
+<span class="n">re_k_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">re_e_max</span><span class="p">)</span>
+<span class="n">re_e_lim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">V0</span><span class="p">,</span> <span class="n">re_e_max</span><span class="p">)</span>
+<span class="n">im_e_lim</span> <span class="o">=</span> <span class="p">(</span><span class="n">im_e_min</span><span class="p">,</span> <span class="o">-</span><span class="n">im_e_min</span><span class="o">/</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">re_k_lim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">re_k_max</span><span class="o">/</span><span class="mi">30</span><span class="p">,</span> <span class="n">re_k_max</span><span class="p">)</span>
+<span class="n">im_k_lim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">im_k_max</span><span class="p">,</span> <span class="n">im_k_max</span><span class="p">)</span>
+<span class="c1"># Plot the energies, wavenumbers and some eigenstates of the potential</span>
+<span class="n">basis1</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_e_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_e_lim</span><span class="p">)</span>
+<span class="n">basis1</span><span class="o">.</span><span class="n">plot_wavenumbers</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_k_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_k_lim</span><span class="p">)</span>
+<span class="n">basis1</span><span class="o">.</span><span class="n">plot_wavefunctions</span><span class="p">(</span><span class="n">nres</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">V0</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_11_0.png" src="../_images/notebooks_gaussian_potentials_11_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_11_1.png" src="../_images/notebooks_gaussian_potentials_11_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_11_2.png" src="../_images/notebooks_gaussian_potentials_11_2.png" />
+</div>
+</div>
+<p>Both bound and resonant states are found and are separable from the rest
+of the states, even if the resonant states virial values are rather high
+for the resonant states.</p>
+<p>Note that the bound states actually are degenerate: the separation
+between both Gaussian wells is large enough to avoid a large overlap of
+the bound states wavefunctions of each Gaussian well. It is easy to see
+that by using simple linear combinations (addition and subtraction) of
+these degenerate bound states wavefunctions of a given energy, one gets
+the bound states of each Gaussian well.</p>
+<p>Some resonant states can also be separated from the rotated continuum
+states thanks to their virial values, even though only few of them are
+found in this case. The first resonant state has a rather long lifetime
+(proportional to the inverse of its imaginary part (in absolute value)),
+while the other next resonant states are associated to decreasing
+lifetimes.</p>
+<p>It is worth noting that the resonant states wavefunctions have
+anti-nodes centered between both Gaussian wells, and the number of nodes
+in this region keeps increasing, starting from one anti-node for the
+first resonant state. This is more clearly presented below:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Sort the resonant states by increasing real energy</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">basis1</span><span class="o">.</span><span class="n">resonants</span><span class="o">.</span><span class="n">states</span>
+<span class="n">res</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+<span class="c1"># Plot each one of them</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">res</span><span class="p">):</span>
+    <span class="n">xmax</span> <span class="o">=</span> <span class="mf">3.5</span><span class="p">;</span> <span class="n">ymax</span> <span class="o">=</span> <span class="mf">1.5</span>
+    <span class="n">tit</span> <span class="o">=</span> <span class="s2">&quot;Resonant state n˚</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">tit</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">ymax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_13_0.png" src="../_images/notebooks_gaussian_potentials_13_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_13_1.png" src="../_images/notebooks_gaussian_potentials_13_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_13_2.png" src="../_images/notebooks_gaussian_potentials_13_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_13_3.png" src="../_images/notebooks_gaussian_potentials_13_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_13_4.png" src="../_images/notebooks_gaussian_potentials_13_4.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_13_5.png" src="../_images/notebooks_gaussian_potentials_13_5.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Increase-of-the-separation-between-both-potentials">
+<h2>Increase of the separation between both potentials<a class="headerlink" href="#Increase-of-the-separation-between-both-potentials" title="Permalink to this headline">¶</a></h2>
+<p>Let us consider a similar case, wit the same Gaussian wells, the main
+difference being that they are separated by a larger distance, that
+should lead to even less overlap between the bound states of each
+potential:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Center of the new Gaussian wells</span>
+<span class="n">xc2</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="c1"># Definition of the new potential</span>
+<span class="n">sym_pot2</span> <span class="o">=</span> <span class="n">TwoGaussianPotential</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="o">-</span><span class="n">xc2</span><span class="p">,</span> <span class="o">-</span><span class="n">V0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">xc2</span><span class="p">,</span> <span class="o">-</span><span class="n">V0</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+<span class="n">sym_pot2</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_16_0.png" src="../_images/notebooks_gaussian_potentials_16_0.png" />
+</div>
+</div>
+<p>As usual, this potential is used to define a Hamiltonian, which is in
+turn solved, so that a basis set is created:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ham2</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">sym_pot2</span><span class="p">,</span> <span class="n">cm_g</span><span class="p">)</span>
+<span class="n">basis2</span> <span class="o">=</span> <span class="n">ham2</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">max_virial</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">8.7</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>The same plots are done for this new potential:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">basis2</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_e_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_e_lim</span><span class="p">)</span>
+<span class="n">basis2</span><span class="o">.</span><span class="n">plot_wavenumbers</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_k_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_k_lim</span><span class="p">)</span>
+<span class="n">basis2</span><span class="o">.</span><span class="n">plot_wavefunctions</span><span class="p">(</span><span class="n">nres</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_20_0.png" src="../_images/notebooks_gaussian_potentials_20_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_20_1.png" src="../_images/notebooks_gaussian_potentials_20_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_20_2.png" src="../_images/notebooks_gaussian_potentials_20_2.png" />
+</div>
+</div>
+<p>The spectrum of bound states is the same as in the previous case, while
+the spectrum of resonant states is very different: the number of
+resonant states in the same energy range is larger and they are
+associated to larger lifetimes. This shows that it is easier to have low
+energy resonant states when the distance between two potential wells is
+increased. This effect is actually similar to what is known for the
+bound states of a potential well of increasing width: the energies of
+the low energy bound states tend to get closer to each other. The same
+phenomenon occurs here for the resonant states: it is as if they were
+trapped between the two potential wells, that effectively act as a
+single potential well for the resonant states.</p>
+<p>The resonant wavefunctions follow the same pattern as the one found for
+the previous potential, with an increasing number of anti-nodes between
+both wells for the resonant states of increasing energy:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Sort the resonant states by increasing real energy</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">basis2</span><span class="o">.</span><span class="n">resonants</span><span class="o">.</span><span class="n">states</span>
+<span class="n">res</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+<span class="c1"># Plot each one of them</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">res</span><span class="p">[:</span><span class="mi">6</span><span class="p">]):</span>
+    <span class="n">xmax</span> <span class="o">=</span> <span class="mf">6.5</span><span class="p">;</span> <span class="n">ymax</span> <span class="o">=</span> <span class="mf">1.5</span>
+    <span class="n">tit</span> <span class="o">=</span> <span class="s2">&quot;Resonant state n˚</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">tit</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">ymax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_22_0.png" src="../_images/notebooks_gaussian_potentials_22_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_22_1.png" src="../_images/notebooks_gaussian_potentials_22_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_22_2.png" src="../_images/notebooks_gaussian_potentials_22_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_22_3.png" src="../_images/notebooks_gaussian_potentials_22_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_22_4.png" src="../_images/notebooks_gaussian_potentials_22_4.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_22_5.png" src="../_images/notebooks_gaussian_potentials_22_5.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Gaussian-barriers-around-the-two-Gaussian-wells">
+<h2>Gaussian barriers around the two Gaussian wells<a class="headerlink" href="#Gaussian-barriers-around-the-two-Gaussian-wells" title="Permalink to this headline">¶</a></h2>
+<p>Let us finally consider a last case where a potential barrier is added
+on each side of the initial Gaussian wells. These barriers are Gaussian
+functions that have the same center as the Gaussian wells used to define
+the previous potential:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Depth of the extra Gaussian barriers</span>
+<span class="n">V1</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">V0</span>
+<span class="c1"># Definition of the potential</span>
+<span class="n">sym_pot3</span> <span class="o">=</span> <span class="n">FourGaussianPotential</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="o">-</span><span class="n">xc2</span><span class="p">,</span> <span class="n">V1</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="o">-</span><span class="n">xc</span><span class="p">,</span> <span class="o">-</span><span class="n">V0</span><span class="p">,</span>
+                                 <span class="n">sigma</span><span class="p">,</span> <span class="n">xc</span><span class="p">,</span> <span class="o">-</span><span class="n">V0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">xc2</span><span class="p">,</span> <span class="n">V1</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+<span class="n">sym_pot3</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_25_0.png" src="../_images/notebooks_gaussian_potentials_25_0.png" />
+</div>
+</div>
+<p>A Hamiltonian is created from this potential, and solved to give a basis
+set:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ham3</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">sym_pot3</span><span class="p">,</span> <span class="n">cm_g</span><span class="p">)</span>
+<span class="n">basis3</span> <span class="o">=</span> <span class="n">ham3</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">max_virial</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>The basis set is then used to create some plots:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">basis3</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_e_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_e_lim</span><span class="p">)</span>
+<span class="n">basis3</span><span class="o">.</span><span class="n">plot_wavenumbers</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_k_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_k_lim</span><span class="p">)</span>
+<span class="n">basis3</span><span class="o">.</span><span class="n">plot_wavefunctions</span><span class="p">(</span><span class="n">nres</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">11</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_29_0.png" src="../_images/notebooks_gaussian_potentials_29_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_29_1.png" src="../_images/notebooks_gaussian_potentials_29_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_29_2.png" src="../_images/notebooks_gaussian_potentials_29_2.png" />
+</div>
+</div>
+<p>Again, the bound states and the resonant states can easily be separated
+from the rest of the resonant states. The virial values are even larger
+for the resonant states. Again, the bound states are degenerate, and
+they are the same as the ones found for the other potentials without the
+barriers.</p>
+<p>The first three resonant states can be considered as quasi-bound, in the
+sense that their lifetime is very large and because their energy is
+below the maximum of the Gaussian barriers. Also note how their
+wavefunction does not tend to diverge, especially compared to the other
+resonant states of higher energy, which are nothing but the same type of
+resonant states we used to find for other potentials. Also note how the
+number of anti-nodes of the resonant states wavefunction still follows
+the same increase when the resonant energy is increased. The presence of
+the barrier does not affect this property of the resonant states,
+whether they are quasi-bound or not. The first resonant states
+wavefunctions are presented below:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Sort the resonant states by increasing real energy</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">basis3</span><span class="o">.</span><span class="n">resonants</span><span class="o">.</span><span class="n">states</span>
+<span class="n">res</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+<span class="c1"># Plot each one of them</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">res</span><span class="p">[:</span><span class="mi">6</span><span class="p">]):</span>
+    <span class="n">xmax</span> <span class="o">=</span> <span class="mf">9.5</span><span class="p">;</span> <span class="n">ymax</span> <span class="o">=</span> <span class="mf">1.5</span>
+    <span class="n">tit</span> <span class="o">=</span> <span class="s2">&quot;Resonant state n˚</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">tit</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">ymax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_31_0.png" src="../_images/notebooks_gaussian_potentials_31_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_31_1.png" src="../_images/notebooks_gaussian_potentials_31_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_31_2.png" src="../_images/notebooks_gaussian_potentials_31_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_31_3.png" src="../_images/notebooks_gaussian_potentials_31_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_31_4.png" src="../_images/notebooks_gaussian_potentials_31_4.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_31_5.png" src="../_images/notebooks_gaussian_potentials_31_5.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Comparison-of-the-eigenstates">
+<h2>Comparison of the eigenstates<a class="headerlink" href="#Comparison-of-the-eigenstates" title="Permalink to this headline">¶</a></h2>
+<p>To get a clearer view on the spectra obtained with the various
+potentials, the same function as for the case of the Woods-Saxon
+potential is defined:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">scatter_plot</span><span class="p">(</span><span class="n">data_kwd</span><span class="p">,</span> <span class="n">basissets</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">file_save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_unknown</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="c1"># Object-oriented plots</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="c1"># Add the real and imaginary axes</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># black line y=0</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># black line x=0</span>
+    <span class="c1"># Define the min and max values of the virial, in order to</span>
+    <span class="c1"># use the same normalized scale of for the virial values.</span>
+    <span class="n">allstates</span> <span class="o">=</span> <span class="n">BasisSet</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">basissets</span><span class="p">:</span>
+        <span class="n">allstates</span> <span class="o">+=</span> <span class="n">b</span>
+    <span class="n">vmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">allstates</span><span class="o">.</span><span class="n">virials</span><span class="p">))</span>
+    <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">allstates</span><span class="o">.</span><span class="n">virials</span><span class="p">))</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+    <span class="c1"># Define the markers used for each basis set (not more than four</span>
+    <span class="c1"># basis sets can be considered ; you can still add more markers here,</span>
+    <span class="c1"># but the plot might become difficult to read)</span>
+    <span class="n">markers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">]</span>
+    <span class="c1"># Loop over the basis sets to plot them</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">basissets</span><span class="p">):</span>
+        <span class="c1"># Select which states have to be plotted and store their virial</span>
+        <span class="n">to_plot</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">bounds</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">resonants</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">continuum</span>
+        <span class="k">if</span> <span class="n">show_unknown</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">unknown</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+            <span class="n">to_plot</span> <span class="o">+=</span> <span class="n">b</span><span class="o">.</span><span class="n">unknown</span>
+        <span class="n">virials</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">to_plot</span><span class="o">.</span><span class="n">virials</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># Set the x-axis label and get the data to be plotted, according</span>
+        <span class="c1"># to the value of data_kwd.</span>
+        <span class="k">if</span> <span class="n">data_kwd</span> <span class="o">==</span> <span class="s1">&#39;wavenumbers&#39;</span><span class="p">:</span>
+            <span class="n">data_label</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span>
+            <span class="n">plot_data</span> <span class="o">=</span> <span class="n">to_plot</span><span class="o">.</span><span class="n">wavenumbers</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">data_kwd</span> <span class="o">==</span> <span class="s1">&#39;energies&#39;</span><span class="p">:</span>
+            <span class="n">data_label</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span>
+            <span class="n">plot_data</span> <span class="o">=</span> <span class="n">to_plot</span><span class="o">.</span><span class="n">energies</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Else: raise a value error</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;data_kwd must be equal to &#39;wavenumbers&#39; &quot;</span>
+                             <span class="s2">&quot;or &#39;energies&#39; (here &#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_kwd</span><span class="p">))</span>
+        <span class="c1"># Plot all the data</span>
+        <span class="k">if</span> <span class="n">plot_data</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="c1"># normalized scale for the colors</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">CMRmap</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">virials</span><span class="p">))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">plot_data</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">plot_data</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+                       <span class="n">marker</span><span class="o">=</span><span class="n">markers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$V_</span><span class="si">{}</span><span class="s2">$&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="c1"># Set the colorbar and its title</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">CMRmap</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">set_array</span><span class="p">([])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$log_</span><span class="si">{10}</span><span class="s2">$(|virial|)&quot;</span><span class="p">)</span>
+    <span class="c1"># Set axis labels and range and the plot title</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Re[$</span><span class="si">{}</span><span class="s2">$]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_label</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Im[$</span><span class="si">{}</span><span class="s2">$]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_label</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">xlim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticks</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">ylim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="c1"># Save the plot and show it</span>
+    <span class="k">if</span> <span class="n">file_save</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">file_save</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>It is finally used to plot the Siegert states of all the potential with
+the same scale of virial values for the various potentials:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data_kwd</span> <span class="o">=</span> <span class="s1">&#39;energies&#39;</span>
+<span class="c1"># Uncomment the next line to plot the wavenumbers</span>
+<span class="c1"># data_kwd = &#39;wavenumbers&#39;</span>
+<span class="k">if</span> <span class="n">data_kwd</span> <span class="o">==</span> <span class="s1">&#39;energies&#39;</span><span class="p">:</span>
+    <span class="n">re_lim</span> <span class="o">=</span> <span class="n">re_e_lim</span>
+    <span class="n">im_lim</span> <span class="o">=</span> <span class="n">im_e_lim</span>
+<span class="k">elif</span> <span class="n">data_kwd</span> <span class="o">==</span> <span class="s1">&#39;wavenumbers&#39;</span><span class="p">:</span>
+    <span class="n">re_lim</span> <span class="o">=</span> <span class="n">re_k_lim</span>
+    <span class="n">im_lim</span> <span class="o">=</span> <span class="n">im_k_lim</span>
+<span class="n">basissets</span> <span class="o">=</span> <span class="p">[</span><span class="n">basis1</span><span class="p">,</span> <span class="n">basis2</span><span class="p">,</span> <span class="n">basis3</span><span class="p">]</span>
+<span class="n">scatter_plot</span><span class="p">(</span><span class="n">data_kwd</span><span class="p">,</span> <span class="n">basissets</span><span class="p">,</span> <span class="n">show_unknown</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">xlim</span><span class="o">=</span><span class="n">re_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_lim</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_gaussian_potentials_36_0.png" src="../_images/notebooks_gaussian_potentials_36_0.png" />
+</div>
+</div>
+<p>This shows that the spectrum of resonant states can vary greatly while
+the bound states are not very different. These differences can be caused
+by the distance between the two wells (which tend to stabilize more
+resonant states close to the threshold energy <span class="math notranslate nohighlight">\(E=0\)</span>) or by the
+presence of barriers (which creates quasi-bound states, which are
+nothing but very stable resonant states).</p>
+<p>The energy of the lowest Siegert states is also presented in the
+following table:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Print the header of the table</span>
+<span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;   phi   |&quot;</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">basissets</span><span class="p">)):</span>
+    <span class="n">header</span> <span class="o">+=</span> <span class="s2">&quot;|       V</span><span class="si">{}</span><span class="s2">      &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">header</span><span class="p">))</span>
+<span class="c1"># Print the table:</span>
+<span class="c1"># - first, the bound states</span>
+<span class="n">bnd_energies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">en</span> <span class="k">for</span> <span class="n">en</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">energies</span><span class="p">)]</span>
+                         <span class="k">for</span> <span class="n">basis</span> <span class="ow">in</span> <span class="n">basissets</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bnd_energies</span><span class="o">.</span><span class="n">T</span><span class="p">)):</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot; phi_b_</span><span class="si">{}</span><span class="s2"> |&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">en</span> <span class="ow">in</span> <span class="n">bnd_energies</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+        <span class="n">line</span> <span class="o">+=</span> <span class="s2">&quot;| </span><span class="si">{: .3f}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">en</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="c1"># - then, the resonant states</span>
+<span class="n">n_res</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">res_energies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">en</span> <span class="k">for</span> <span class="n">en</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">resonants</span><span class="o">.</span><span class="n">energies</span><span class="p">[:</span><span class="n">n_res</span><span class="p">])]</span>
+                         <span class="k">for</span> <span class="n">basis</span> <span class="ow">in</span> <span class="n">basissets</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_res</span><span class="p">):</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot; phi_r_</span><span class="si">{}</span><span class="s2"> |&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">en</span> <span class="ow">in</span> <span class="n">res_energies</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+        <span class="n">line</span> <span class="o">+=</span> <span class="s2">&quot;| </span><span class="si">{: .3f}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">en</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+   phi   ||       V1      |       V2      |       V3
+----------------------------------------------------------
+ phi_b_1 || -6.636+0.000j | -6.636-0.000j | -6.635+0.000j
+ phi_b_2 || -6.636-0.000j | -6.636-0.000j | -6.635+0.000j
+ phi_b_3 || -1.404-0.000j | -1.391+0.000j | -1.376+0.000j
+ phi_b_4 || -1.377-0.000j | -1.391+0.000j | -1.347+0.000j
+ phi_r_1 ||  0.381-0.156j |  1.376-0.395j |  1.149-0.035j
+ phi_r_2 ||  1.270-0.833j |  2.074-0.688j |  1.775-0.122j
+ phi_r_3 ||  2.439-1.802j |  2.837-1.038j |  2.627-0.286j
+ phi_r_4 ||  3.922-2.764j |  3.651-1.373j |  3.661-0.568j
+ phi_r_5 ||  5.872-3.810j |  4.586-1.642j |  4.809-0.959j
+</pre></div></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="other_symbolic_potentials.html" class="btn btn-neutral float-right" title="Defining a new symbolic potential" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="woods-saxon_potential.html" class="btn btn-neutral" title="Symbolic Woods-Saxon potential" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

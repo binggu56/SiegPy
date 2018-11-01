@@ -1,0 +1,1234 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Test functions &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Functions" href="Functions.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_objects.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1DSWPCase.html">1D Square-Well Potential Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="General1DCase.html">General 1D Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AbstractClasses.html">Abstract classes for further analytic cases</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="Other.html">The Function class and its children</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Functions.html">Functions</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Test functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api_objects.html">Code Documentation</a> &raquo;</li>
+        
+          <li><a href="Other.html">The Function class and its children</a> &raquo;</li>
+        
+      <li>Test functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/TestFunctions.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="test-functions">
+<span id="testfunctions"></span><h1>Test functions<a class="headerlink" href="#test-functions" title="Permalink to this headline">¶</a></h1>
+<p>Below are presented the classes that are mainly used as test functions when it
+comes to evaluate the completeness relation, response function or
+time-propagation.</p>
+<p>Such classes are:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#siegpy.functions.Rectangular" title="siegpy.functions.Rectangular"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rectangular</span></code></a></li>
+<li><a class="reference internal" href="#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><code class="xref py py-class docutils literal notranslate"><span class="pre">Gaussian</span></code></a></li>
+</ul>
+<dl class="class">
+<dt id="siegpy.functions.Rectangular">
+<em class="property">class </em><code class="descclassname">siegpy.functions.</code><code class="descname">Rectangular</code><span class="sig-paren">(</span><em>xl</em>, <em>xr</em>, <em>k0=0.0</em>, <em>h=1.0</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Rectangular"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Rectangular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="Functions.html#siegpy.functions.AnalyticFunction" title="siegpy.functions.AnalyticFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.functions.AnalyticFunction</span></code></a></p>
+<p>A rectangular function is characterized by:</p>
+<ul class="simple">
+<li>a left and right border <code class="docutils literal notranslate"><span class="pre">xl</span></code> and <code class="docutils literal notranslate"><span class="pre">xr</span></code> (or, alternatively, by
+a width <span class="math notranslate nohighlight">\(a = xr - xl\)</span> and a center <code class="docutils literal notranslate"><span class="pre">xc</span></code>; see
+<a class="reference internal" href="#siegpy.functions.Rectangular.from_center_and_width" title="siegpy.functions.Rectangular.from_center_and_width"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_center_and_width()</span></code></a> or
+<a class="reference internal" href="#siegpy.functions.Rectangular.from_width_and_center" title="siegpy.functions.Rectangular.from_width_and_center"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_width_and_center()</span></code></a>),</li>
+<li>an initial momentum <code class="docutils literal notranslate"><span class="pre">k0</span></code>,</li>
+<li>an amplitude <code class="docutils literal notranslate"><span class="pre">h</span></code>.</li>
+</ul>
+<p>In addition to the behaviour of an analytic function:</p>
+<ul class="simple">
+<li>the norm is computed analytically,</li>
+<li>the attribute <a class="reference internal" href="#siegpy.functions.Rectangular.is_even" title="siegpy.functions.Rectangular.is_even"><code class="xref py py-attr docutils literal notranslate"><span class="pre">is_even</span></code></a>
+returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the rectangular function is centered, even if
+the discretization grid is not centered,</li>
+<li>the equality and addition of two rectangular functions are also
+defined.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xl</strong> (<em>float</em>) – Left border of the rectangular function.</li>
+<li><strong>xr</strong> (<em>float</em>) – Right border of the rectangular function.</li>
+<li><strong>k0</strong> (<em>float</em>) – Initial momentum of the rectangular function (default to 0).</li>
+<li><strong>h</strong> (<em>float</em>) – Maximal amplitude of the rectangular function (default to
+1).</li>
+<li><strong>grid</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Discretization grid (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the amplitude <code class="docutils literal notranslate"><span class="pre">h</span></code> is zero or if the width is negative.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Examples</span></code></p>
+</li>
+<li><p class="first">A rectangular function has several attributes:</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Rectangular</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">k0</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">xl</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">-4</span></code></p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">xr</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">2</span></code></p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">width</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">6</span></code></p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">center</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">-1.0</span></code></p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">momentum</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">5</span></code></p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">amplitude</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">1.0</span></code></p>
+</li>
+<li><p class="first">If no discretization grid is passed, then the atrributes</p>
+</li>
+<li><p class="first"><a class="reference internal" href="Functions.html#siegpy.functions.AnalyticFunction.grid" title="siegpy.functions.AnalyticFunction.grid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">grid</span></code></a> and</p>
+</li>
+<li><p class="first"><code class="xref py py-attr docutils literal notranslate"><span class="pre">values</span></code> are set to</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">r</span><span class="o">.</span><span class="n">values</span> <span class="ow">is</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">True</span></code></p>
+</li>
+<li><p class="first">If a grid is passed, then the rectangular function is</p>
+</li>
+<li><p class="first">discretized (meaning its attribute</p>
+</li>
+<li><p class="first"><code class="xref py py-attr docutils literal notranslate"><span class="pre">values</span></code> is not</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">None</span></code>):</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r1</span> <span class="o">=</span> <span class="n">Rectangular</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">k0</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r2</span> <span class="o">=</span> <span class="n">Rectangular</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">k0</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">r1</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">True</span></code></p>
+</li>
+<li><p class="first"><em>.. note::</em> – The only way of modifying the values of a Rectangular instance
+is by setting a new grid:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">r1</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">r1</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">AttributeError</span>: <span class="n">can&#39;t set attribute</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><em>.. warning::</em> – A rectangular function must have a strictly positive width:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Rectangular</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">ValueError</span>: <span class="n">The width must be strictly positive.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Rectangular</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">ValueError</span>: <span class="n">The width must be strictly positive.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="siegpy.functions.Rectangular.from_center_and_width">
+<em class="property">classmethod </em><code class="descname">from_center_and_width</code><span class="sig-paren">(</span><em>xc</em>, <em>width</em>, <em>k0=0.0</em>, <em>h=1.0</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Rectangular.from_center_and_width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Rectangular.from_center_and_width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization of a rectangular function centered in <code class="docutils literal notranslate"><span class="pre">xc</span></code>, of
+width <code class="docutils literal notranslate"><span class="pre">a</span></code>, with an amplitude <code class="docutils literal notranslate"><span class="pre">h</span></code> and with an initial
+momentum <code class="docutils literal notranslate"><span class="pre">k0</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xc</strong> (<em>float</em>) – Center of the rectangular function.</li>
+<li><strong>width</strong> (<em>float</em>) – Width of the rectangular function.</li>
+<li><strong>k0</strong> (<em>float</em>) – Initial momentum of the rectangular function (default to 0).</li>
+<li><strong>h</strong> (<em>float</em>) – Maximal amplitude of the rectangular function (default
+to 1.).</li>
+<li><strong>grid</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Discretization grid (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>Rectangular</em> – An initialized rectangular function.</li>
+<li><em>Example</em></li>
+<li><em>&gt;&gt;&gt; r = Rectangular.from_center_and_width(4, 2)</em></li>
+<li><em>&gt;&gt;&gt; r.xl</em></li>
+<li><em>3.0</em></li>
+<li><em>&gt;&gt;&gt; r.xr</em></li>
+<li><em>5.0</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="siegpy.functions.Rectangular.from_width_and_center">
+<em class="property">classmethod </em><code class="descname">from_width_and_center</code><span class="sig-paren">(</span><em>width</em>, <em>xc</em>, <em>k0=0.0</em>, <em>h=1.0</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Rectangular.from_width_and_center"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Rectangular.from_width_and_center" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similar to the class method
+<a class="reference internal" href="#siegpy.functions.Rectangular.from_center_and_width" title="siegpy.functions.Rectangular.from_center_and_width"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_center_and_width()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>Rectangular</em> – An initialized rectangular function.</li>
+<li><em>Example</em></li>
+<li><em>&gt;&gt;&gt; r = Rectangular.from_width_and_center(4, 2)</em></li>
+<li><em>&gt;&gt;&gt; r.xl</em></li>
+<li><em>0.0</em></li>
+<li><em>&gt;&gt;&gt; r.xr</em></li>
+<li><em>4.0</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Rectangular.xl">
+<code class="descname">xl</code><a class="headerlink" href="#siegpy.functions.Rectangular.xl" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Left border of the rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Rectangular.xr">
+<code class="descname">xr</code><a class="headerlink" href="#siegpy.functions.Rectangular.xr" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Right border of the rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Rectangular.amplitude">
+<code class="descname">amplitude</code><a class="headerlink" href="#siegpy.functions.Rectangular.amplitude" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Amplitude of the rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Rectangular.width">
+<code class="descname">width</code><a class="headerlink" href="#siegpy.functions.Rectangular.width" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Width of the rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Rectangular.center">
+<code class="descname">center</code><a class="headerlink" href="#siegpy.functions.Rectangular.center" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Center of the rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Rectangular.momentum">
+<code class="descname">momentum</code><a class="headerlink" href="#siegpy.functions.Rectangular.momentum" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Momentum of the rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Rectangular.__eq__">
+<code class="descname">__eq__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Rectangular.__eq__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Rectangular.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>object</strong> (<em>Another</em>) – </td>
+</tr>
+</tbody>
+</table>
+<p>other: object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>bool</em> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if both objects are Rectangular functions with the
+same amplitude, width, center and momentum.</li>
+<li><em>Examples</em></li>
+<li><em>Two rectangular functions with different amplitudes are</em></li>
+<li><em>different</em></li>
+<li><em>&gt;&gt;&gt; r1 = Rectangular(-4, 2, k0=5, grid=[-1, 0, 1])</em></li>
+<li><em>&gt;&gt;&gt; r2 = Rectangular(-4, 2, k0=5, h=2, grid=[-1, 0, 1])</em></li>
+<li><em>&gt;&gt;&gt; r1 == r2</em></li>
+<li><em>False</em></li>
+<li><em>Two rectangular functions that are identical, except for the</em></li>
+<li><em>grid, are considered to be the same</em></li>
+<li><em>&gt;&gt;&gt; r3 = Rectangular(-4, 2, k0=5, grid=[-1, -0.5, 0, 0.5, 1])</em></li>
+<li><em>&gt;&gt;&gt; r1 == r3</em></li>
+<li><em>True</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Rectangular.__add__">
+<code class="descname">__add__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Rectangular.__add__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Rectangular.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add another function to a rectangular function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<a class="reference internal" href="Functions.html#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Another function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>Rectangular or Function.</em> – Sum of a rectangular function with another function.</li>
+<li><em>Example</em></li>
+<li><em>Two rectangular functions differing only by the amplitude can</em></li>
+<li><em>be added to give another rectangular function</em></li>
+<li><em>&gt;&gt;&gt; r1 = Rectangular(-1, 1)</em></li>
+<li><em>&gt;&gt;&gt; r2 = Rectangular(-1, 1, h=3)</em></li>
+<li><em>&gt;&gt;&gt; r = r1 + r2</em></li>
+<li><em>&gt;&gt;&gt; assert r.amplitude == 4</em></li>
+<li><em>&gt;&gt;&gt; assert r.center == r1.center</em></li>
+<li><em>&gt;&gt;&gt; assert r.width == r1.width</em></li>
+<li><em>&gt;&gt;&gt; assert r.momentum == r1.momentum</em></li>
+<li><em>Two different rectangular functions that were not discretized</em></li>
+<li><em>cannot be added</em></li>
+<li><em>&gt;&gt;&gt; r1 + Rectangular(-2, 2)</em></li>
+<li><em>Traceback (most recent call last)</em></li>
+<li><strong>ValueError</strong> (<em>Two analytic functions not discretized cannot be added.</em>)</li>
+<li><em>Finally, if the rectangular function is not discretized over a</em></li>
+<li><em>grid, but the other function is, then the addition can be</em></li>
+<li><em>performed</em></li>
+<li><em>&gt;&gt;&gt; r = r1 + Function([-1, 0, 1], [1, 2, 3])</em></li>
+<li><em>&gt;&gt;&gt; r.grid</em></li>
+<li><em>array([-1,  0,  1])</em></li>
+<li><em>&gt;&gt;&gt; r.values</em></li>
+<li><em>array([ 2.+0.j,  3.+0.j,  4.+0.j])</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Rectangular.is_even">
+<code class="descname">is_even</code><a class="headerlink" href="#siegpy.functions.Rectangular.is_even" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>bool</em> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if the rectangular function is even.</li>
+<li><em>Examples</em></li>
+<li><em>A centered rectangular function is even, even if t grid is</em></li>
+<li><em>not centered</em></li>
+<li><em>&gt;&gt;&gt; Rectangular(-2, 2, grid=[-2, -1, 0]).is_even</em></li>
+<li><em>True</em></li>
+<li><em>A non-centered rectangular function cannot be even</em></li>
+<li><em>&gt;&gt;&gt; Rectangular(-2, 0).is_even</em></li>
+<li><em>False</em></li>
+<li><em>A centered rectangular function with an initial momentum</em></li>
+<li><em>cannot be even</em></li>
+<li><em>&gt;&gt;&gt; Rectangular(-2, 2, k0=1).is_even</em></li>
+<li><em>False</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Rectangular.is_odd">
+<code class="descname">is_odd</code><a class="headerlink" href="#siegpy.functions.Rectangular.is_odd" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">False</span></code>, as a rectangular function can’t be odd.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Rectangular._compute_values">
+<code class="descname">_compute_values</code><span class="sig-paren">(</span><em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Rectangular._compute_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Rectangular._compute_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluation of the Rectangular function for each grid point.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid</strong> (<em>numpy array</em>) – Discretization grid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>float</em> – Value of the Rectangular function over the grid.</li>
+<li><em>Examples</em></li>
+<li><em>&gt;&gt;&gt; r = Rectangular(-5, 1, h=-3.5)</em></li>
+<li><em>&gt;&gt;&gt; r.evaluate(-1) == -3.5</em></li>
+<li><em>True</em></li>
+<li><em>&gt;&gt;&gt; r.evaluate(-10) == 0</em></li>
+<li><em>True</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Rectangular.abs">
+<code class="descname">abs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Rectangular.abs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Rectangular.abs" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>Rectangular</em> – Absolute value of the Rectangular function.</li>
+<li><em>Example</em></li>
+<li><em>The absolute value of a Rectangular function is nothing but</em></li>
+<li><em>the same Rectangular function without initial momentum</em></li>
+<li><em>&gt;&gt;&gt; r = Rectangular(-5, 1, h=4, k0=-6)</em></li>
+<li><em>&gt;&gt;&gt; assert r.abs() == Rectangular(-5, 1, h=4)</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Rectangular.conjugate">
+<code class="descname">conjugate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Rectangular.conjugate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Rectangular.conjugate" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>Rectangular</em> – Conjugate of the Rectangular function.</li>
+<li><em>Example</em></li>
+<li><em>The conjugate of a Rectangular is the same Rectangular</em></li>
+<li><em>function with a negative momentum</em></li>
+<li><em>&gt;&gt;&gt; r = Rectangular(-5, 1, h=4, k0=-6)</em></li>
+<li><em>&gt;&gt;&gt; assert r.conjugate() == Rectangular(-5, 1, h=4, k0=6)</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Rectangular.norm">
+<code class="descname">norm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Rectangular.norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Rectangular.norm" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>float</em> – Analytic norm of a rectangular function, that is equal to
+its width times its amplitude squared.</li>
+<li><em>Examples</em></li>
+<li><em>&gt;&gt;&gt; r = Rectangular(-1, 1, h=3)</em></li>
+<li><em>&gt;&gt;&gt; r.norm()</em></li>
+<li><em>18</em></li>
+<li><em>The norm does not depend on the discretization grid</em></li>
+<li><em>&gt;&gt;&gt; r.norm() == Rectangular(-1, 1, h=3, grid=[-1, 0, 1]).norm()</em></li>
+<li><em>True</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Rectangular.split">
+<code class="descname">split</code><span class="sig-paren">(</span><em>sw_pot</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Rectangular.split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Rectangular.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the rectangular function into three other rectangular
+functions, each one spreading over only one of the three regions
+defined by a 1D Square-Well potential SWP. If the original
+rectangular function does not spread over one particular region,
+the returned value for this region is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sw_pot</strong> (<a class="reference internal" href="SWPotential.html#siegpy.swpotential.SWPotential" title="siegpy.swpotential.SWPotential"><em>SWPotential</em></a>) – 1D Square-Well Potential</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Three rectangular functions.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple of length 3</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">TypeError</span></code> – If <code class="docutils literal notranslate"><span class="pre">sw_pot</span></code> is not a
+<a class="reference internal" href="SWPotential.html#siegpy.swpotential.SWPotential" title="siegpy.swpotential.SWPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">SWPotential</span></code></a> instance.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.functions.Gaussian">
+<em class="property">class </em><code class="descclassname">siegpy.functions.</code><code class="descname">Gaussian</code><span class="sig-paren">(</span><em>sigma</em>, <em>xc</em>, <em>k0=0.0</em>, <em>h=1.0</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Gaussian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Gaussian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="Functions.html#siegpy.functions.AnalyticFunction" title="siegpy.functions.AnalyticFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.functions.AnalyticFunction</span></code></a></p>
+<p>A Gaussian function is characterized by:</p>
+<ul class="simple">
+<li>a width <code class="docutils literal notranslate"><span class="pre">sigma</span></code></li>
+<li>a center <code class="docutils literal notranslate"><span class="pre">xc</span></code></li>
+<li>an initial momentum <code class="docutils literal notranslate"><span class="pre">k0</span></code></li>
+<li>an amplitude <code class="docutils literal notranslate"><span class="pre">h</span></code></li>
+</ul>
+<p>In addition to the behaviour of an analytic function:</p>
+<ul class="simple">
+<li>the norm is computed analytically,</li>
+<li>the attribute <a class="reference internal" href="#siegpy.functions.Gaussian.is_even" title="siegpy.functions.Gaussian.is_even"><code class="xref py py-attr docutils literal notranslate"><span class="pre">is_even</span></code></a> returns
+<code class="docutils literal notranslate"><span class="pre">True</span></code> if the Gaussian function is centered, even if the
+discretization grid is not centered,</li>
+<li>the equality and addition of two Gaussian functions are also
+defined.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sigma</strong> (<em>strictly positive float</em>) – Width of the Gaussian function.</li>
+<li><strong>xc</strong> (<em>float</em>) – Center of the Gaussian function.</li>
+<li><strong>k0</strong> (<em>float</em>) – Initial momentum of the Gaussian function (default to 0).</li>
+<li><strong>h</strong> (<em>float</em>) – Maximal amplitude of the Gaussian function (default to 1).</li>
+<li><strong>grid</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Discretization grid (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If <code class="docutils literal notranslate"><span class="pre">sigma</span></code> is negative.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Examples</span></code></p>
+</li>
+<li><p class="first">A Gaussian function is characterized by various attributes:</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">Gaussian</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">k0</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">sigma</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">4</span></code></p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">center</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">2</span></code></p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">momentum</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">5</span></code></p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">amplitude</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">1.0</span></code></p>
+</li>
+<li><p class="first">If no discretization grid is passed, then the atrributes</p>
+</li>
+<li><p class="first"><a class="reference internal" href="Functions.html#siegpy.functions.AnalyticFunction.grid" title="siegpy.functions.AnalyticFunction.grid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">grid</span></code></a> and</p>
+</li>
+<li><p class="first"><code class="xref py py-attr docutils literal notranslate"><span class="pre">values</span></code> are set to</p>
+</li>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">g</span><span class="o">.</span><span class="n">values</span> <span class="ow">is</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">True</span></code></p>
+</li>
+<li><p class="first">If a grid is given, the Gaussian is discretized:</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g1</span> <span class="o">=</span> <span class="n">Gaussian</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">k0</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g2</span> <span class="o">=</span> <span class="n">Gaussian</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">k0</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">g2</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">g1</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">True</span></code></p>
+</li>
+<li><p class="first"><em>.. note::</em> – The only way to modify the values of a Gaussian is by
+setting its grid:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">g1</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">g1</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">AttributeError</span>: <span class="n">can&#39;t set attribute</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><em>.. warning::</em> – Finally, a Gaussian function must have a strictly positive
+sigma:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Gaussian</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">ValueError</span>: <span class="n">The Gaussian must have a strictly positive sigma.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Gaussian</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">ValueError</span>: <span class="n">The Gaussian must have a strictly positive sigma.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="siegpy.functions.Gaussian.sigma">
+<code class="descname">sigma</code><a class="headerlink" href="#siegpy.functions.Gaussian.sigma" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Width of the Gaussian function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Gaussian.center">
+<code class="descname">center</code><a class="headerlink" href="#siegpy.functions.Gaussian.center" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Center of the Gaussian function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Gaussian.momentum">
+<code class="descname">momentum</code><a class="headerlink" href="#siegpy.functions.Gaussian.momentum" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Momentum of the Gaussian function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Gaussian.amplitude">
+<code class="descname">amplitude</code><a class="headerlink" href="#siegpy.functions.Gaussian.amplitude" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Amplitude of the Gaussian function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Gaussian._params">
+<code class="descname">_params</code><a class="headerlink" href="#siegpy.functions.Gaussian._params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shortcut to get the main parameters of a Gaussian function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">sigma, center and amplitude of the Gaussian function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Gaussian.__eq__">
+<code class="descname">__eq__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Gaussian.__eq__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Gaussian.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>object</em>) – Another object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>bool</em> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if both Gaussian functions have the same sigma,
+center, momentum and amplitude.</li>
+<li><em>Examples</em></li>
+<li><em>Two Gaussian functions with different amplitudes are different</em></li>
+<li><em>&gt;&gt;&gt; g1 = Gaussian(4, 2, k0=5, grid=[-1, 0, 1])</em></li>
+<li><em>&gt;&gt;&gt; g2 = Gaussian(4, 2, k0=5, h=2, grid=[-1, 0, 1])</em></li>
+<li><em>&gt;&gt;&gt; g1 == g2</em></li>
+<li><em>False</em></li>
+<li><em>If only the grid differs, then the two Gaussian functions are</em></li>
+<li><em>the same</em></li>
+<li><em>&gt;&gt;&gt; g3 = Gaussian(4, 2, k0=5, grid=[-1, -0.5, 0, 0.5, 1])</em></li>
+<li><em>&gt;&gt;&gt; g1 == g3</em></li>
+<li><em>True</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Gaussian.__add__">
+<code class="descname">__add__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Gaussian.__add__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Gaussian.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add another function to a Gaussian function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<a class="reference internal" href="Functions.html#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Another function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>Gaussian or Function.</em> – Sum of a Gaussian function with another function.</li>
+<li><em>Example</em></li>
+<li><em>Two Gaussian functions differing only by the amplitude can be</em></li>
+<li><em>added to give another Gaussian function</em></li>
+<li><em>&gt;&gt;&gt; g1 = Gaussian(1, 0)</em></li>
+<li><em>&gt;&gt;&gt; g2 = Gaussian(1, 0, h=3)</em></li>
+<li><em>&gt;&gt;&gt; g = g1 + g2</em></li>
+<li><em>&gt;&gt;&gt; assert g.amplitude == 4</em></li>
+<li><em>&gt;&gt;&gt; assert g.center == g1.center</em></li>
+<li><em>&gt;&gt;&gt; assert g.sigma == g1.sigma</em></li>
+<li><em>&gt;&gt;&gt; assert g.momentum == g1.momentum</em></li>
+<li><em>Two different Gaussian functions that were not discretized</em></li>
+<li><em>cannot be added</em></li>
+<li><em>&gt;&gt;&gt; g1 + Gaussian(1, 1)</em></li>
+<li><em>Traceback (most recent call last)</em></li>
+<li><strong>ValueError</strong> (<em>Two analytic functions not discretized cannot be added.</em>)</li>
+<li><em>Finally, if the Gaussian function is not discretized over a</em></li>
+<li><em>grid, but the other function is, then the addition can be</em></li>
+<li><em>performed</em></li>
+<li><em>&gt;&gt;&gt; g = g1 + Function([-1, 0, 1], [1, 2, 3])</em></li>
+<li><em>&gt;&gt;&gt; g.grid</em></li>
+<li><em>array([-1,  0,  1])</em></li>
+<li><em>&gt;&gt;&gt; g.values</em></li>
+<li><em>array([ 1.60653066+0.j,  3.00000000+0.j,  3.60653066+0.j])</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Gaussian.is_even">
+<code class="descname">is_even</code><a class="headerlink" href="#siegpy.functions.Gaussian.is_even" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>bool</em> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if the Gaussian function is even.</li>
+<li><em>Examples</em></li>
+<li><em>A centered Gaussian with no initial momentum is even, even if</em></li>
+<li><em>its grid is not centered</em></li>
+<li><em>&gt;&gt;&gt; Gaussian(2, 0, grid=[-2, -1, 0]).is_even</em></li>
+<li><em>True</em></li>
+<li><em>A non-centered Gaussian is not even</em></li>
+<li><em>&gt;&gt;&gt; Gaussian(2, 2).is_even</em></li>
+<li><em>False</em></li>
+<li><em>A centered Gaussian with a non-zero initial momentum is</em></li>
+<li><em>not even</em></li>
+<li><em>&gt;&gt;&gt; Gaussian(2, 0, k0=1).is_even</em></li>
+<li><em>False</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Gaussian.is_odd">
+<code class="descname">is_odd</code><a class="headerlink" href="#siegpy.functions.Gaussian.is_odd" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">False</span></code>, as a Gaussian function can’t be odd.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Gaussian.is_inside">
+<code class="descname">is_inside</code><span class="sig-paren">(</span><em>sw_pot</em>, <em>tol=1e-05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Gaussian.is_inside"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Gaussian.is_inside" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the Gaussian function can be considered as inside the
+1D Square-Well potential, given a tolerance value that must be
+larger than the values of the Gaussian function at the border of
+the potential.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sw_pot</strong> (<a class="reference internal" href="SWPotential.html#siegpy.swpotential.SWPotential" title="siegpy.swpotential.SWPotential"><em>SWPotential</em></a>) – 1D potential.</li>
+<li><strong>tol</strong> (<em>float</em>) – Tolerance value (default to <span class="math notranslate nohighlight">\(10^{-5}\)</span>).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the Gaussian function is inside the 1D SWP.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">TypeError</span></code> – If <code class="docutils literal notranslate"><span class="pre">sw_pot</span></code> is not a
+<a class="reference internal" href="SWPotential.html#siegpy.swpotential.SWPotential" title="siegpy.swpotential.SWPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">SWPotential</span></code></a> instance.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Gaussian.abs">
+<code class="descname">abs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Gaussian.abs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Gaussian.abs" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>Gaussian</em> – Absolute value of the Gaussian function.</li>
+<li><em>Example</em></li>
+<li><em>The absolute value of a Gaussian function is nothing but</em></li>
+<li><em>the same Gaussian function without initial momentum</em></li>
+<li><em>&gt;&gt;&gt; g = Gaussian(5, -1, h=4, k0=-6)</em></li>
+<li><em>&gt;&gt;&gt; assert g.abs() == Gaussian(5, -1, h=4)</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Gaussian.conjugate">
+<code class="descname">conjugate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Gaussian.conjugate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Gaussian.conjugate" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>Gaussian</em> – Conjugate of the Gaussian function.</li>
+<li><em>Example</em></li>
+<li><em>The conjugate of a Gaussian is the same Gaussian function</em></li>
+<li><em>with a negative momentum</em></li>
+<li><em>&gt;&gt;&gt; g = Gaussian(5, -1, h=4, k0=-6)</em></li>
+<li><em>&gt;&gt;&gt; assert g.conjugate() == Gaussian(5, -1, h=4, k0=6)</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Gaussian.norm">
+<code class="descname">norm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Gaussian.norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Gaussian.norm" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>float</em> – Analytic norm of the Gaussian function.</li>
+<li><em>Example</em></li>
+<li><em>The norm of a Gaussian function does not depend on the</em></li>
+<li><em>discretization grid</em></li>
+<li><em>&gt;&gt;&gt; g1 = Gaussian(2, 0)</em></li>
+<li><em>&gt;&gt;&gt; g2 = Gaussian(2, 0, grid=[-1, 0, 1])</em></li>
+<li><em>&gt;&gt;&gt; assert g1.norm() == g2.norm()</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Gaussian._compute_values">
+<code class="descname">_compute_values</code><span class="sig-paren">(</span><em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Gaussian._compute_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Gaussian._compute_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the Gaussian for each grid point <span class="math notranslate nohighlight">\(x_0\)</span>:
+<span class="math notranslate nohighlight">\(a e^{-\frac{(x_0-xc)^2}{2 sigma^2}} * e^{i k_0 x}\)</span></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid</strong> (<em>numpy array</em>) – Discretization grid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>float or complex</em> – Value of the Gaussian function over the grid.</li>
+<li><em>Example</em></li>
+<li><em>&gt;&gt;&gt; g = Gaussian(5, -1, h=-3.5)</em></li>
+<li><em>&gt;&gt;&gt; g.evaluate(-1) == -3.5</em></li>
+<li><em>True</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="Functions.html" class="btn btn-neutral" title="Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1669 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CoordMap &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Hamiltonian" href="Hamiltonian.html" />
+    <link rel="prev" title="Symbolic Potential" href="SymbolicPotentials.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_objects.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1DSWPCase.html">1D Square-Well Potential Case</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="General1DCase.html">General 1D Case</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="BasisSet.html">BasisSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Potential.html">Potential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SymbolicPotentials.html">Symbolic Potential</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CoordMap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Hamiltonian.html">Hamiltonian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Eigenstate.html">Eigenstate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SmoothFunctions.html">SmoothFunction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Filters.html">Filters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="AbstractClasses.html">Abstract classes for further analytic cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Other.html">The Function class and its children</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api_objects.html">Code Documentation</a> &raquo;</li>
+        
+          <li><a href="General1DCase.html">General 1D Case</a> &raquo;</li>
+        
+      <li>CoordMap</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/CoordMap.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="module-siegpy.coordinatemappings">
+<span id="coordmap"></span><h1>CoordMap<a class="headerlink" href="#module-siegpy.coordinatemappings" title="Permalink to this headline">¶</a></h1>
+<p>Various classes are defined to represent different <strong>coordinate mappings</strong>.
+They define the coordinate transformation (and its derivatives) so that
+the Reflection-Free Complex Absorbing Potentials and the virial operator
+can be easily discretized over the discretization grid.</p>
+<p>The <a class="reference internal" href="#siegpy.coordinatemappings.CoordMap" title="siegpy.coordinatemappings.CoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">CoordMap</span></code></a> class is the most basic one. It is an abstract
+class, requiring only a complex scaling angle <span class="math notranslate nohighlight">\(\theta\)</span> and a
+discretization grid.</p>
+<p>The <strong>Uniform Complex Scaling</strong> (UCS) transformation
+<span class="math notranslate nohighlight">\(F_{UCS}: x \mapsto x e^{i \theta}\)</span> is easily derived from it in
+the <a class="reference internal" href="#siegpy.coordinatemappings.UniformCoordMap" title="siegpy.coordinatemappings.UniformCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">UniformCoordMap</span></code></a> class.</p>
+<p>Another well-known transformation is the <strong>Exterior Complex Scaling</strong>
+(ECS), that leaves the potential unscaled inside a region
+<span class="math notranslate nohighlight">\([-x_0, x_0]\)</span> (<em>i.e.</em>, <span class="math notranslate nohighlight">\(F_{ECS}: x \mapsto x\)</span>), while
+amounting to the UCS outside (<em>i.e.</em> <span class="math notranslate nohighlight">\((x - x_0) e^{i \theta}\)</span> for
+<span class="math notranslate nohighlight">\(x &gt; x_0\)</span>). This has the advantage of leaving the innermost
+potential unscaled.</p>
+<p>However, the most efficient coordinate transformations discussed in the
+literature (when it comes to finding Siegert states numerically) are
+know as <strong>Smooth Exterior Complex Scaling</strong> (SECS). Contrary to the
+usual ECS, there are smooth transitions between both regimes, hence
+their name. The sharpness of these transitions is then controlled by
+another parameter, <span class="math notranslate nohighlight">\(\lambda\)</span>. The abstract base class
+<a class="reference internal" href="#siegpy.coordinatemappings.SmoothExtCoordMap" title="siegpy.coordinatemappings.SmoothExtCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SmoothExtCoordMap</span></code></a> allows for the representation of such
+coordinate transformations.</p>
+<p>A SECS generally relies on a function <span class="math notranslate nohighlight">\(q\)</span> that smoothly goes from
+0 to 1 around <span class="math notranslate nohighlight">\(\pm x_0\)</span>. This is why a <a class="reference internal" href="#siegpy.coordinatemappings.SmoothFuncCoordMap" title="siegpy.coordinatemappings.SmoothFuncCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SmoothFuncCoordMap</span></code></a>
+class is also defined as an abstract base class deriving from the
+<a class="reference internal" href="#siegpy.coordinatemappings.SmoothExtCoordMap" title="siegpy.coordinatemappings.SmoothExtCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SmoothExtCoordMap</span></code></a> class. In practice, all the implemented SECS
+implemented in SiegPy derive from the <a class="reference internal" href="#siegpy.coordinatemappings.SmoothFuncCoordMap" title="siegpy.coordinatemappings.SmoothFuncCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SmoothFuncCoordMap</span></code></a> class.</p>
+<p>There are two main possibilites to define a smooth coordinate
+transformations by using a smooth function <span class="math notranslate nohighlight">\(q\)</span>:</p>
+<ul class="simple">
+<li><span class="math notranslate nohighlight">\(F_{KG}: x \mapsto x e^{i \theta q(x)}\)</span>, that will be called the
+Kalita-Gupta (KG) coordinate transformation,</li>
+<li><span class="math notranslate nohighlight">\(F_{S}: x \mapsto F_S(x)\)</span> such that its derivative with respect to
+<span class="math notranslate nohighlight">\(x\)</span> is <span class="math notranslate nohighlight">\(F_S^\prime = f_S: x \mapsto 1 + (e^{i \theta} - 1) q(x)\)</span>.
+This will be labeled as the Simon coordinate transformation.</li>
+</ul>
+<p>This is the reason why two other abstract base classes were defined:</p>
+<ul class="simple">
+<li>the <a class="reference internal" href="#siegpy.coordinatemappings.KGCoordMap" title="siegpy.coordinatemappings.KGCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">KGCoordMap</span></code></a> class,</li>
+<li>and the <a class="reference internal" href="#siegpy.coordinatemappings.SimonCoordMap" title="siegpy.coordinatemappings.SimonCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimonCoordMap</span></code></a> class.</li>
+</ul>
+<p>They both require a smooth function <span class="math notranslate nohighlight">\(q\)</span> as parameters.</p>
+<p>Two main types of smooth functions are implemented in SiegPy: one based
+on the error function <span class="math notranslate nohighlight">\(\text{erf}\)</span>, the other on <span class="math notranslate nohighlight">\(\tanh\)</span>,
+hence giving rise to four classes that can readily be used to find
+Siegert states numerically:</p>
+<ul class="simple">
+<li>the <a class="reference internal" href="#siegpy.coordinatemappings.ErfKGCoordMap" title="siegpy.coordinatemappings.ErfKGCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ErfKGCoordMap</span></code></a> class,</li>
+<li>the <a class="reference internal" href="#siegpy.coordinatemappings.ErfSimonCoordMap" title="siegpy.coordinatemappings.ErfSimonCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ErfSimonCoordMap</span></code></a> class,</li>
+<li>the <a class="reference internal" href="#siegpy.coordinatemappings.TanhKGCoordMap" title="siegpy.coordinatemappings.TanhKGCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">TanhKGCoordMap</span></code></a> class,</li>
+<li>the <a class="reference internal" href="#siegpy.coordinatemappings.TanhSimonCoordMap" title="siegpy.coordinatemappings.TanhSimonCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">TanhSimonCoordMap</span></code></a> class.</li>
+</ul>
+<p>See <a class="reference internal" href="SmoothFunctions.html#module-siegpy.smoothfunctions" title="siegpy.smoothfunctions"><code class="xref py py-class docutils literal notranslate"><span class="pre">smoothfunctions</span></code></a> for more details on the smooth
+functions.</p>
+<dl class="class">
+<dt id="siegpy.coordinatemappings.CoordMap">
+<em class="property">class </em><code class="descclassname">siegpy.coordinatemappings.</code><code class="descname">CoordMap</code><span class="sig-paren">(</span><em>theta</em>, <em>grid</em>, <em>GCVT</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract class.</p>
+</div>
+<p>Base class of all the other coordinate mappings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>theta</strong> (<em>float</em>) – Complex scaling angle.</li>
+<li><strong>grid</strong> (<em>numpy array</em><em> or </em><em>None</em>) – Discretization grid.</li>
+<li><strong>GCVT</strong> (<em>bool</em>) – Stands for Generalized Complex Virial Theorem. If it is set
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then only one virial value is computed, else
+there are one per coordinate mapping parameter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.theta">
+<code class="descname">theta</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.theta" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Complex scaling angle.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.GCVT">
+<code class="descname">GCVT</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.GCVT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Parameter stating which virial operator(s) have to be used.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.grid">
+<code class="descname">grid</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.grid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Discretization grid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._to_be_updated">
+<code class="descname">_to_be_updated</code><span class="sig-paren">(</span><em>new_grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._to_be_updated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._to_be_updated" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_grid</strong> (<em>numpy array</em>) – New discretization grid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the grid has to be updated.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.values">
+<code class="descname">values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the coordinate transorfmation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.f_values">
+<code class="descname">f_values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.f_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the first derivative of the coordinate
+transorfmation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.f_dx_values">
+<code class="descname">f_dx_values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.f_dx_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the second derivative of the coordinate
+transorfmation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.f_dx2_values">
+<code class="descname">f_dx2_values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.f_dx2_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the third derivative of the coordinate
+transorfmation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.dxi_values">
+<code class="descname">dxi_values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.dxi_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the first derivative with respect to all the
+parameters of the coordinate transorfmation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.f_dxi_values">
+<code class="descname">f_dxi_values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.f_dxi_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the first derivative with respect to all the
+parameters of the first derivative of the coordinate
+transorfmation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.V0_values">
+<code class="descname">V0_values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.V0_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the first additional RF-CAP.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.V1_values">
+<code class="descname">V1_values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.V1_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the second additional RF-CAP.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.V2_values">
+<code class="descname">V2_values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.V2_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the third additional RF-CAP.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.U0_values">
+<code class="descname">U0_values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.U0_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the first additional virial operator potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.U1_values">
+<code class="descname">U1_values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.U1_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the second additional virial operator potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.U2_values">
+<code class="descname">U2_values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.U2_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the third additional virial operator potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.CoordMap.U11_values">
+<code class="descname">U11_values</code><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap.U11_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the fourth additional virial operator potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._update_all_values">
+<code class="descname">_update_all_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._update_all_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._update_all_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the values of the coordinate mapping and its derivatives
+with respect to <span class="math notranslate nohighlight">\(x\)</span> and with respect to the coordinate
+mapping parameters, as well as related quantities such as the
+Reflection-Free Complex Absorbing Potential and the virial
+operator.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._update_x_deriv_values">
+<code class="descname">_update_x_deriv_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._update_x_deriv_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._update_x_deriv_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the values of the coordinate mapping and its three first
+derivatives with respect to <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._update_x_deriv_from_grid">
+<code class="descname">_update_x_deriv_from_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._update_x_deriv_from_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._update_x_deriv_from_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the values of the coordinate mapping and its three first
+derivatives with respect to <span class="math notranslate nohighlight">\(x\)</span>, if the grid is not
+<code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._update_param_deriv_values">
+<code class="descname">_update_param_deriv_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._update_param_deriv_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._update_param_deriv_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the values of the derivative with respect to the
+coordinate mapping parameters of the coordinate mapping and its
+first derivative with respect to <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._update_param_deriv_from_grid">
+<code class="descname">_update_param_deriv_from_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._update_param_deriv_from_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._update_param_deriv_from_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the values of the derivative with respect to the
+coordinate mapping parameters of the coordinate mapping and its
+first derivative with respect to <span class="math notranslate nohighlight">\(x\)</span>, if the grid is not
+<code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._get_values">
+<code class="descname">_get_values</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._get_values" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract method.</p>
+</div>
+<p>Evaluate the values of the coordinate mapping with respect to
+<span class="math notranslate nohighlight">\(x\)</span>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._get_f_values">
+<code class="descname">_get_f_values</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._get_f_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._get_f_values" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract method.</p>
+</div>
+<p>Evaluate the values of the first derivative of the coordinate
+mapping with respect to <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._get_f_dx_values">
+<code class="descname">_get_f_dx_values</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._get_f_dx_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._get_f_dx_values" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract method.</p>
+</div>
+<p>Evaluate the values of the second derivative of the coordinate
+mapping with respect to <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._get_f_dx2_values">
+<code class="descname">_get_f_dx2_values</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._get_f_dx2_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._get_f_dx2_values" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract method.</p>
+</div>
+<p>Evaluate the values of the third derivative of the coordinate
+mapping with respect to <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._get_dxi_values">
+<code class="descname">_get_dxi_values</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._get_dxi_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._get_dxi_values" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract method.</p>
+</div>
+<p>Evaluate the values of the first derivative of the coordinate
+mapping with respect to the coordinate mapping parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._get_f_dxi_values">
+<code class="descname">_get_f_dxi_values</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._get_f_dxi_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._get_f_dxi_values" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract method.</p>
+</div>
+<p>Evaluate the values of the first derivative with respect to the
+coordinate mapping parameters of the first derivative with
+respect to <span class="math notranslate nohighlight">\(x\)</span> of the coordinate mapping.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._update_RFCAP_values">
+<code class="descname">_update_RFCAP_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._update_RFCAP_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._update_RFCAP_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the various potentials used to define the Reflection-Free
+Complex Absorbing Potentials</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.CoordMap._update_virial_values">
+<code class="descname">_update_virial_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#CoordMap._update_virial_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.CoordMap._update_virial_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the values of the different potentials used to define the
+various virial operators.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.coordinatemappings.UniformCoordMap">
+<em class="property">class </em><code class="descclassname">siegpy.coordinatemappings.</code><code class="descname">UniformCoordMap</code><span class="sig-paren">(</span><em>theta</em>, <em>GCVT=True</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#UniformCoordMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.UniformCoordMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.coordinatemappings.CoordMap" title="siegpy.coordinatemappings.CoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.coordinatemappings.CoordMap</span></code></a></p>
+<p>The uniform coordinate transformation corresponds to:
+<span class="math notranslate nohighlight">\(x \mapsto x e^{i \theta}\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>theta</strong> (<em>float</em>) – Complex scaling angle.</li>
+<li><strong>GCVT</strong> (<em>bool</em>) – Stands for Generalized Complex Virial Theorem. If it is set
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then only one virial value is computed, else
+there are one per parameter (here, <code class="xref py py-attr docutils literal notranslate"><span class="pre">theta</span></code>). Defaults
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<li><strong>grid</strong> (<em>numpy array</em>) – Discretization grid (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="siegpy.coordinatemappings.UniformCoordMap._get_values">
+<code class="descname">_get_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#UniformCoordMap._get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.UniformCoordMap._get_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the coordinate mapping with respect to <span class="math notranslate nohighlight">\(x\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.UniformCoordMap._get_f_values">
+<code class="descname">_get_f_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#UniformCoordMap._get_f_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.UniformCoordMap._get_f_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the first derivative of the coordinate mapping
+with respect to <span class="math notranslate nohighlight">\(x\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.UniformCoordMap._get_f_dx_values">
+<code class="descname">_get_f_dx_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#UniformCoordMap._get_f_dx_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.UniformCoordMap._get_f_dx_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the second derivative of the coordinate mapping
+with respect to <span class="math notranslate nohighlight">\(x\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.UniformCoordMap._get_f_dx2_values">
+<code class="descname">_get_f_dx2_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#UniformCoordMap._get_f_dx2_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.UniformCoordMap._get_f_dx2_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the third derivative of the coordinate mapping
+with respect to <span class="math notranslate nohighlight">\(x\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.UniformCoordMap._get_dxi_values">
+<code class="descname">_get_dxi_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#UniformCoordMap._get_dxi_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.UniformCoordMap._get_dxi_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the first derivative of the coordinate mapping
+with respect to the coordinate mapping parameters.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.UniformCoordMap._get_f_dxi_values">
+<code class="descname">_get_f_dxi_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#UniformCoordMap._get_f_dxi_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.UniformCoordMap._get_f_dxi_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the first derivative with respect to the
+coordinate mapping parameters of the first derivative with
+respect to <span class="math notranslate nohighlight">\(x\)</span> of the coordinate mapping.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.coordinatemappings.SmoothExtCoordMap">
+<em class="property">class </em><code class="descclassname">siegpy.coordinatemappings.</code><code class="descname">SmoothExtCoordMap</code><span class="sig-paren">(</span><em>theta</em>, <em>x0</em>, <em>lbda</em>, <em>GCVT</em>, <em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SmoothExtCoordMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SmoothExtCoordMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.coordinatemappings.CoordMap" title="siegpy.coordinatemappings.CoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.coordinatemappings.CoordMap</span></code></a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract class.</p>
+</div>
+<p>This is the base class for all the other classes implementing a
+particular type of smooth exterior complex scaling.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This class must be used to create child classes if no smooth
+function is actually required.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>theta</strong> (<em>float</em>) – Complex scaling angle.</li>
+<li><strong>x0</strong> (<em>float</em>) – Inflection point.</li>
+<li><strong>lbda</strong> (<em>float</em>) – Sharpness parameter</li>
+<li><strong>GCVT</strong> (<em>bool</em>) – Stands for Generalized Complex Virial Theorem. If it is set
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then only one virial value is computed, else
+there are three, one for each parameter (here,
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">theta</span></code>, <a class="reference internal" href="#siegpy.coordinatemappings.SmoothExtCoordMap.x0" title="siegpy.coordinatemappings.SmoothExtCoordMap.x0"><code class="xref py py-attr docutils literal notranslate"><span class="pre">x0</span></code></a> and <a class="reference internal" href="#siegpy.coordinatemappings.SmoothExtCoordMap.lbda" title="siegpy.coordinatemappings.SmoothExtCoordMap.lbda"><code class="xref py py-attr docutils literal notranslate"><span class="pre">lbda</span></code></a>).</li>
+<li><strong>grid</strong> (<em>numpy array</em><em> or </em><em>None</em>) – Discretization grid.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the <code class="docutils literal notranslate"><span class="pre">x0</span></code> or <code class="docutils literal notranslate"><span class="pre">lbda</span></code> is not positive.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.SmoothExtCoordMap.x0">
+<code class="descname">x0</code><a class="headerlink" href="#siegpy.coordinatemappings.SmoothExtCoordMap.x0" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Inflection point.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.SmoothExtCoordMap.lbda">
+<code class="descname">lbda</code><a class="headerlink" href="#siegpy.coordinatemappings.SmoothExtCoordMap.lbda" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Sharpness paramter.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.coordinatemappings.SmoothFuncCoordMap">
+<em class="property">class </em><code class="descclassname">siegpy.coordinatemappings.</code><code class="descname">SmoothFuncCoordMap</code><span class="sig-paren">(</span><em>theta</em>, <em>smooth_func</em>, <em>GCVT</em>, <em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SmoothFuncCoordMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SmoothFuncCoordMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.coordinatemappings.SmoothExtCoordMap" title="siegpy.coordinatemappings.SmoothExtCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.coordinatemappings.SmoothExtCoordMap</span></code></a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract class.</p>
+</div>
+<p>Class used to define methods that may not be generally shared by any
+type of <a class="reference internal" href="#siegpy.coordinatemappings.SmoothExtCoordMap" title="siegpy.coordinatemappings.SmoothExtCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SmoothExtCoordMap</span></code></a> child
+classes, because a Smooth Exterior Coordinate Mapping could be
+defined without an explicit use of a smooth function.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This class must be used to create child classes if a smooth
+function is required.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>theta</strong> (<em>float</em>) – Complex scaling angle.</li>
+<li><strong>smooth_func</strong> (<a class="reference internal" href="SmoothFunctions.html#siegpy.smoothfunctions.SmoothFunction" title="siegpy.smoothfunctions.SmoothFunction"><em>SmoothFunction</em></a>) – Smooth function <span class="math notranslate nohighlight">\(q\)</span>.</li>
+<li><strong>GCVT</strong> (<em>bool</em>) – Stands for Generalized Complex Virial Theorem. If it is set
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then only one virial value is computed, else
+there are one per coordinate mapping parameter (including
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">theta</span></code> here).</li>
+<li><strong>grid</strong> (<em>numpy array</em><em> or </em><em>None</em>) – Discretization grid.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="siegpy.coordinatemappings.SmoothFuncCoordMap.smooth_func">
+<code class="descname">smooth_func</code><a class="headerlink" href="#siegpy.coordinatemappings.SmoothFuncCoordMap.smooth_func" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Smooth function <span class="math notranslate nohighlight">\(q\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="SmoothFunctions.html#siegpy.smoothfunctions.SmoothFunction" title="siegpy.smoothfunctions.SmoothFunction">SmoothFunction</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SmoothFuncCoordMap._update_all_values">
+<code class="descname">_update_all_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SmoothFuncCoordMap._update_all_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SmoothFuncCoordMap._update_all_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the grid and values of the smooth function before using
+the parent method updating all other values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SmoothFuncCoordMap._get_gp_and_gm">
+<code class="descname">_get_gp_and_gm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SmoothFuncCoordMap._get_gp_and_gm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SmoothFuncCoordMap._get_gp_and_gm" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This function only avoids code repetition in child classes.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Two numpy arrays that are often used by the child
+classes, while only being based on properties.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple made of two numpy arrays</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.coordinatemappings.SimonCoordMap">
+<em class="property">class </em><code class="descclassname">siegpy.coordinatemappings.</code><code class="descname">SimonCoordMap</code><span class="sig-paren">(</span><em>theta</em>, <em>smooth_func</em>, <em>GCVT</em>, <em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SimonCoordMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SimonCoordMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.coordinatemappings.SmoothFuncCoordMap" title="siegpy.coordinatemappings.SmoothFuncCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.coordinatemappings.SmoothFuncCoordMap</span></code></a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract class.</p>
+</div>
+<p>This class allows the representation of the smooth exterior
+coordinate mapping <span class="math notranslate nohighlight">\(F: x \mapsto F(x)\)</span> such that its
+derivative with respect to <span class="math notranslate nohighlight">\(x\)</span> is equal to
+<span class="math notranslate nohighlight">\(1 + (e^{i \theta} - 1) q(x)\)</span>, where <span class="math notranslate nohighlight">\(q\)</span> is a smooth
+function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>theta</strong> (<em>float</em>) – Complex scaling angle.</li>
+<li><strong>smooth_func</strong> (<a class="reference internal" href="SmoothFunctions.html#siegpy.smoothfunctions.SmoothFunction" title="siegpy.smoothfunctions.SmoothFunction"><em>SmoothFunction</em></a>) – Smooth function <span class="math notranslate nohighlight">\(q\)</span>.</li>
+<li><strong>GCVT</strong> (<em>bool</em>) – Stands for Generalized Complex Virial Theorem. If it is set
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then only one virial value is computed, else
+there are one per coordinate mapping parameter (including
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">theta</span></code> here).</li>
+<li><strong>grid</strong> (<em>numpy array</em><em> or </em><em>None</em>) – Discretization grid.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SimonCoordMap._update_x_deriv_from_grid">
+<code class="descname">_update_x_deriv_from_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SimonCoordMap._update_x_deriv_from_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SimonCoordMap._update_x_deriv_from_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the values of the coordinate mapping and its three first
+derivatives with respect to <span class="math notranslate nohighlight">\(x\)</span>, if the grid is not
+<code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SimonCoordMap._update_param_deriv_from_grid">
+<code class="descname">_update_param_deriv_from_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SimonCoordMap._update_param_deriv_from_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SimonCoordMap._update_param_deriv_from_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the values of the derivative with respect to the
+coordinate mapping parameters of the coordinate mapping and its
+first derivative with respect to <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SimonCoordMap._get_values">
+<code class="descname">_get_values</code><span class="sig-paren">(</span><em>m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SimonCoordMap._get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SimonCoordMap._get_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>m</strong> (<em>numpy array</em>) – Values of the intermediary function which is the factor of
+<span class="math notranslate nohighlight">\((e^{i \theta} - 1)\)</span> term in the coordinate mapping
+function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Values of the second derivative of the coordinate
+mapping with respect to <span class="math notranslate nohighlight">\(x\)</span>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SimonCoordMap._get_f_values">
+<code class="descname">_get_f_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SimonCoordMap._get_f_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SimonCoordMap._get_f_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the first derivative of the coordinate
+mapping with respect to <span class="math notranslate nohighlight">\(x\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SimonCoordMap._get_f_dx_values">
+<code class="descname">_get_f_dx_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SimonCoordMap._get_f_dx_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SimonCoordMap._get_f_dx_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the second derivative of the coordinate
+mapping with respect to <span class="math notranslate nohighlight">\(x\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SimonCoordMap._get_f_dx2_values">
+<code class="descname">_get_f_dx2_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SimonCoordMap._get_f_dx2_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SimonCoordMap._get_f_dx2_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the third derivative of the coordinate
+mapping with respect to <span class="math notranslate nohighlight">\(x\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SimonCoordMap._get_dxi_values">
+<code class="descname">_get_dxi_values</code><span class="sig-paren">(</span><em>m</em>, <em>m_dx0</em>, <em>m_dl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SimonCoordMap._get_dxi_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SimonCoordMap._get_dxi_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<em>numpy array</em>) – Values of the intermadiary function.</li>
+<li><strong>m_dx0</strong> (<em>numpy array</em>) – First derivative of the intermediary function with respect
+to <code class="xref py py-attr docutils literal notranslate"><span class="pre">x0</span></code>.</li>
+<li><strong>m_dl</strong> (<em>numpy array</em>) – First derivative of the intermediary function with respect
+to the sharpness parameter.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Values of the first derivative of the coordinate
+mapping with respect to the coordinate mapping parameters.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SimonCoordMap._get_f_dxi_values">
+<code class="descname">_get_f_dxi_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SimonCoordMap._get_f_dxi_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SimonCoordMap._get_f_dxi_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the first derivative with respect to the
+coordinate mapping parameters of the first derivative with
+respect to <span class="math notranslate nohighlight">\(x\)</span> of the coordinate mapping.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SimonCoordMap._get_m_values">
+<code class="descname">_get_m_values</code><span class="sig-paren">(</span><em>grid</em>, <em>lbda</em>, <em>gp</em>, <em>gm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SimonCoordMap._get_m_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SimonCoordMap._get_m_values" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract method.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>grid</strong> (<em>numpy array</em>) – Discretization grid.</li>
+<li><strong>lbda</strong> (<em>float</em>) – Sharpness parameter</li>
+<li><strong>gp</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+<li><strong>gm</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of an intermediate function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SimonCoordMap._get_m_dx0_values">
+<code class="descname">_get_m_dx0_values</code><span class="sig-paren">(</span><em>grid</em>, <em>lbda</em>, <em>gp</em>, <em>gm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SimonCoordMap._get_m_dx0_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SimonCoordMap._get_m_dx0_values" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract method.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>grid</strong> (<em>numpy array</em>) – Discretization grid.</li>
+<li><strong>lbda</strong> (<em>float</em>) – Sharpness parameter</li>
+<li><strong>gp</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+<li><strong>gm</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of the first derivative with respect to
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">x0</span></code> of an intermediate function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.SimonCoordMap._get_m_dl_values">
+<code class="descname">_get_m_dl_values</code><span class="sig-paren">(</span><em>grid</em>, <em>lbda</em>, <em>gp</em>, <em>gm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#SimonCoordMap._get_m_dl_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.SimonCoordMap._get_m_dl_values" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract method.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>grid</strong> (<em>numpy array</em>) – Discretization grid.</li>
+<li><strong>lbda</strong> (<em>float</em>) – Sharpness parameter</li>
+<li><strong>gp</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+<li><strong>gm</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of the first derivative with respect to
+the sharpness parameter <code class="xref py py-attr docutils literal notranslate"><span class="pre">lambda</span></code> of an intermediate
+function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.coordinatemappings.TanhSimonCoordMap">
+<em class="property">class </em><code class="descclassname">siegpy.coordinatemappings.</code><code class="descname">TanhSimonCoordMap</code><span class="sig-paren">(</span><em>theta</em>, <em>x0</em>, <em>lbda</em>, <em>GCVT=True</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#TanhSimonCoordMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.TanhSimonCoordMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.coordinatemappings.SimonCoordMap" title="siegpy.coordinatemappings.SimonCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.coordinatemappings.SimonCoordMap</span></code></a></p>
+<p>This class defines the smooth exterior coordinate mapping of the
+Simon type using the smooth function based on <span class="math notranslate nohighlight">\(\tanh\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>theta</strong> (<em>float</em>) – Complex scaling angle.</li>
+<li><strong>x0</strong> (<em>float</em>) – Inflection point.</li>
+<li><strong>lbda</strong> (<em>float</em>) – Sharpness parameter</li>
+<li><strong>GCVT</strong> (<em>bool</em>) – Stands for Generalized Complex Virial Theorem. If it is set
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then only one virial value is computed, else
+there are one per coordinate mapping parameter (here,
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">theta</span></code>, <code class="xref py py-attr docutils literal notranslate"><span class="pre">x0</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">lbda</span></code>). Defaults to
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<li><strong>grid</strong> (<em>numpy array</em><em> or </em><em>None</em>) – Discretization grid (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="siegpy.coordinatemappings.TanhSimonCoordMap._get_m_values">
+<code class="descname">_get_m_values</code><span class="sig-paren">(</span><em>gp</em>, <em>gm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#TanhSimonCoordMap._get_m_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.TanhSimonCoordMap._get_m_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>gp</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+<li><strong>gm</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of an intermediate function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.TanhSimonCoordMap._get_m_dx0_values">
+<code class="descname">_get_m_dx0_values</code><span class="sig-paren">(</span><em>gp</em>, <em>gm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#TanhSimonCoordMap._get_m_dx0_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.TanhSimonCoordMap._get_m_dx0_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>gp</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+<li><strong>gm</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of the first derivative with respect to
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">x0</span></code> of an intermediate function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.TanhSimonCoordMap._get_m_dl_values">
+<code class="descname">_get_m_dl_values</code><span class="sig-paren">(</span><em>gp</em>, <em>gm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#TanhSimonCoordMap._get_m_dl_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.TanhSimonCoordMap._get_m_dl_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>gp</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+<li><strong>gm</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of the first derivative with respect to
+the sharpness parameter <code class="xref py py-attr docutils literal notranslate"><span class="pre">lambda</span></code> of an intermediate
+function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.coordinatemappings.ErfSimonCoordMap">
+<em class="property">class </em><code class="descclassname">siegpy.coordinatemappings.</code><code class="descname">ErfSimonCoordMap</code><span class="sig-paren">(</span><em>theta</em>, <em>x0</em>, <em>lbda</em>, <em>GCVT=True</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#ErfSimonCoordMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.ErfSimonCoordMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.coordinatemappings.SimonCoordMap" title="siegpy.coordinatemappings.SimonCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.coordinatemappings.SimonCoordMap</span></code></a></p>
+<p>This class defines the smooth exterior coordinate mapping of the
+Simon type using the smooth function based on <span class="math notranslate nohighlight">\(\text{erf}\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>theta</strong> (<em>float</em>) – Complex scaling angle.</li>
+<li><strong>x0</strong> (<em>float</em>) – Inflection point.</li>
+<li><strong>lbda</strong> (<em>float</em>) – Sharpness parameter</li>
+<li><strong>GCVT</strong> (<em>bool</em>) – Stands for Generalized Complex Virial Theorem. If it is set
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then only one virial value is computed, else
+there are one per coordinate mapping parameter (here,
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">theta</span></code>, <code class="xref py py-attr docutils literal notranslate"><span class="pre">x0</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">lbda</span></code>). Defaults to
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<li><strong>grid</strong> (<em>numpy array</em><em> or </em><em>None</em>) – Discretization grid (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="siegpy.coordinatemappings.ErfSimonCoordMap._get_m_values">
+<code class="descname">_get_m_values</code><span class="sig-paren">(</span><em>gp</em>, <em>gm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#ErfSimonCoordMap._get_m_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.ErfSimonCoordMap._get_m_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>gp</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+<li><strong>gm</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of an intermediate function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.ErfSimonCoordMap._get_m_dx0_values">
+<code class="descname">_get_m_dx0_values</code><span class="sig-paren">(</span><em>gp</em>, <em>gm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#ErfSimonCoordMap._get_m_dx0_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.ErfSimonCoordMap._get_m_dx0_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>gp</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+<li><strong>gm</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of the first derivative with respect to
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">x0</span></code> of an intermediate function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.ErfSimonCoordMap._get_m_dl_values">
+<code class="descname">_get_m_dl_values</code><span class="sig-paren">(</span><em>gp</em>, <em>gm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#ErfSimonCoordMap._get_m_dl_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.ErfSimonCoordMap._get_m_dl_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>gp</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+<li><strong>gm</strong> (<em>numpy array</em>) – Intermadiary value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of the first derivative with respect to
+the sharpness parameter <code class="xref py py-attr docutils literal notranslate"><span class="pre">lambda</span></code> of an intermediate
+function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.coordinatemappings.KGCoordMap">
+<em class="property">class </em><code class="descclassname">siegpy.coordinatemappings.</code><code class="descname">KGCoordMap</code><span class="sig-paren">(</span><em>theta</em>, <em>smooth_func</em>, <em>GCVT</em>, <em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#KGCoordMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.KGCoordMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.coordinatemappings.SmoothFuncCoordMap" title="siegpy.coordinatemappings.SmoothFuncCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.coordinatemappings.SmoothFuncCoordMap</span></code></a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract class.</p>
+</div>
+<p>This class allows the representation of the smooth exterior
+coordinate mapping <span class="math notranslate nohighlight">\(F: x \mapsto x e^{i \theta q(x)}\)</span>, that we
+will call the Kalita-Gupta (KG) coordinate mapping.
+<span class="math notranslate nohighlight">\(q\)</span> represents the smooth function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>theta</strong> (<em>float</em>) – Complex scaling angle.</li>
+<li><strong>smooth_func</strong> (<a class="reference internal" href="SmoothFunctions.html#siegpy.smoothfunctions.SmoothFunction" title="siegpy.smoothfunctions.SmoothFunction"><em>SmoothFunction</em></a>) – Smooth function <span class="math notranslate nohighlight">\(q\)</span>.</li>
+<li><strong>GCVT</strong> (<em>bool</em>) – Stands for Generalized Complex Virial Theorem. If it is set
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then only one virial value is computed, else
+there are one per coordinate mapping parameter (including
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">theta</span></code> here).</li>
+<li><strong>grid</strong> (<em>numpy array</em><em> or </em><em>None</em>) – Discretization grid.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="siegpy.coordinatemappings.KGCoordMap._update_x_deriv_from_grid">
+<code class="descname">_update_x_deriv_from_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#KGCoordMap._update_x_deriv_from_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.KGCoordMap._update_x_deriv_from_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the values of the coordinate mapping and its three first
+derivatives with respect to <span class="math notranslate nohighlight">\(x\)</span>, if the grid is not
+<code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.KGCoordMap._update_param_deriv_from_grid">
+<code class="descname">_update_param_deriv_from_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#KGCoordMap._update_param_deriv_from_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.KGCoordMap._update_param_deriv_from_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the values of the derivative with respect to the
+coordinate mapping parameters of the coordinate mapping and its
+first derivative with respect to <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.KGCoordMap._get_values">
+<code class="descname">_get_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#KGCoordMap._get_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.KGCoordMap._get_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the second derivative of the coordinate
+mapping with respect to <span class="math notranslate nohighlight">\(x\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.KGCoordMap._get_f_values">
+<code class="descname">_get_f_values</code><span class="sig-paren">(</span><em>F</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#KGCoordMap._get_f_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.KGCoordMap._get_f_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>F</strong> (<em>numpy array</em>) – Values of the coordinate mapping.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Values of the first derivative of the coordinate
+mapping with respect to <span class="math notranslate nohighlight">\(x\)</span>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.KGCoordMap._get_f_dx_values">
+<code class="descname">_get_f_dx_values</code><span class="sig-paren">(</span><em>F</em>, <em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#KGCoordMap._get_f_dx_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.KGCoordMap._get_f_dx_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>F</strong> (<em>numpy array</em>) – Values of the coordinate mapping.</li>
+<li><strong>f</strong> (<em>numpy array</em>) – Values of the first derivative of the coordinate mapping
+with respect to <span class="math notranslate nohighlight">\(x\)</span>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Values of the second derivative of the coordinate
+mapping with respect to <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.KGCoordMap._get_f_dx2_values">
+<code class="descname">_get_f_dx2_values</code><span class="sig-paren">(</span><em>F</em>, <em>f</em>, <em>f_dx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#KGCoordMap._get_f_dx2_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.KGCoordMap._get_f_dx2_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>F</strong> (<em>numpy array</em>) – Values of the coordinate mapping.</li>
+<li><strong>f</strong> (<em>numpy array</em>) – Values of the first derivative of the coordinate mapping
+with respect to <span class="math notranslate nohighlight">\(x\)</span>.</li>
+<li><strong>f_dx</strong> (<em>numpy array</em>) – Values of the second derivative of the coordinate mapping
+with respect to <span class="math notranslate nohighlight">\(x\)</span>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Values of the third derivative of the coordinate mapping
+with respect to <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.KGCoordMap._get_dxi_values">
+<code class="descname">_get_dxi_values</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#KGCoordMap._get_dxi_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.KGCoordMap._get_dxi_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does nothing, as its role is already performed by the
+<a class="reference internal" href="#siegpy.coordinatemappings.KGCoordMap._update_param_deriv_from_grid" title="siegpy.coordinatemappings.KGCoordMap._update_param_deriv_from_grid"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_update_param_deriv_from_grid()</span></code></a> method</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.coordinatemappings.KGCoordMap._get_f_dxi_values">
+<code class="descname">_get_f_dxi_values</code><span class="sig-paren">(</span><em>F</em>, <em>F_dth</em>, <em>F_dx0</em>, <em>F_dl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#KGCoordMap._get_f_dxi_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.KGCoordMap._get_f_dxi_values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>F</strong> (<em>numpy array</em>) – Values of the coordinate mapping.</li>
+<li><strong>F_dth</strong> (<em>numpy array</em>) – Values of the first derivative of the coordinate mapping
+with respect to the complex scaling angle.</li>
+<li><strong>F_dx0</strong> (<em>numpy array</em>) – Values of the second derivative of the coordinate mapping
+with respect to <code class="xref py py-attr docutils literal notranslate"><span class="pre">x0</span></code>.</li>
+<li><strong>F_dl</strong> (<em>numpy array</em>) – Values of the first derivative of the coordinate mapping
+with respect to the sharpness parameter.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Values of the first derivative with respect to the
+coordinate mapping parameters of the first derivative with
+respect to <span class="math notranslate nohighlight">\(x\)</span> of the coordinate mapping.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.coordinatemappings.TanhKGCoordMap">
+<em class="property">class </em><code class="descclassname">siegpy.coordinatemappings.</code><code class="descname">TanhKGCoordMap</code><span class="sig-paren">(</span><em>theta</em>, <em>x0</em>, <em>lbda</em>, <em>GCVT=True</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#TanhKGCoordMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.TanhKGCoordMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.coordinatemappings.KGCoordMap" title="siegpy.coordinatemappings.KGCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.coordinatemappings.KGCoordMap</span></code></a></p>
+<p>This class defines the smooth exterior coordinate mapping of the
+Kalita-Gupta type using the smooth function based on <span class="math notranslate nohighlight">\(\tanh\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>theta</strong> (<em>float</em>) – Complex scaling angle.</li>
+<li><strong>x0</strong> (<em>float</em>) – Inflection point.</li>
+<li><strong>lbda</strong> (<em>float</em>) – Sharpness parameter</li>
+<li><strong>GCVT</strong> (<em>bool</em>) – Stands for Generalized Complex Virial Theorem. If it is set
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then only one virial value is computed, else
+there are one per coordinate mapping parameter (here,
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">theta</span></code>, <code class="xref py py-attr docutils literal notranslate"><span class="pre">x0</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">lbda</span></code>). Defaults to
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<li><strong>grid</strong> (<em>numpy array</em><em> or </em><em>None</em>) – Discretization grid (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.coordinatemappings.ErfKGCoordMap">
+<em class="property">class </em><code class="descclassname">siegpy.coordinatemappings.</code><code class="descname">ErfKGCoordMap</code><span class="sig-paren">(</span><em>theta</em>, <em>x0</em>, <em>lbda</em>, <em>GCVT=True</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/coordinatemappings.html#ErfKGCoordMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.coordinatemappings.ErfKGCoordMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.coordinatemappings.KGCoordMap" title="siegpy.coordinatemappings.KGCoordMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.coordinatemappings.KGCoordMap</span></code></a></p>
+<p>This class defines the smooth exterior coordinate mapping of the
+Kalita-Gupta type using the smooth function based on
+<span class="math notranslate nohighlight">\(\text{erf}\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>theta</strong> (<em>float</em>) – Complex scaling angle.</li>
+<li><strong>x0</strong> (<em>float</em>) – Inflection point.</li>
+<li><strong>lbda</strong> (<em>float</em>) – Sharpness parameter</li>
+<li><strong>GCVT</strong> (<em>bool</em>) – Stands for Generalized Complex Virial Theorem. If it is set
+to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then only one virial value is computed, else
+there are one per coordinate mapping parameter (here,
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">theta</span></code>, <code class="xref py py-attr docutils literal notranslate"><span class="pre">x0</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">lbda</span></code>). Defaults to
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<li><strong>grid</strong> (<em>numpy array</em>) – Discretization grid (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Hamiltonian.html" class="btn btn-neutral float-right" title="Hamiltonian" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="SymbolicPotentials.html" class="btn btn-neutral" title="Symbolic Potential" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

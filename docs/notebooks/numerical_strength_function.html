@@ -1,0 +1,950 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Strength function from numerical basis sets &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Code Documentation" href="../api_objects.html" />
+    <link rel="prev" title="Defining a new symbolic potential" href="other_symbolic_potentials.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../notebooks.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-analytical-case">1D Square-Well Potential: the analytical case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-numerical-case">1D Square-Well Potential: the numerical case</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../notebooks.html#other-numerical-potentials">Other numerical potentials</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="woods-saxon_potential.html">Symbolic Woods-Saxon potential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gaussian_potentials.html">Multiple Gaussian potentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other_symbolic_potentials.html">Defining a new symbolic potential</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Strength function from numerical basis sets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Initialization">Initialization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Square-Well-potential-case">Square-Well potential case</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Two-Gaussian-functions-potential">Two Gaussian functions potential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../notebooks.html">Tutorial</a> &raquo;</li>
+        
+      <li>Strength function from numerical basis sets</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/numerical_strength_function.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Strength-function-from-numerical-basis-sets">
+<h1>Strength function from numerical basis sets<a class="headerlink" href="#Strength-function-from-numerical-basis-sets" title="Permalink to this headline">¶</a></h1>
+<p>This notebook shows how the strength function can be approximated from a
+basis set made of the solutions of a numerical Hamiltonian. Given that
+only the bound and resonant states are found numerically, it is not
+possible to compute the contribution of the peak due to the bound and
+anti-bound states. Still, using the relations between the resonant and
+anti-resonant wavenumbers and wavefunctions, it is possible to build the
+strength function due to the resonant couples, as will be shown below.</p>
+<p>Two main examples will be studied:</p>
+<ul class="simple">
+<li>the first one concerns the 1D Square-Well potential, where a
+comparison with the analytic result is possible. We’ll see that the
+numerical and analytical results are in rather good agreement.</li>
+<li>we’ll then be able to proceed to the case of the two Gaussian
+potentials, where we’ll see the effect of the distance between the
+two wells on the strength function.</li>
+</ul>
+<div class="section" id="Initialization">
+<h2>Initialization<a class="headerlink" href="#Initialization" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">siegpy</span> <span class="k">import</span> <span class="p">(</span><span class="n">Hamiltonian</span><span class="p">,</span> <span class="n">ErfKGCoordMap</span><span class="p">,</span> <span class="n">SWPotential</span><span class="p">,</span>
+                    <span class="n">SWPBasisSet</span><span class="p">,</span> <span class="n">Gaussian</span><span class="p">,</span> <span class="n">TwoGaussianPotential</span><span class="p">,</span>
+                    <span class="n">BasisSet</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Square-Well-potential-case">
+<h2>Square-Well potential case<a class="headerlink" href="#Square-Well-potential-case" title="Permalink to this headline">¶</a></h2>
+<p>Let us first start by finding the resonant states of a numerical
+Hamiltonian. The usual procedure is used:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define a grid</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mf">7.5</span>
+<span class="n">xgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="mi">501</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define a potential, and discretize it over the grid</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">V0</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">pot</span> <span class="o">=</span> <span class="n">SWPotential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">V0</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Initialize a coordinate mapping</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="mf">6.0</span>
+<span class="n">lbda</span> <span class="o">=</span> <span class="mf">1.5</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">ErfKGCoordMap</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lbda</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Initialize the Hamiltonian</span>
+<span class="n">ham</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">pot</span><span class="p">,</span> <span class="n">cm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Find the eigenstates of the Hamiltonian</span>
+<span class="c1"># with a virial selection to separate the</span>
+<span class="c1"># Siegert states from the other eigenstates</span>
+<span class="n">basis</span> <span class="o">=</span> <span class="n">ham</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">max_virial</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>Once the basis set is initialized, one can define a test function and
+compute the strength function based on the resonant couples on a given
+wavenumber grid:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define the test function</span>
+<span class="n">xc</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Center of the test functions</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="mf">20.</span>  <span class="c1"># Width of the Gaussian</span>
+<span class="n">gauss1</span> <span class="o">=</span> <span class="n">Gaussian</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">xc</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define the wavenumber grid for the strength function</span>
+<span class="n">step</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Grid-step for plotting</span>
+<span class="n">k_max</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># Maximal wavenumber for plotting</span>
+<span class="n">kgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">k_max</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The same <code class="docutils literal notranslate"><span class="pre">plot_strength_function</span></code> method can be used, even though only
+the Mittag-Leffler Expansion of the strength function is available,
+compared to the analytical case. The contribution of a given number of
+resonant couples can still be highlighted:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Plot the MLE strength function</span>
+<span class="n">basis</span><span class="o">.</span><span class="n">plot_strength_function</span><span class="p">(</span><span class="n">gauss1</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_numerical_strength_function_13_0.png" src="../_images/notebooks_numerical_strength_function_13_0.png" />
+</div>
+</div>
+<p>The test function being centered in an even potential, the contribution
+of the odd resonant couples is obviously 0. The second and fourth
+resonant states are not odd, and this is why they have a non-zero
+contribution.</p>
+<p>It is then possible to compare with the analytical result.</p>
+<p>Remember the strength function is given by:
+<span class="math notranslate nohighlight">\(S(k) = - \frac{1}{\pi} \Im \left\langle g | G(k) | g \right\rangle\)</span></p>
+<p>where <span class="math notranslate nohighlight">\(G\)</span> is the Green’s function (or resolvent) of the
+Hamiltonian of the considered system and <span class="math notranslate nohighlight">\(g\)</span> is the test function.
+The exact Green’s function may be written as follows:</p>
+<p><span class="math notranslate nohighlight">\(G(k) = \sum_b \frac{\left| \varphi_b \right\rangle \left\langle \varphi_b \right|}{k^2/2 - {k_b}^2/2}  + \sum_{p = \pm} \int_0^{+\infty} \text{d} k_1 \frac{\left| \varphi_p \right\rangle \left\langle \varphi_p \right|}{k^2/2 - {k_1}^2/2}\)</span></p>
+<p>and approximated by :
+<span class="math notranslate nohighlight">\(G_{MLE}(k) = \sum_{S = a, b, c, d} \frac{\left| \varphi_S \right) \left( \varphi_S \right|}{k_S (k - k_S)}\)</span>.</p>
+<p>This means that the numerical strength function depends on both the
+quality of the scalar product with the test function and on the position
+of the wavenumbers in the complex wavenumber plane. To make sure that
+the errors are not due to an insufficiently dense discretization grid, a
+basis set using the non-analytical scalar products for the analytical
+Siegert states is created (<em>i.e.</em>, <code class="docutils literal notranslate"><span class="pre">analytic</span> <span class="pre">=</span> <span class="pre">False</span></code>), along with the
+usual basis set using the analytical scalar product formulas with the
+test functions (<em>i.e.</em>, <code class="docutils literal notranslate"><span class="pre">analytic</span> <span class="pre">=</span> <span class="pre">True</span></code>).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Read the analytical basis set made of Siegert states</span>
+<span class="n">siegerts</span> <span class="o">=</span> <span class="n">SWPBasisSet</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;siegerts.dat&quot;</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">siegerts_not_an</span> <span class="o">=</span> <span class="n">SWPBasisSet</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;siegerts.dat&quot;</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">analytic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>First, we can plot the exact contribution of the resonant couples only,
+using the analytical scalar product:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">res_couples</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">resonants</span> <span class="o">+</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">antiresonants</span>
+<span class="n">res_couples</span><span class="o">.</span><span class="n">plot_strength_function</span><span class="p">(</span><span class="n">gauss1</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">,</span> <span class="n">exact</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_numerical_strength_function_18_0.png" src="../_images/notebooks_numerical_strength_function_18_0.png" />
+</div>
+</div>
+<p>The numerical results seem to reproduce the exact results. In order to
+have a clearer view on that point, let us plot both results in the same
+figure, along with the exact result using the bound and anti-bound
+states, and the exact result where <code class="docutils literal notranslate"><span class="pre">analytic</span> <span class="pre">=</span> <span class="pre">False</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Compute the various strength functions</span>
+<span class="n">sf</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">MLE_strength_function</span><span class="p">(</span><span class="n">gauss1</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+<span class="n">exact_sf</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">MLE_strength_function</span><span class="p">(</span><span class="n">gauss1</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+<span class="n">exact_res_sf</span> <span class="o">=</span> <span class="n">res_couples</span><span class="o">.</span><span class="n">MLE_strength_function</span><span class="p">(</span><span class="n">gauss1</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+<span class="n">res_couples_not_an</span> <span class="o">=</span> <span class="n">siegerts_not_an</span><span class="o">.</span><span class="n">resonants</span> <span class="o">+</span> <span class="n">siegerts_not_an</span><span class="o">.</span><span class="n">antiresonants</span>
+<span class="n">exact_res_sf_not_an</span> <span class="o">=</span> <span class="n">res_couples_not_an</span><span class="o">.</span><span class="n">MLE_strength_function</span><span class="p">(</span><span class="n">gauss1</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+<span class="c1"># Plot them in the same figure</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">sf</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Numerical&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">exact_sf</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exact (with b/ab)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">exact_res_sf</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exact&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">exact_res_sf_not_an</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exact (non-an. scal. prod.)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_numerical_strength_function_20_0.png" src="../_images/notebooks_numerical_strength_function_20_0.png" />
+</div>
+</div>
+<p>The peak corresponding to the bound and anti-bound states is missing,
+but it is still possible to get a very good agreement for all the other
+peaks. We also see that the discretization grid should be sufficient to
+give good enough non-analytic scalar products (both green and red curves
+are superimposed): the error is mainly due to the fact that the
+numerical Siegert states wavenumbers and wavefunctions do not exactly
+correspond to the analytical ones.</p>
+<div class="section" id="Off-centered-test-function">
+<h3>Off-centered test function<a class="headerlink" href="#Off-centered-test-function" title="Permalink to this headline">¶</a></h3>
+<p>If the same Gaussian is off-centered, the peaks associated to the odd
+resonant couples now show up. This means that there are more features in
+the spectrum:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define the off-centered test function</span>
+<span class="n">xc2</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="mi">8</span>
+<span class="n">gauss2</span> <span class="o">=</span> <span class="n">Gaussian</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">xc2</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Numerical MLE of the strength function</span>
+<span class="n">basis</span><span class="o">.</span><span class="n">plot_strength_function</span><span class="p">(</span><span class="n">gauss2</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_numerical_strength_function_24_0.png" src="../_images/notebooks_numerical_strength_function_24_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Analytical strength function (except for bound and anti-bound peak)</span>
+<span class="n">res_couples</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">resonants</span> <span class="o">+</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">antiresonants</span>
+<span class="n">res_couples</span><span class="o">.</span><span class="n">plot_strength_function</span><span class="p">(</span><span class="n">gauss2</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">,</span> <span class="n">exact</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_numerical_strength_function_25_0.png" src="../_images/notebooks_numerical_strength_function_25_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Compute the various strength functions</span>
+<span class="n">sf</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">MLE_strength_function</span><span class="p">(</span><span class="n">gauss2</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+<span class="n">exact_sf</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">MLE_strength_function</span><span class="p">(</span><span class="n">gauss2</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+<span class="n">exact_res_sf</span> <span class="o">=</span> <span class="n">res_couples</span><span class="o">.</span><span class="n">MLE_strength_function</span><span class="p">(</span><span class="n">gauss2</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+<span class="n">res_couples_not_an</span> <span class="o">=</span> <span class="n">siegerts_not_an</span><span class="o">.</span><span class="n">resonants</span> <span class="o">+</span> <span class="n">siegerts_not_an</span><span class="o">.</span><span class="n">antiresonants</span>
+<span class="n">exact_res_sf_not_an</span> <span class="o">=</span> <span class="n">res_couples_not_an</span><span class="o">.</span><span class="n">MLE_strength_function</span><span class="p">(</span><span class="n">gauss2</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+<span class="c1"># Plot them in the same figure</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">sf</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Numerical&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">exact_sf</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exact (with b/ab)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">exact_res_sf</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exact&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">exact_res_sf_not_an</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exact (non-an. scal. prod.)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_numerical_strength_function_26_0.png" src="../_images/notebooks_numerical_strength_function_26_0.png" />
+</div>
+</div>
+<p>The conclusion found for the other test function still holds: the
+numerical strength function reproduces the exact one! It is possible to
+gain insight on the strength function by simply using a few numerical
+Siegert states.</p>
+</div>
+</div>
+<div class="section" id="Two-Gaussian-functions-potential">
+<h2>Two Gaussian functions potential<a class="headerlink" href="#Two-Gaussian-functions-potential" title="Permalink to this headline">¶</a></h2>
+<p>Given the previous section, it can be confidently said that the
+numerical Siegert states give high quality results for the strength
+function. New potentials can be safely studied: let us focus on the
+potential made of two Gaussian wells.</p>
+<p>The influence of the distance between the two potential wells will be
+studied: the strength function for two case will be presented, while
+using the same test function. The first step therefore consists in
+obtain these strength functions: the same procedure as the one used
+above is used for both potentials.</p>
+<div class="section" id="Gaussian-wells-close-to-each-other">
+<h3>Gaussian wells close to each other<a class="headerlink" href="#Gaussian-wells-close-to-each-other" title="Permalink to this headline">¶</a></h3>
+<p>Let us first compute the strength function for the case of two Gaussian
+wells close to each other:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define a grid</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mf">11.5</span>
+<span class="n">xgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span><span class="mi">1201</span><span class="p">)</span>
+<span class="c1"># Define a depth, sigma and center for the Gaussian potential</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">xc</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">V0</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="c1"># Define a Potential with two Gaussian functions</span>
+<span class="n">sym_pot1</span> <span class="o">=</span> <span class="n">TwoGaussianPotential</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="o">-</span><span class="n">xc</span><span class="p">,</span> <span class="o">-</span><span class="n">V0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">xc</span><span class="p">,</span> <span class="o">-</span><span class="n">V0</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+<span class="n">sym_pot1</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_numerical_strength_function_30_0.png" src="../_images/notebooks_numerical_strength_function_30_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Create and solve the Hamiltonian</span>
+<span class="n">cm_g</span> <span class="o">=</span> <span class="n">ErfKGCoordMap</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">ham1</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">sym_pot1</span><span class="p">,</span> <span class="n">cm_g</span><span class="p">)</span>
+<span class="n">basis1</span> <span class="o">=</span> <span class="n">ham1</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">max_virial</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define the wavenumber grid</span>
+<span class="n">step1</span> <span class="o">=</span> <span class="mf">0.025</span>  <span class="c1"># Grid-step for plotting</span>
+<span class="n">kmax1</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># Maximal wavenumber for plotting</span>
+<span class="n">kgrid1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">step1</span><span class="p">,</span> <span class="n">kmax1</span><span class="p">,</span> <span class="n">step1</span><span class="p">)</span>
+<span class="c1"># Make sure the test function is discretized on the right grid</span>
+<span class="n">gauss2</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">xgrid</span>
+<span class="c1"># Plot the MLE of the strength function</span>
+<span class="n">basis1</span><span class="o">.</span><span class="n">plot_strength_function</span><span class="p">(</span><span class="n">gauss2</span><span class="p">,</span> <span class="n">kgrid1</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_numerical_strength_function_32_0.png" src="../_images/notebooks_numerical_strength_function_32_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Gaussian-wells-far-from-each-other">
+<h3>Gaussian wells far from each other<a class="headerlink" href="#Gaussian-wells-far-from-each-other" title="Permalink to this headline">¶</a></h3>
+<p>The strength function for the two Gaussian wells further from each other
+is obtained in a similar fashion</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Center of the new Gaussian wells</span>
+<span class="n">xc2</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="c1"># Definition of the new potential</span>
+<span class="n">sym_pot2</span> <span class="o">=</span> <span class="n">TwoGaussianPotential</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="o">-</span><span class="n">xc2</span><span class="p">,</span> <span class="o">-</span><span class="n">V0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">xc2</span><span class="p">,</span> <span class="o">-</span><span class="n">V0</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+<span class="n">sym_pot2</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_numerical_strength_function_34_0.png" src="../_images/notebooks_numerical_strength_function_34_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ham2</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">sym_pot2</span><span class="p">,</span> <span class="n">cm_g</span><span class="p">)</span>
+<span class="n">basis2</span> <span class="o">=</span> <span class="n">ham2</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">max_virial</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">8.7</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define the wavenumber grid</span>
+<span class="n">step2</span> <span class="o">=</span> <span class="mf">0.01</span>  <span class="c1"># Grid-step for plotting</span>
+<span class="n">kmax2</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Maximal wavenumber for plotting</span>
+<span class="n">kgrid2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">step2</span><span class="p">,</span> <span class="n">kmax2</span><span class="p">,</span> <span class="n">step2</span><span class="p">)</span>
+<span class="c1"># Plot the MLE of the strength function</span>
+<span class="n">basis2</span><span class="o">.</span><span class="n">plot_strength_function</span><span class="p">(</span><span class="n">gauss2</span><span class="p">,</span> <span class="n">kgrid2</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_numerical_strength_function_36_0.png" src="../_images/notebooks_numerical_strength_function_36_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Discussion">
+<h3>Discussion<a class="headerlink" href="#Discussion" title="Permalink to this headline">¶</a></h3>
+<p>Two very different strength functions have just been obtained, revealing
+the influence on the distance between the two Gaussian wells, which is
+actually related to the positions of the resonant states in the complex
+energy or wavenumber plane. Let us plot the energies of the resonant
+states of both basis sets to have that in mind:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Plot the energies of the resonant states of both basis sets</span>
+<span class="k">for</span> <span class="n">basis</span> <span class="ow">in</span> <span class="n">basis1</span><span class="p">,</span> <span class="n">basis2</span><span class="p">:</span>
+    <span class="n">basis</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">kmax1</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">show_unknown</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_numerical_strength_function_39_0.png" src="../_images/notebooks_numerical_strength_function_39_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_numerical_strength_function_39_1.png" src="../_images/notebooks_numerical_strength_function_39_1.png" />
+</div>
+</div>
+<p>As discussed in a previous notebook, increasing the distance between
+both Gaussian wells leads to denser (more Siegert states per energy
+range) and more stable Siegert states (their imaginary part is closer to
+0). This fact is reflected in the strength function: the peak associated
+to a more stable state has a higher intensity and a smaller width: it
+actually tends to a Dirac delta for a bound state.</p>
+<p>Having that in mind, it explains why the strength function obtained for
+the largest distance between the Gaussian wells has more intense peaks
+compared to the other one, with smaller width (the first peaks scarcely
+overlap). There are also more peaks per energy range.</p>
+</div>
+</div>
+<div class="section" id="Conclusion">
+<h2>Conclusion<a class="headerlink" href="#Conclusion" title="Permalink to this headline">¶</a></h2>
+<p>This notebook showed that the strength function using numerical Siegert
+states for any 1D potential could be readily obtained thanks to SiegPy.
+Even though it does not allow to reproduce the peak due to the bound and
+anti-bound states contributions, all other peaks can be reproduced, and
+they are in very good agreement to the exact strength function, that is
+known for the 1D SWP, showing that the results for other potentials can
+be trusted.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../api_objects.html" class="btn btn-neutral float-right" title="Code Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="other_symbolic_potentials.html" class="btn btn-neutral" title="Defining a new symbolic potential" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

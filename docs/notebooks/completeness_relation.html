@@ -1,0 +1,740 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Completeness relation: an introduction &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Completeness relation: some problematic cases" href="completeness_relation_problematic_cases.html" />
+    <link rel="prev" title="Find the Siegert and continuum states of a 1D Square-Well Potential case" href="find_Siegerts_1DSWP.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../notebooks.html">Tutorial</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-analytical-case">1D Square-Well Potential: the analytical case</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="find_Siegerts_1DSWP.html">Find the Siegert and continuum states of a 1D Square-Well Potential case</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Completeness relation: an introduction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Initialization:-find-continuum-and-Siegert-states">Initialization: find continuum and Siegert states</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Computation-of-the-completeness-relation">Computation of the completeness relation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="completeness_relation_problematic_cases.html">Completeness relation: some problematic cases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="completeness_relation_multiple_test_functions.html">Completeness relation: a wider picture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="strength_function.html">Strength function: an introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="convergence_MLE_strength_function.html">Strength function: convergence of the Mittag-Leffler expansion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time_propagation.html">Time propagation: an introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time_propagation_initial_momentum.html">Time propagation: wavepacket with an initial momentum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time_propagation_error_estimation.html">Time propagation: error estimation of the Siegert states expansions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-numerical-case">1D Square-Well Potential: the numerical case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#other-numerical-potentials">Other numerical potentials</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../notebooks.html">Tutorial</a> &raquo;</li>
+        
+      <li>Completeness relation: an introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/completeness_relation.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Completeness-relation:-an-introduction">
+<h1>Completeness relation: an introduction<a class="headerlink" href="#Completeness-relation:-an-introduction" title="Permalink to this headline">¶</a></h1>
+<p>One of the main interest of using the Siegert states in solving quantum
+mechanical problems is that they form a complete basis set made of
+discrete states only (you may think of it as a generalization of the
+quantized bound states), that may suitably replace the cumbersome
+continuum of unocciped states usually studied.</p>
+<p>The simplest way of observing that is by comparing the following exact
+completeness relation (CR), that involved the bound (subscript
+<span class="math notranslate nohighlight">\(b\)</span>) and the continuum states of the 1D SWP (subscript <span class="math notranslate nohighlight">\(p\)</span>):</p>
+<p><span class="math notranslate nohighlight">\(\text{CR}(k) = \text{CR}(k) = \sum_b \frac{\left\langle g|\varphi_b\right\rangle^2}{\left\langle g | g \right\rangle} +  \sum_{p=\pm} \int_0^k \text{d} k_1 \frac{\left\langle g |\varphi_p\right\rangle \left\langle \varphi_p | g\right\rangle}{\left\langle g | g \right\rangle}\)</span></p>
+<p>to the one approximated by the so-called Mittag-Leffler Expansion (MLE):</p>
+<p><span class="math notranslate nohighlight">\(CR_{MLE}(k) = \frac{1}{2} \sum_{S=a,b} \frac{\left( g | \varphi_S \right)^2}{ \left\langle g | g \right\rangle } +  \frac{1}{2} \sum_{S=c,d}^{|k_S| \leq |k|} \frac{\left( g | \varphi_S \right)^2}{ \left\langle g | g \right\rangle }\)</span></p>
+<p>where <span class="math notranslate nohighlight">\(g\)</span> is a test function, <span class="math notranslate nohighlight">\(\varphi_S\)</span> is a Siegert state
+(where the subscripts <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, <span class="math notranslate nohighlight">\(c\)</span>, <span class="math notranslate nohighlight">\(d\)</span> stand
+for anti-bound, bound, resonant, anti-resonant) of wavenumber
+<span class="math notranslate nohighlight">\(k_S\)</span> and <span class="math notranslate nohighlight">\(\varphi_p\)</span> is a continuum state (where the
+subscripts + and - stand for even and odd continuum states) of
+wavenumber <span class="math notranslate nohighlight">\(k_1\)</span>.</p>
+<p>The exact CR is a continuous function of <span class="math notranslate nohighlight">\(k\)</span>, while the MLE of the
+CR is evaluated at discrete values of <span class="math notranslate nohighlight">\(k\)</span>, being the absolute
+values of the resonant/anti-resonant wavenumbers (and k=0 to get the
+bound/anti-bound contribution to the MLE of the CR).</p>
+<p>This comparison will be performed here in the case of the 1D Square-Well
+Potential (1DSWP).</p>
+<p><strong>To perform such a study, one has to:</strong></p>
+<ul class="simple">
+<li>Define a 1D SW potential,</li>
+<li>Create two basis sets: one made of Siegerts states only, the other
+made of continuum and bound states</li>
+<li>Define a test function, which can be a rectangular function or a
+Gaussian function</li>
+<li>Perform the exact evaluation of the CR and the approximated
+Mittag-Leffler expansion (MLE) of the CR, and compare them.</li>
+</ul>
+<div class="section" id="Initialization:-find-continuum-and-Siegert-states">
+<h2>Initialization: find continuum and Siegert states<a class="headerlink" href="#Initialization:-find-continuum-and-Siegert-states" title="Permalink to this headline">¶</a></h2>
+<p>Before studying the completeness relation, we need to create two basis
+sets: one made of Siegert states only, the other made of bound and
+continuum states.</p>
+<div class="section" id="Import-useful-modules-and-classes">
+<h3>Import useful modules and classes<a class="headerlink" href="#Import-useful-modules-and-classes" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Make the notebook aware of some classes of the SiegPy module</span>
+<span class="kn">from</span> <span class="nn">siegpy</span> <span class="k">import</span> <span class="n">SWPotential</span><span class="p">,</span> <span class="n">SWPBasisSet</span><span class="p">,</span> <span class="n">Rectangular</span><span class="p">,</span> <span class="n">Gaussian</span>
+<span class="c1"># Other imports</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Define-a-1D-Square-Well-Potential.">
+<h3>Define a 1D Square-Well Potential.<a class="headerlink" href="#Define-a-1D-Square-Well-Potential." title="Permalink to this headline">¶</a></h3>
+<p>A 1D SW potential is caracterized by its width <em>l</em> and depth <em>V0</em>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">V0</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># Depth of the potential</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>  <span class="c1"># Width of the potential</span>
+<span class="n">potential</span> <span class="o">=</span> <span class="n">SWPotential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">V0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Create-a-basis-set-made-of-Siegert-states-only.">
+<h3>Create a basis-set made of Siegert states only.<a class="headerlink" href="#Create-a-basis-set-made-of-Siegert-states-only." title="Permalink to this headline">¶</a></h3>
+<p>The search of the wavenumbers of the Siegert states is limited to a
+certain part of the complex wavenumber plane. Here, the absolute value
+of the real part (resp. imaginary part) of the Siegert wavenumbers must
+not exceed <code class="docutils literal notranslate"><span class="pre">re_kmax</span></code> (resp. <code class="docutils literal notranslate"><span class="pre">im_kmax</span></code>).</p>
+<p>To find the wavenumbers, one has to define a grid of input-guess, made
+of complex wavenumbers. This grid is defined by a grid step on the real
+axis <code class="docutils literal notranslate"><span class="pre">re_hk</span></code> and an optional one on the imaginary axis <code class="docutils literal notranslate"><span class="pre">im_hk</span></code>. The
+search of the bound and anti bound states on the imaginary axis is
+carried out automatically (given that the number of states on this axis
+and the range over which they are to be found is defined by the depth
+and width of the potential).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">re_kmax</span> <span class="o">=</span> <span class="mf">20.</span>
+<span class="n">im_kmax</span> <span class="o">=</span> <span class="mf">3.</span>
+<span class="n">re_hk</span> <span class="o">=</span> <span class="mf">1.</span>
+<span class="n">im_hk</span> <span class="o">=</span> <span class="mf">2.</span>
+<span class="n">siegerts</span> <span class="o">=</span> <span class="n">SWPBasisSet</span><span class="o">.</span><span class="n">find_Siegert_states</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="n">re_kmax</span><span class="p">,</span> <span class="n">re_hk</span><span class="p">,</span>
+                                           <span class="n">im_kmax</span><span class="p">,</span> <span class="n">im_hk</span><span class="o">=</span><span class="n">im_hk</span><span class="p">,</span> <span class="n">analytic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Create-an-exact-basis-set,-made-of-bound-and-continuum-states.">
+<h3>Create an exact basis-set, made of bound and continuum states.<a class="headerlink" href="#Create-an-exact-basis-set,-made-of-bound-and-continuum-states." title="Permalink to this headline">¶</a></h3>
+<p>The bound states can be taken from the previous calculation finding the
+Siegert states (given that bound states are nothing but a particuliar
+type of Siegert states), while the continuum states are discretized over
+a grid of real wavenumbers. This grid is caracterized by the grid step
+<code class="docutils literal notranslate"><span class="pre">h_k</span></code> and the maximal wavenumber <code class="docutils literal notranslate"><span class="pre">k_max</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Find the continuum states</span>
+<span class="n">hk</span> <span class="o">=</span> <span class="mf">0.01</span>   <span class="c1"># Grid step for the continuum states wavenumbers</span>
+<span class="n">kmax</span> <span class="o">=</span> <span class="mf">20.</span>  <span class="c1"># Maximal wavenumber of the continuum state to find.</span>
+<span class="n">continuum</span> <span class="o">=</span> <span class="n">SWPBasisSet</span><span class="o">.</span><span class="n">find_continuum_states</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="n">kmax</span><span class="p">,</span> <span class="n">hk</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Create the exact basis set</span>
+<span class="n">exact</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">bounds</span> <span class="o">+</span> <span class="n">continuum</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Define-test-functions-to-evaluate-the-completeness-relation.">
+<h3>Define test functions to evaluate the completeness relation.<a class="headerlink" href="#Define-test-functions-to-evaluate-the-completeness-relation." title="Permalink to this headline">¶</a></h3>
+<p>The completeness relation is evaluated using a test function <span class="math notranslate nohighlight">\(g\)</span>.
+For the MLE of the CR to hold, the test function must lie in region
+<span class="math notranslate nohighlight">\(II\)</span> (inside the potential, where <span class="math notranslate nohighlight">\(|x| \leq l/2\)</span>).</p>
+<p>Two types of test functions are implemented to yield analytical scalar
+product with the Siegert and continuum states of the 1D SWP:</p>
+<ul class="simple">
+<li>the rectangular function (<code class="docutils literal notranslate"><span class="pre">Rectangular</span></code> class), that can obviously
+lie exactly within region <span class="math notranslate nohighlight">\(II\)</span>.</li>
+<li>the Gaussian function (<code class="docutils literal notranslate"><span class="pre">Gaussian</span></code> class), that lies inside region
+<span class="math notranslate nohighlight">\(II\)</span> only approximately, when its <span class="math notranslate nohighlight">\(\sigma\)</span> is small
+enough so that it may be safely considered as 0 outside of region
+<span class="math notranslate nohighlight">\(II\)</span>.</li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">xc</span> <span class="o">=</span> <span class="mf">0.0</span>      <span class="c1"># Center of the test functions</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">3.0</span>       <span class="c1"># Amplitude of the test functions</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="mf">8.</span>      <span class="c1"># Width of the rectangular function</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="mf">20.</span> <span class="c1"># Width of the Gaussian</span>
+<span class="n">gauss</span> <span class="o">=</span> <span class="n">Gaussian</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">xc</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">)</span>  <span class="c1"># Gaussian test function</span>
+<span class="n">rect</span> <span class="o">=</span> <span class="n">Rectangular</span><span class="o">.</span><span class="n">from_width_and_center</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">xc</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">)</span>   <span class="c1"># Rectangular test function</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Computation-of-the-completeness-relation">
+<h2>Computation of the completeness relation<a class="headerlink" href="#Computation-of-the-completeness-relation" title="Permalink to this headline">¶</a></h2>
+<p>The computation of the completeness relation can be performed “exactly”
+(<em>i.e.</em> analytically with a discretized grid of continuum states) or
+approximately using the MLE, for Gaussian or rectangular test functions,
+.</p>
+<div class="section" id="Case-1:-Gaussian-test-function">
+<h3>Case 1: Gaussian test function<a class="headerlink" href="#Case-1:-Gaussian-test-function" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="Compute-the-conversion-of-the-completeness-relation-as-a-function-of-the-number-of-states-included">
+<h4>Compute the conversion of the completeness relation as a function of the number of states included<a class="headerlink" href="#Compute-the-conversion-of-the-completeness-relation-as-a-function-of-the-number-of-states-included" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li>The convergence of the MLE of the CR as a function of the number of
+the resonant couples included in the completeness relation is
+computed thanks to the <code class="docutils literal notranslate"><span class="pre">MLE_completeness_convergence</span></code> method
+applied to the basis set made of Siegert states. This method returns
+the grid of wavenumbers and the convergence of the CR as a tuple.</li>
+<li>The convergence of the exact CR as a function of the number of
+continuum states included in the completeness relation is computed
+thanks to the <code class="docutils literal notranslate"><span class="pre">exact_completeness_convergence</span></code> method applied to
+the exact basis set made of bound and continuum states. This method
+also returns the grid of wavenumbers and the convergence of the CR as
+a tuple.</li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">k_MLE_g</span><span class="p">,</span> <span class="n">CR_MLE_gauss</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">MLE_completeness_convergence</span><span class="p">(</span><span class="n">gauss</span><span class="p">)</span>
+<span class="n">k_exa_g</span><span class="p">,</span> <span class="n">CR_exact_gauss</span> <span class="o">=</span> <span class="n">exact</span><span class="o">.</span><span class="n">exact_completeness_convergence</span><span class="p">(</span><span class="n">gauss</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Compare-both-convergences">
+<h4>Compare both convergences<a class="headerlink" href="#Compare-both-convergences" title="Permalink to this headline">¶</a></h4>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#plt.axhline(0, color=&#39;black&#39;)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">k_exa_g</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">CR_exact_gauss</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#d73027&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Exact&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">k_MLE_g</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">CR_MLE_gauss</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#4575b4&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MLE&#39;</span><span class="p">,</span>
+         <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$k$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$CR$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;CR_gauss.pdf&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">gauss</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_completeness_relation_15_0.png" src="../_images/notebooks_completeness_relation_15_0.png" />
+</div>
+</div>
+<p>The exact completeness relation tend to 1, and so does the approximated
+MLE of the CR, that closely follows the exact result. This shows that
+finding the resonant states up to a certain absolute value of the
+wavenumber (or energy) is equivalent to finding the continuum states up
+to a certain wavenumber (or energy). <strong>Only a few Siegert states are
+sufficient to reproduce the influence of a continuum of eigenstates on
+the completeness relation.</strong></p>
+<p>Note that half of the resonant couples have a zero influence on the
+completeness relation. This is explained by the parity of the
+corresponding states: the Gaussian function is even (because it is
+centered in 0), so the scalar product with the odd Siegert states is
+obviously equal to zero. You would also see that the continuum
+contribution to the CR is only due to the even continuum states.</p>
+</div>
+</div>
+<div class="section" id="Case-2:-Rectangular-test-function.">
+<h3>Case 2: Rectangular test function.<a class="headerlink" href="#Case-2:-Rectangular-test-function." title="Permalink to this headline">¶</a></h3>
+<p>You could have actually obtained the same plot by using a single line
+(and without needing to compute the exact basis set made of continuum
+beforehand) by applying the <code class="docutils literal notranslate"><span class="pre">plot_completeness_convergence</span></code> method to
+the Siegert states basis set. If the basis set does not contain any
+continuum states, then a basis set of continuum states is created. If
+the optional parameters <code class="docutils literal notranslate"><span class="pre">hk</span></code> and <code class="docutils literal notranslate"><span class="pre">nres</span></code> are not specified, then
+default values are used. Another important option is that you can
+provide an output filename in order to save the plot, via the
+<code class="docutils literal notranslate"><span class="pre">file_save</span></code> optional argument. We present these funtionalities with
+the rectangular test function defined earlier:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">siegerts</span><span class="o">.</span><span class="n">plot_completeness_convergence</span><span class="p">(</span><span class="n">rect</span><span class="p">,</span> <span class="n">file_save</span><span class="o">=</span><span class="s1">&#39;CR_rect.pdf&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_completeness_relation_18_0.png" src="../_images/notebooks_completeness_relation_18_0.png" />
+</div>
+</div>
+<p>As you can see, the exact completeness relation also tends to one,
+however more slowly than in the case of the Gaussian test function. This
+is explained by the dicontinuities of the rectangular function, that are
+more difficult to represent using the basis sets made of continuous
+wavefunctions (<em>e.g.</em> those of the continuum and of the Siegert states).</p>
+<p>Another optional argument of the <code class="docutils literal notranslate"><span class="pre">plot_completeness_convergence</span></code>
+method is <code class="docutils literal notranslate"><span class="pre">nres</span></code>, which enables to choose the number of resonant
+states used to perform the convergence:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">siegerts</span><span class="o">.</span><span class="n">plot_completeness_convergence</span><span class="p">(</span><span class="n">rect</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_completeness_relation_21_0.png" src="../_images/notebooks_completeness_relation_21_0.png" />
+</div>
+</div>
+<p>This concludes this notebook! By now, you should be able to test the
+convergence of the completeness relation for any Gaussian and
+rectangular test functions using the <code class="docutils literal notranslate"><span class="pre">Gaussian</span></code> and <code class="docutils literal notranslate"><span class="pre">Rectangular</span></code>
+class.</p>
+<p>You also learned that the Mittag-Leffler expansion is the natural
+expansion that uses Siegert states instead of continuum states in the
+completeness relation, so that a discrete basis set can accurately
+reproduce the result of the cumbersome continuum of states of positive
+energy.</p>
+<p>Still, we only studied cases where the convergence of the completeness
+relation with Siegert states is closely related to the exact result
+obtained with continuum states. The next notebook will show that there
+are indeed some problematic cases…</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="completeness_relation_problematic_cases.html" class="btn btn-neutral float-right" title="Completeness relation: some problematic cases" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="find_Siegerts_1DSWP.html" class="btn btn-neutral" title="Find the Siegert and continuum states of a 1D Square-Well Potential case" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

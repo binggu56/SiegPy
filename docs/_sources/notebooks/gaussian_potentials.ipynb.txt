@@ -1,0 +1,525 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Multiple Gaussian potentials\n",
+    "\n",
+    "In this notebook, we will present another type of potentials, made of Gaussian functions. There will be two or four Gaussian functions used to define each potential.\n",
+    "\n",
+    "The initial potential to be studied in this notebook is made of two Gaussian wells, and we will see the influence of two parameters on the obtained spectra:\n",
+    "\n",
+    "- the addition of two Gaussian barriers (one on each side of the two initial Gaussian wells)\n",
+    "\n",
+    "- the distance between the two Gaussian wells"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Initialization"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The same initialization is required than for the notebook about the Woods-Saxon potential, the two difference being that two other classes of symbolic potentials are imported: `TwoGaussianPotential` and `FourGaussianPotential`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import matplotlib.colors\n",
+    "from matplotlib import cm\n",
+    "from siegpy import (Hamiltonian, ErfKGCoordMap, BasisSet,\n",
+    "                    TwoGaussianPotential, FourGaussianPotential)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Two identical Gaussian wells"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The first potential is made of two identical Gaussian wells that are not too broadly separated:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Define a grid\n",
+    "xmax = 11.5\n",
+    "xgrid = np.linspace(-xmax, xmax,1201)\n",
+    "# Define a depth, sigma and center for the Gaussian potential\n",
+    "sigma = 0.4\n",
+    "xc = 2\n",
+    "V0 = 10\n",
+    "# Define a Potential with two Gaussian functions\n",
+    "sym_pot1 = TwoGaussianPotential(sigma, -xc, -V0, sigma, xc, -V0, grid=xgrid)\n",
+    "sym_pot1.plot()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The depth and sigma defined here will be used throughout this notebook."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The potential is then used to define a Hamiltonian, that is finally solved in order to create a basis set:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "cm_g = ErfKGCoordMap(0.6, 10.0, 1.0)\n",
+    "ham1 = Hamiltonian(sym_pot1, cm_g)\n",
+    "basis1 = ham1.solve(max_virial=10**(-6))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Finally, let us show some plots:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Definition of all the parameters to get consistent plots for \n",
+    "# all the potentials considered throughout this notebook\n",
+    "re_e_max = 15\n",
+    "im_e_min = -6\n",
+    "im_k_max = np.sqrt(2*V0)\n",
+    "re_k_max = np.sqrt(2*re_e_max)\n",
+    "re_e_lim = (-V0, re_e_max)\n",
+    "im_e_lim = (im_e_min, -im_e_min/30)\n",
+    "re_k_lim = (-re_k_max/30, re_k_max)\n",
+    "im_k_lim = (-im_k_max, im_k_max)\n",
+    "# Plot the energies, wavenumbers and some eigenstates of the potential\n",
+    "basis1.plot_energies(xlim=re_e_lim, ylim=im_e_lim)\n",
+    "basis1.plot_wavenumbers(xlim=re_k_lim, ylim=im_k_lim)\n",
+    "basis1.plot_wavefunctions(nres=4, xlim=(-4, 4), ylim=(-V0-1, 5))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Both bound and resonant states are found and are separable from the rest of the states, even if the resonant states virial values are rather high for the resonant states. \n",
+    "\n",
+    "Note that the bound states actually are degenerate: the separation between both Gaussian wells is large enough to avoid a large overlap of the bound states wavefunctions of each Gaussian well. It is easy to see that by using simple linear combinations (addition and subtraction) of these degenerate bound states wavefunctions of a given energy, one gets the bound states of each Gaussian well.\n",
+    "\n",
+    "Some resonant states can also be separated from the rotated continuum states thanks to their virial values, even though only few of them are found in this case. The first resonant state has a rather long lifetime (proportional to the inverse of its imaginary part (in absolute value)), while the other next resonant states are associated to decreasing lifetimes.\n",
+    "\n",
+    "It is worth noting that the resonant states wavefunctions have anti-nodes centered between both Gaussian wells, and the number of nodes in this region keeps increasing, starting from one anti-node for the first resonant state. This is more clearly presented below:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Sort the resonant states by increasing real energy\n",
+    "res = basis1.resonants.states\n",
+    "res.sort(key=lambda x: x.energy.real)\n",
+    "# Plot each one of them\n",
+    "for i, state in enumerate(res):\n",
+    "    xmax = 3.5; ymax = 1.5\n",
+    "    tit = \"Resonant state n˚{}\".format(i+1)\n",
+    "    state.plot(title=tit, xlim=(-xmax, xmax), ylim=(-ymax, ymax))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Increase of the separation between both potentials"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Let us consider a similar case, wit the same Gaussian wells, the main difference being that they are separated by a larger distance, that should lead to even less overlap between the bound states of each potential:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Center of the new Gaussian wells\n",
+    "xc2 = 4\n",
+    "# Definition of the new potential\n",
+    "sym_pot2 = TwoGaussianPotential(sigma, -xc2, -V0, sigma, xc2, -V0, grid=xgrid)\n",
+    "sym_pot2.plot()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "As usual, this potential is used to define a Hamiltonian, which is in turn solved, so that a basis set is created:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ham2 = Hamiltonian(sym_pot2, cm_g)\n",
+    "basis2 = ham2.solve(max_virial=10**(-8.7))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The same plots are done for this new potential:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "basis2.plot_energies(xlim=re_e_lim, ylim=im_e_lim)\n",
+    "basis2.plot_wavenumbers(xlim=re_k_lim, ylim=im_k_lim)\n",
+    "basis2.plot_wavefunctions(nres=0)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The spectrum of bound states is the same as in the previous case, while the spectrum of resonant states is very different: the number of resonant states in the same energy range is larger and they are associated to larger lifetimes. This shows that it is easier to have low energy resonant states when the distance between two potential wells is increased. This effect is actually similar to what is known for the bound states of a potential well of increasing width: the energies of the low energy bound states tend to get closer to each other. The same phenomenon occurs here for the resonant states: it is as if they were trapped between the two potential wells, that effectively act as a single potential well for the resonant states.\n",
+    "\n",
+    "The resonant wavefunctions follow the same pattern as the one found for the previous potential, with an increasing number of anti-nodes between both wells for the resonant states of increasing energy:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Sort the resonant states by increasing real energy\n",
+    "res = basis2.resonants.states\n",
+    "res.sort(key=lambda x: x.energy.real)\n",
+    "# Plot each one of them\n",
+    "for i, state in enumerate(res[:6]):\n",
+    "    xmax = 6.5; ymax = 1.5\n",
+    "    tit = \"Resonant state n˚{}\".format(i+1)\n",
+    "    state.plot(title=tit, xlim=(-xmax, xmax), ylim=(-ymax, ymax))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Gaussian barriers around the two Gaussian wells"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Let us finally consider a last case where a potential barrier is added on each side of the initial Gaussian wells. These barriers are Gaussian functions that have the same center as the Gaussian wells used to define the previous potential:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Depth of the extra Gaussian barriers\n",
+    "V1 = 0.2 * V0\n",
+    "# Definition of the potential\n",
+    "sym_pot3 = FourGaussianPotential(sigma, -xc2, V1, sigma, -xc, -V0,\n",
+    "                                 sigma, xc, -V0, sigma, xc2, V1, grid=xgrid)\n",
+    "sym_pot3.plot()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "A Hamiltonian is created from this potential, and solved to give a basis set:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ham3 = Hamiltonian(sym_pot3, cm_g)\n",
+    "basis3 = ham3.solve(max_virial=10**(-9))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The basis set is then used to create some plots:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "basis3.plot_energies(xlim=re_e_lim, ylim=im_e_lim)\n",
+    "basis3.plot_wavenumbers(xlim=re_k_lim, ylim=im_k_lim)\n",
+    "basis3.plot_wavefunctions(nres=7, ylim=(-11, 7.5))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Again, the bound states and the resonant states can easily be separated from the rest of the resonant states. The virial values are even larger for the resonant states. Again, the bound states are degenerate, and they are the same as the ones found for the other potentials without the barriers. \n",
+    "\n",
+    "The first three resonant states can be considered as quasi-bound, in the sense that their lifetime is very large and because their energy is below the maximum of the Gaussian barriers. Also note how their wavefunction does not tend to diverge, especially compared to the other resonant states of higher energy, which are nothing but the same type of resonant states we used to find for other potentials. Also note how the number of anti-nodes of the resonant states wavefunction still follows the same increase when the resonant energy is increased. The presence of the barrier does not affect this property of the resonant states, whether they are quasi-bound or not. The first resonant states wavefunctions are presented below:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Sort the resonant states by increasing real energy\n",
+    "res = basis3.resonants.states\n",
+    "res.sort(key=lambda x: x.energy.real)\n",
+    "# Plot each one of them\n",
+    "for i, state in enumerate(res[:6]):\n",
+    "    xmax = 9.5; ymax = 1.5\n",
+    "    tit = \"Resonant state n˚{}\".format(i+1)\n",
+    "    state.plot(title=tit, ylim=(-ymax, ymax))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Comparison of the eigenstates"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "To get a clearer view on the spectra obtained with the various potentials, the same function as for the case of the Woods-Saxon potential is defined:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def scatter_plot(data_kwd, basissets, xlim=None, ylim=None, title=None,\n",
+    "                 file_save=None, show_unknown=False):\n",
+    "    # Object-oriented plots\n",
+    "    fig = plt.figure()\n",
+    "    ax = fig.add_subplot(111)\n",
+    "    # Add the real and imaginary axes\n",
+    "    ax.axhline(0, color='black', lw=1)  # black line y=0\n",
+    "    ax.axvline(0, color='black', lw=1)  # black line x=0\n",
+    "    # Define the min and max values of the virial, in order to\n",
+    "    # use the same normalized scale of for the virial values.\n",
+    "    allstates = BasisSet()\n",
+    "    for b in basissets:\n",
+    "        allstates += b\n",
+    "    vmin = np.min(np.log10(allstates.virials))\n",
+    "    vmax = np.max(np.log10(allstates.virials))\n",
+    "    norm = matplotlib.colors.Normalize(vmin=vmin, vmax=vmax)\n",
+    "    # Define the markers used for each basis set (not more than four\n",
+    "    # basis sets can be considered ; you can still add more markers here,\n",
+    "    # but the plot might become difficult to read)\n",
+    "    markers = [\"o\", \"s\", \"d\", \"^\"]\n",
+    "    # Loop over the basis sets to plot them\n",
+    "    for i, b in enumerate(basissets):\n",
+    "        # Select which states have to be plotted and store their virial\n",
+    "        to_plot = b.bounds + b.resonants + b.continuum\n",
+    "        if show_unknown is True or len(b.unknown) == len(b):\n",
+    "            to_plot += b.unknown\n",
+    "        virials = np.log10(to_plot.virials[::-1])\n",
+    "        # Set the x-axis label and get the data to be plotted, according\n",
+    "        # to the value of data_kwd.\n",
+    "        if data_kwd == 'wavenumbers':\n",
+    "            data_label = 'k'\n",
+    "            plot_data = to_plot.wavenumbers[::-1]\n",
+    "        elif data_kwd == 'energies':\n",
+    "            data_label = 'E'\n",
+    "            plot_data = to_plot.energies[::-1]\n",
+    "        # Else: raise a value error\n",
+    "        else:\n",
+    "            raise ValueError(\"data_kwd must be equal to 'wavenumbers' \"\n",
+    "                             \"or 'energies' (here '{}')\".format(data_kwd))\n",
+    "        # Plot all the data\n",
+    "        if plot_data != []:\n",
+    "            # normalized scale for the colors\n",
+    "            c = plt.cm.CMRmap(norm(virials))\n",
+    "            ax.scatter(np.real(plot_data), np.imag(plot_data), c=c,\n",
+    "                       marker=markers[i], s=30, label=\"$V_{}$\".format(i+1))\n",
+    "    # Set the colorbar and its title\n",
+    "    m = cm.ScalarMappable(cmap=plt.cm.CMRmap, norm=norm)\n",
+    "    m.set_array([])\n",
+    "    plt.colorbar(m, label=\"$log_{10}$(|virial|)\")\n",
+    "    # Set axis labels and range and the plot title\n",
+    "    ax.set_xlabel(\"Re[${}$]\".format(data_label))\n",
+    "    ax.set_ylabel(\"Im[${}$]\".format(data_label))\n",
+    "    if xlim is not None:\n",
+    "        ax.set_xlim(xlim)\n",
+    "    ax.set_xticklabels(ax.get_xticks())\n",
+    "    if ylim is not None:\n",
+    "        ax.set_ylim(ylim)\n",
+    "    ax.set_yticklabels(ax.get_yticks())\n",
+    "    if title is not None:\n",
+    "        ax.set_title(title)\n",
+    "    # Save the plot and show it\n",
+    "    if file_save is not None:\n",
+    "        fig.savefig(file_save)\n",
+    "    plt.legend()\n",
+    "    plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "It is finally used to plot the Siegert states of all the potential with the same scale of virial values for the various potentials:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data_kwd = 'energies'\n",
+    "# Uncomment the next line to plot the wavenumbers\n",
+    "# data_kwd = 'wavenumbers'\n",
+    "if data_kwd == 'energies':\n",
+    "    re_lim = re_e_lim\n",
+    "    im_lim = im_e_lim\n",
+    "elif data_kwd == 'wavenumbers':\n",
+    "    re_lim = re_k_lim\n",
+    "    im_lim = im_k_lim\n",
+    "basissets = [basis1, basis2, basis3]\n",
+    "scatter_plot(data_kwd, basissets, show_unknown=False,\n",
+    "             xlim=re_lim, ylim=im_lim)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "This shows that the spectrum of resonant states can vary greatly while the bound states are not very different. These differences can be caused by the distance between the two wells (which tend to stabilize more resonant states close to the threshold energy $E=0$) or by the presence of barriers (which creates quasi-bound states, which are nothing but very stable resonant states)."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The energy of the lowest Siegert states is also presented in the following table:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Print the header of the table\n",
+    "header = \"   phi   |\"\n",
+    "for i in range(len(basissets)):\n",
+    "    header += \"|       V{}      \".format(i+1)\n",
+    "print(header)\n",
+    "print(\"-\"*len(header))\n",
+    "# Print the table:\n",
+    "# - first, the bound states\n",
+    "bnd_energies = np.array([[en for en in np.sort(basis.bounds.energies)]\n",
+    "                         for basis in basissets])\n",
+    "for i in range(len(bnd_energies.T)):\n",
+    "    line = \" phi_b_{} |\".format(i+1)\n",
+    "    for en in bnd_energies.T[i]:\n",
+    "        line += \"| {: .3f} \".format(en)\n",
+    "    print(line)\n",
+    "# - then, the resonant states\n",
+    "n_res = 5\n",
+    "res_energies = np.array([[en for en in np.sort(basis.resonants.energies[:n_res])]\n",
+    "                         for basis in basissets])\n",
+    "for i in range(n_res):\n",
+    "    line = \" phi_r_{} |\".format(i+1)\n",
+    "    for en in res_energies.T[i]:\n",
+    "        line += \"| {: .3f} \".format(en)\n",
+    "    print(line)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

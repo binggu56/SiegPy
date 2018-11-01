@@ -1,0 +1,975 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Numerical potential: bound and continuum states &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Completeness relation using numerical bound and continuum states" href="completeness_relation_numerical_bound_and_continuum.html" />
+    <link rel="prev" title="Time propagation: error estimation of the Siegert states expansions" href="time_propagation_error_estimation.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../notebooks.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-analytical-case">1D Square-Well Potential: the analytical case</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-numerical-case">1D Square-Well Potential: the numerical case</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Numerical potential: bound and continuum states</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Initialization">Initialization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Finding-numerical-eigenstates">Finding numerical eigenstates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Create-plots-of-the-basis-set">Create plots of the basis set</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Comparison-with-the-analytical-bound-states">Comparison with the analytical bound states</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Numerical-continuum-states">Numerical continuum states</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="completeness_relation_numerical_bound_and_continuum.html">Completeness relation using numerical bound and continuum states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="find_numerical_Siegert.html">Numerical potential: Siegert states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="completeness_relation_numerical_Siegert.html">Completeness relation with numerical Siegert states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="influence_virials_siegerts.html">Virial operators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="influence_filters_siegerts.html">Influence of the filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="influence_coordMap_siegerts_1.html">Influence of the coordinate mapping parameters: case study of the ErfKGCoordMap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="influence_grid_continuum.html">Influence of the grid for continuum states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="influence_grid_siegerts.html">Influence of the grid for Siegert states</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#other-numerical-potentials">Other numerical potentials</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../notebooks.html">Tutorial</a> &raquo;</li>
+        
+      <li>Numerical potential: bound and continuum states</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/find_numerical_bound_and_continuum.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Numerical-potential:-bound-and-continuum-states">
+<h1>Numerical potential: bound and continuum states<a class="headerlink" href="#Numerical-potential:-bound-and-continuum-states" title="Permalink to this headline">¶</a></h1>
+<p>The present notebook introduces how to find the eigenvalues of a
+numerical Hamiltonian using <code class="docutils literal notranslate"><span class="pre">SiegPy</span></code>. We will focus on the 1D
+Square-Well Potential (1DSWP) case, for comparisons with analytical
+results to be possible.</p>
+<div class="section" id="Initialization">
+<h2>Initialization<a class="headerlink" href="#Initialization" title="Permalink to this headline">¶</a></h2>
+<p>The initialization only consists in importing all the necessary modules
+and classes and defining the potential to be used throughout the
+notebook.</p>
+<div class="section" id="Import-classes-and-modules">
+<h3>Import classes and modules<a class="headerlink" href="#Import-classes-and-modules" title="Permalink to this headline">¶</a></h3>
+<p>You should be familiar with every import from <code class="docutils literal notranslate"><span class="pre">SiegPy</span></code> except the last
+three.</p>
+<p>We’ll see that finding numerical eigenstates of a potential requires a
+<code class="docutils literal notranslate"><span class="pre">Hamiltonian</span></code> instance, the latter taking a coordinate mapping as
+argument to be initialized, hence the <code class="docutils literal notranslate"><span class="pre">UniformCoordMap</span></code> (we will soon
+explain what do we mean by that). <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> is the most general class
+defining a basis set in <code class="docutils literal notranslate"><span class="pre">SiegPy</span></code>. The <code class="docutils literal notranslate"><span class="pre">SWPBasisSet</span></code> class
+extensively used throughout the previous notebooks actually inherits
+from the <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> class.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">siegpy</span> <span class="k">import</span> <span class="p">(</span><span class="n">SWPotential</span><span class="p">,</span> <span class="n">SWPBasisSet</span><span class="p">,</span> <span class="n">BasisSet</span><span class="p">,</span>
+                    <span class="n">Hamiltonian</span><span class="p">,</span> <span class="n">UniformCoordMap</span><span class="p">)</span>
+<span class="c1"># We also import numpy and matplotlib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Define-a-potential">
+<h3>Define a potential<a class="headerlink" href="#Define-a-potential" title="Permalink to this headline">¶</a></h3>
+<p>We first read a basis set made of analytical Siegert states from a file,
+in order to easily compare our future numerical results with the
+analytical ones. We can then reuse the same potential, except that it
+has to be discretized over a grid.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Read the analytical basis set made of Siegert states</span>
+<span class="n">siegerts</span> <span class="o">=</span> <span class="n">SWPBasisSet</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;siegerts.dat&quot;</span><span class="p">)</span>
+
+<span class="c1"># Find its potential, and discretize it over a grid</span>
+<span class="n">pot</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">potential</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">pot</span><span class="o">.</span><span class="n">width</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mf">7.5</span>
+<span class="n">xgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="mi">501</span><span class="p">)</span>
+<span class="n">pot</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">xgrid</span>
+<span class="n">pot</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_5_0.png" src="../_images/notebooks_find_numerical_bound_and_continuum_5_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Finding-numerical-eigenstates">
+<h2>Finding numerical eigenstates<a class="headerlink" href="#Finding-numerical-eigenstates" title="Permalink to this headline">¶</a></h2>
+<p>Finding numerical solutions of a Hamiltonian is done in two times:</p>
+<ul class="simple">
+<li>first, a <code class="docutils literal notranslate"><span class="pre">Hamiltonian</span></code> is defined in matrix form,</li>
+<li>and then its eigenvalues and eigenvectors are found in order to
+create a <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> instance.</li>
+</ul>
+<div class="section" id="Define-the-Hamitonian">
+<h3>Define the Hamitonian<a class="headerlink" href="#Define-the-Hamitonian" title="Permalink to this headline">¶</a></h3>
+<p>The Hamiltonian is made of the sum of the kinetic and potential terms.
+In order to write it in matrix form, the Laplacian operator also has to
+be defined in matrix form.</p>
+<p>This requires the use of a set of filters (i.e., a set of coefficients)
+(see
+<a class="reference external" href="https://en.wikipedia.org/wiki/Finite_difference_coefficient">here</a>
+for some finite difference filters up to order 8). For example, the
+finite difference filter of order 1 of the Laplacian reads
+<code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">-2,</span> <span class="pre">1]</span></code>, meaning that the derivative of a function <span class="math notranslate nohighlight">\(f\)</span> at a
+given grid point <span class="math notranslate nohighlight">\(x_n\)</span> reads
+<span class="math notranslate nohighlight">\(f''(x_n) \approx \frac{f(x_{x-1}) - 2 f(x_n) + f(x_{n+1})}{h^2}\)</span>.
+The defaults filters used consist of more complex Daubechies wavelets
+filters (named <code class="docutils literal notranslate"><span class="pre">Sym8_filters</span></code>).</p>
+<p>The main goal of the SiegPy module is to study the Siegert states of a
+given potential, and this requires the use of a Complex Scaling (CS)
+method, consisting of a given coordinate mapping <span class="math notranslate nohighlight">\(F\)</span> such that the
+usual position <span class="math notranslate nohighlight">\(x\)</span> is transformed into <span class="math notranslate nohighlight">\(F(x)\)</span>. A Hamiltonian
+therefore requires a coordinate mapping as argument. However, we are
+only interested in finding the usual solution of the Hamiltonian, <em>i.e.</em>
+we want <span class="math notranslate nohighlight">\(F(x) = x\)</span>. This is easily achieved by taking a so-called
+uniform coordinate mapping <span class="math notranslate nohighlight">\(F(x) = x e^{i \theta}\)</span> with
+<span class="math notranslate nohighlight">\(\theta = 0\)</span>. Such a coordinate mapping is defined in the first
+line of the following cell.</p>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li>The Laplacian filter is not the only one used, the gradient filter is
+also often required to define the virial (see below) and Hamiltonian
+operators, hence the plural for filters used above. The wavelet
+filters also require a so-called magic filter.</li>
+<li>Even though Daubechies wavelets filters are used as default, finite
+difference filters of order 2 and 8 are also provided in <code class="docutils literal notranslate"><span class="pre">SiegPy</span></code>
+(they are named <code class="docutils literal notranslate"><span class="pre">FD2_filters</span></code> and <code class="docutils literal notranslate"><span class="pre">FD8_filters</span></code> respectively). To
+use them, you only need to import them from <code class="docutils literal notranslate"><span class="pre">SiegPy</span></code> and specify
+the <code class="docutils literal notranslate"><span class="pre">filters</span></code> optional argument of the <code class="docutils literal notranslate"><span class="pre">Hamiltonian</span></code> class.</li>
+<li>More filters can easily be created thanks to the <code class="docutils literal notranslate"><span class="pre">Filters</span></code> and
+<code class="docutils literal notranslate"><span class="pre">WaveletFilters</span></code> class (imported with the command
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">siegpy.filters</span> <span class="pre">import</span> <span class="pre">Filters,</span> <span class="pre">WaveletFilters</span></code>)</li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Initialize the coordinate mapping $F: x \mapsto x$</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">UniformCoordMap</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Initialize the Hamiltonian</span>
+<span class="n">ham</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">pot</span><span class="p">,</span> <span class="n">cm</span><span class="p">)</span>
+<span class="c1"># To use another set of filters, uncomment the following lines:</span>
+<span class="c1"># from siegpy import FD2_filters</span>
+<span class="c1"># ham = Hamiltonian(pot, cm, filters=FD2_filters)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Solve-the-Hamiltonian">
+<h3>Solve the Hamiltonian<a class="headerlink" href="#Solve-the-Hamiltonian" title="Permalink to this headline">¶</a></h3>
+<p>You then only need to apply the <code class="docutils literal notranslate"><span class="pre">solve</span></code> method to the <code class="docutils literal notranslate"><span class="pre">Hamiltonian</span></code>
+instance <code class="docutils literal notranslate"><span class="pre">ham</span></code>, and this returns a <code class="docutils literal notranslate"><span class="pre">BasisSet</span></code> instance. It doesn’t
+get any simpler than this!</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">basis</span> <span class="o">=</span> <span class="n">ham</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">basis</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[4]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>siegpy.basisset.BasisSet
+</pre></div>
+</div>
+</div>
+<p>The basis set is made of <code class="docutils literal notranslate"><span class="pre">Eigenstate</span></code> instances. For example, the
+first state correspond to the bound state with the lowest energy:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">first_state</span> <span class="o">=</span> <span class="n">basis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">first_state</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">first_state</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+<span class="n">first_state</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;class &#39;siegpy.eigenstates.Eigenstate&#39;&gt;
+(-9.796086879584973+0j)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_12_1.png" src="../_images/notebooks_find_numerical_bound_and_continuum_12_1.png" />
+</div>
+</div>
+<p>The basis set is made of the same number of states as the dimension of
+the Hamiltonian matrix, that is the number of grid points.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">len</span><span class="p">(</span><span class="n">basis</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ham</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">xgrid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[6]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>True
+</pre></div>
+</div>
+</div>
+<p>The states are divided in two categories: the bound and continuum
+states:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">len</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">bounds</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">continuum</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[7]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>(7, 494)
+</pre></div>
+</div>
+</div>
+<p>The first category is made of the states with negative energy, while the
+other is made of the states of positive energy.</p>
+</div>
+</div>
+<div class="section" id="Create-plots-of-the-basis-set">
+<h2>Create plots of the basis set<a class="headerlink" href="#Create-plots-of-the-basis-set" title="Permalink to this headline">¶</a></h2>
+<p>We can plot the the energies of the basis set. The energy range is
+limited here to show that the spectrum of continuum states cannot be as
+regular as it was in the analytical case:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">basis</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_19_0.png" src="../_images/notebooks_find_numerical_bound_and_continuum_19_0.png" />
+</div>
+</div>
+<p>A virial value is attributed to each of the states in the basis set.
+This will allow us to discriminate Siegert states from the other types
+of states (the lower the virial, the more likely the state can be
+considered as a Siegert state). You can already see that bound states
+have virial values orders of magnitude below those of the continuum
+states.</p>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li>The eigenstates in the basis set are sorted by increasing virial
+value.</li>
+<li>See <a class="reference external" href="http://arxiv.org/abs/1504.00536">here</a> for a reference on how
+the virial operator is defined.</li>
+</ul>
+<p>A broader view is given here, where the wavenumbers of all the states
+are plotted:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">basis</span><span class="o">.</span><span class="n">plot_wavenumbers</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_22_0.png" src="../_images/notebooks_find_numerical_bound_and_continuum_22_0.png" />
+</div>
+</div>
+<p>The continuum states wavenumbers extend to large values along the real
+axis. It is interesting to note that the virial values of all the
+continuum states is order of magnitudes below that of bound states: the
+expectation values of the virial operator allow to separate Siegert
+states from other types of states. This virial operator actually
+measures if the position-momentum commutator, when applied to a given
+eigenstate <span class="math notranslate nohighlight">\(\varphi\)</span> is such that
+<span class="math notranslate nohighlight">\(\left\langle \varphi | [\hat{X}, \hat{P}] | \varphi \right\rangle = i \left\langle \varphi | \varphi \right\rangle\)</span>.
+This equality is verified numerically for bound states, but not for
+continuum states.</p>
+<p>The wavefunctions can also be plotted. You can set the number of states
+to plot with the <code class="docutils literal notranslate"><span class="pre">nstates</span></code> optional argument. You can also plot the
+potential by passing it as argument:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">basis</span><span class="o">.</span><span class="n">plot_wavefunctions</span><span class="p">(</span><span class="n">nstates</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_24_0.png" src="../_images/notebooks_find_numerical_bound_and_continuum_24_0.png" />
+</div>
+</div>
+<p>Here, the 9 first states correspond to the seven bound states of the
+potental and the first two continuum states, that are almost degenerate.</p>
+</div>
+<div class="section" id="Comparison-with-the-analytical-bound-states">
+<h2>Comparison with the analytical bound states<a class="headerlink" href="#Comparison-with-the-analytical-bound-states" title="Permalink to this headline">¶</a></h2>
+<p>The numerical and analytical bound states can be easily compared:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Create a basis set made of the numerical bound states only</span>
+<span class="n">numerical_bounds</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">bounds</span>
+<span class="c1"># Create a basis set made of the analytical bound states only</span>
+<span class="n">exact_bounds</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">bounds</span>
+<span class="n">exact_bounds</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">xgrid</span>  <span class="c1"># Use the same grid</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Loop over both basis set, to plot the bound states wavefunctions</span>
+<span class="c1"># and compare their energies</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">exact_bounds</span><span class="p">)):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Num. energy = </span><span class="si">{0.real}</span><span class="se">\n</span><span class="s2">Exact energy = </span><span class="si">{1.real}</span><span class="s2">&quot;</span>\
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">numerical_bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span>
+                    <span class="n">exact_bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numerical_bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
+             <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">numerical_bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Num. WF&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">exact_bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
+             <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">exact_bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exact WF&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_28_0.png" src="../_images/notebooks_find_numerical_bound_and_continuum_28_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_28_1.png" src="../_images/notebooks_find_numerical_bound_and_continuum_28_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_28_2.png" src="../_images/notebooks_find_numerical_bound_and_continuum_28_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_28_3.png" src="../_images/notebooks_find_numerical_bound_and_continuum_28_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_28_4.png" src="../_images/notebooks_find_numerical_bound_and_continuum_28_4.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_28_5.png" src="../_images/notebooks_find_numerical_bound_and_continuum_28_5.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_28_6.png" src="../_images/notebooks_find_numerical_bound_and_continuum_28_6.png" />
+</div>
+</div>
+<p>Except for a phase factor for some bound states, the numerical bound
+states wavefunctions coincide to the analytical ones. The energies are
+also in a correct agreement. Note that the agreement is worse for the
+highest energy bound states. This is due to the fact the grid is finite:
+extending it to larger values (<em>i.e.</em>, increasing <code class="docutils literal notranslate"><span class="pre">xmax</span></code>) and
+increasing the density of grid points would lead to an even better
+correspondence (and lower virials).</p>
+</div>
+<div class="section" id="Numerical-continuum-states">
+<h2>Numerical continuum states<a class="headerlink" href="#Numerical-continuum-states" title="Permalink to this headline">¶</a></h2>
+<p>Let us plot the lowest virial continuum states:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">numerical_continuum</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">continuum</span>
+<span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">numerical_continuum</span><span class="p">[:</span><span class="mi">10</span><span class="p">]:</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Num. energy = </span><span class="si">{0.real:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_31_0.png" src="../_images/notebooks_find_numerical_bound_and_continuum_31_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_31_1.png" src="../_images/notebooks_find_numerical_bound_and_continuum_31_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_31_2.png" src="../_images/notebooks_find_numerical_bound_and_continuum_31_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_31_3.png" src="../_images/notebooks_find_numerical_bound_and_continuum_31_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_31_4.png" src="../_images/notebooks_find_numerical_bound_and_continuum_31_4.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_31_5.png" src="../_images/notebooks_find_numerical_bound_and_continuum_31_5.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_31_6.png" src="../_images/notebooks_find_numerical_bound_and_continuum_31_6.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_31_7.png" src="../_images/notebooks_find_numerical_bound_and_continuum_31_7.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_31_8.png" src="../_images/notebooks_find_numerical_bound_and_continuum_31_8.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_find_numerical_bound_and_continuum_31_9.png" src="../_images/notebooks_find_numerical_bound_and_continuum_31_9.png" />
+</div>
+</div>
+<p>In general, the lowest the virial value, the lowest the continuum state
+energy, but there may be some exceptions. Just like the analytical
+continuum states, they exhibit a constant amplitude of the nodes in each
+region, the amplitudes being the same in region <span class="math notranslate nohighlight">\(I\)</span> and
+<span class="math notranslate nohighlight">\(III\)</span>.</p>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li>The oscillations of the wavefunctions in region <span class="math notranslate nohighlight">\(I\)</span> and
+<span class="math notranslate nohighlight">\(III\)</span> (outside of the potential) are associated to particle in
+a box: there is an increasing number of sinusoid oscillations in
+these regions (for a given number of nodes in region <span class="math notranslate nohighlight">\(II\)</span>). For
+example, the first and third continuum state are very similar in
+region <span class="math notranslate nohighlight">\(II\)</span>, but not in region <span class="math notranslate nohighlight">\(I\)</span> and <span class="math notranslate nohighlight">\(III\)</span>, where
+the latter wavefunction exhibit one more node in each of these
+regions. This comes from the fact that the grid is finite: it as if
+the finite square well potential was embedded in an larger, infinite
+square-well potential.</li>
+<li>Numerical continuum states go by pair, but they are not degenerate.
+See, for instance, the first and second states.</li>
+</ul>
+</div>
+<div class="section" id="Conclusion">
+<h2>Conclusion<a class="headerlink" href="#Conclusion" title="Permalink to this headline">¶</a></h2>
+<p>This notebook focused on presenting how to define a numerical
+Hamiltonian and how to solve it to find bound and continuum states. This
+requires the definition of a coordinate mapping <span class="math notranslate nohighlight">\(F\)</span>, that is
+simply <span class="math notranslate nohighlight">\(F: x \mapsto x\)</span> here. More refined coordinate mappings
+will be presented in other notebooks, allowing to find numerical
+resonant states of a numerical potential.</p>
+<p>We saw that the methods used to plot the energies, wavenumbers and
+wavefunctions in the analytical case can still be used.</p>
+<p>Finally, the bound states found are comparable to the the analytical
+ones.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="completeness_relation_numerical_bound_and_continuum.html" class="btn btn-neutral float-right" title="Completeness relation using numerical bound and continuum states" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="time_propagation_error_estimation.html" class="btn btn-neutral" title="Time propagation: error estimation of the Siegert states expansions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1017 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SWPEigenstates &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="General 1D Case" href="General1DCase.html" />
+    <link rel="prev" title="SWPotential" href="SWPotential.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_objects.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="1DSWPCase.html">1D Square-Well Potential Case</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="SWPBasisSet.html">SWPBasisSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SWPotential.html">SWPotential</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">SWPEigenstates</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="General1DCase.html">General 1D Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AbstractClasses.html">Abstract classes for further analytic cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Other.html">The Function class and its children</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api_objects.html">Code Documentation</a> &raquo;</li>
+        
+          <li><a href="1DSWPCase.html">1D Square-Well Potential Case</a> &raquo;</li>
+        
+      <li>SWPEigenstates</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/SWPEigenstates.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="module-siegpy.swpeigenstates">
+<span id="swpeigenstates"></span><h1>SWPEigenstates<a class="headerlink" href="#module-siegpy.swpeigenstates" title="Permalink to this headline">¶</a></h1>
+<p>Here are defined the classes allowing one to create and use the
+eigenstates of the 1-dimendional (1D) Square Well Potential (SWP)
+case.</p>
+<p>The two classes are:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#siegpy.swpeigenstates.SWPSiegert" title="siegpy.swpeigenstates.SWPSiegert"><code class="xref py py-class docutils literal notranslate"><span class="pre">SWPSiegert</span></code></a>, the class of Siegert
+states of the 1DSWP</li>
+<li><a class="reference internal" href="#siegpy.swpeigenstates.SWPContinuum" title="siegpy.swpeigenstates.SWPContinuum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SWPContinuum</span></code></a>, the class of Continuum
+states</li>
+</ul>
+<p>Both classes derive from the
+<a class="reference internal" href="#siegpy.swpeigenstates.SWPEigenstate" title="siegpy.swpeigenstates.SWPEigenstate"><code class="xref py py-class docutils literal notranslate"><span class="pre">SWPEigenstate</span></code></a> abstract class, that
+forces to redefine the scalar product so that it is computed
+analytically when possible.</p>
+<dl class="class">
+<dt id="siegpy.swpeigenstates.SWPEigenstate">
+<em class="property">class </em><code class="descclassname">siegpy.swpeigenstates.</code><code class="descname">SWPEigenstate</code><span class="sig-paren">(</span><em>k</em>, <em>parity</em>, <em>potential</em>, <em>grid</em>, <em>analytic</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="AnalyticEigenstates.html#siegpy.analyticeigenstates.AnalyticEigenstate" title="siegpy.analyticeigenstates.AnalyticEigenstate"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.analyticeigenstates.AnalyticEigenstate</span></code></a></p>
+<p>This is the base class for any eigenstate of the 1D Square-Well
+Potential (1DSWP). It defines some generic methods, while leaving
+some others to be defined by its subclasses, that are:</p>
+<ul class="simple">
+<li>the <a class="reference internal" href="#siegpy.swpeigenstates.SWPSiegert" title="siegpy.swpeigenstates.SWPSiegert"><code class="xref py py-class docutils literal notranslate"><span class="pre">SWPSiegert</span></code></a> class, defining the
+Siegert states of the Hamiltonian defined by the 1D SWP,</li>
+<li>the <a class="reference internal" href="#siegpy.swpeigenstates.SWPContinuum" title="siegpy.swpeigenstates.SWPContinuum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SWPContinuum</span></code></a> class, defining
+the continuum states of the same problem.</li>
+</ul>
+<p>In addition to those of an
+<a class="reference internal" href="AnalyticEigenstates.html#siegpy.analyticeigenstates.AnalyticEigenstate" title="siegpy.analyticeigenstates.AnalyticEigenstate"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalyticEigenstate</span></code></a>, one
+of the main characteristics of a SWPEigenstate is its parity
+(the eigenstate must be an even or odd function).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>k</strong> (<em>complex</em>) – Wavenumber of the state.</li>
+<li><strong>parity</strong> (<em>str</em>) – Parity of the state (<code class="docutils literal notranslate"><span class="pre">'e'</span></code> for even, <code class="docutils literal notranslate"><span class="pre">'o'</span></code> for odd).</li>
+<li><strong>potential</strong> (<a class="reference internal" href="SWPotential.html#siegpy.swpotential.SWPotential" title="siegpy.swpotential.SWPotential"><em>SWPotential</em></a>) – 1D Square-Well Potential giving rise to this eigenstate.</li>
+<li><strong>grid</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Discretization grid.</li>
+<li><strong>analytic</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the scalar products must be computed
+analytically.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">TypeError</span></code> – If the potential is not a <code class="xref py py-class docutils literal notranslate"><span class="pre">SWPotential</span></code> instance.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="siegpy.swpeigenstates.SWPEigenstate.parity">
+<code class="descname">parity</code><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate.parity" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Parity of the eigenstate (<code class="docutils literal notranslate"><span class="pre">'e'</span></code> if it is even or <code class="docutils literal notranslate"><span class="pre">'o'</span></code>
+if it is odd).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.swpeigenstates.SWPEigenstate.is_even">
+<code class="descname">is_even</code><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate.is_even" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the eigenstate is even.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.swpeigenstates.SWPEigenstate.is_odd">
+<code class="descname">is_odd</code><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate.is_odd" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the eigenstate is odd.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPEigenstate._compute_values">
+<code class="descname">_compute_values</code><span class="sig-paren">(</span><em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate._compute_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate._compute_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the wavefunction of the eigenstate discretized over the
+whole grid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Discretization grid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Wavefunction discretized over the grid.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPEigenstate._even_wf_1">
+<code class="descname">_even_wf_1</code><span class="sig-paren">(</span><em>grid_1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate._even_wf_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate._even_wf_1" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an asbtract method.</p>
+</div>
+<p>Evaluate the even eigenstate wavefunction over the grid points
+in region <em>I</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid_1</strong> (<em>numpy array</em>) – Grid in region <em>I</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Even eigenstate wavefunction discretized over the grid in
+region <em>I</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPEigenstate._even_wf_2">
+<code class="descname">_even_wf_2</code><span class="sig-paren">(</span><em>grid_2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate._even_wf_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate._even_wf_2" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an asbtract method.</p>
+</div>
+<p>Evaluate the even eigenstate wavefunction over the grid points
+in region <em>II</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid_2</strong> (<em>numpy array</em>) – Grid in region <em>II</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Even eigenstate wavefunction discretized over the grid in
+region <em>II</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPEigenstate._odd_wf_1">
+<code class="descname">_odd_wf_1</code><span class="sig-paren">(</span><em>grid_1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate._odd_wf_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate._odd_wf_1" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an asbtract method.</p>
+</div>
+<p>Evaluate the odd eigenstate wavefunction over the grid points
+in region <em>I</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid_1</strong> (<em>numpy array</em>) – Grid in region <em>I</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Odd eigenstate wavefunction discretized over the grid in
+region <em>I</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPEigenstate._odd_wf_2">
+<code class="descname">_odd_wf_2</code><span class="sig-paren">(</span><em>grid_2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate._odd_wf_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate._odd_wf_2" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an asbtract method.</p>
+</div>
+<p>Evaluate the odd eigenstate wavefunction over the grid points
+in region <em>II</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid_2</strong> (<em>numpy array</em>) – Grid in region <em>II</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Odd eigenstate wavefunction discretized over the grid in
+region <em>II</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPEigenstate.scal_prod">
+<code class="descname">scal_prod</code><span class="sig-paren">(</span><em>other</em>, <em>xlim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate.scal_prod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate.scal_prod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the scalar product of an eigenstate with another
+function. It can be computed analytically or not.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If it has to be computed analytically, a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>
+may be raised if the analytic scalar product with the test
+function <cite>other</cite> is analytically unknown (at present, only
+scalar products with Gaussian and rectangular functions are
+possible).</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>other</strong> (<a class="reference internal" href="Functions.html#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Another Function.</li>
+<li><strong>xlim</strong> (<em>tuple</em><em>(</em><em>float</em><em> or </em><em>int</em><em>, </em><em>float</em><em> or </em><em>int</em><em>)</em>) – Range of the x axis for the integration (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Result of the scalar product.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">complex</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">TypeError</span></code> – If the value of the analytical scalar product with the other
+function is unknown.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPEigenstate._scal_prod_with_Gaussian">
+<code class="descname">_scal_prod_with_Gaussian</code><span class="sig-paren">(</span><em>gaussian</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate._scal_prod_with_Gaussian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate._scal_prod_with_Gaussian" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gaussian</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><em>Gaussian</em></a>) – Gaussian function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Value of the analytic scalar product of an eigenstate with a
+Gaussian test function.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">complex or float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPEigenstate._scal_prod_with_Rectangular">
+<code class="descname">_scal_prod_with_Rectangular</code><span class="sig-paren">(</span><em>rect</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate._scal_prod_with_Rectangular"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate._scal_prod_with_Rectangular" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rect</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Rectangular" title="siegpy.functions.Rectangular"><em>Rectangular</em></a>) – Rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Value of the analytic scalar product of an eigenstate with a
+Rectangular test function.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">complex or float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPEigenstate._sp_R_1">
+<code class="descname">_sp_R_1</code><span class="sig-paren">(</span><em>rect</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate._sp_R_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate._sp_R_1" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an asbtract method.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rect</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Rectangular" title="siegpy.functions.Rectangular"><em>Rectangular</em></a>) – Rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Value of the analytic scalar product between an eigenstate
+and a rectangular function spreading over region <em>I</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float or complex</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPEigenstate._sp_R_2">
+<code class="descname">_sp_R_2</code><span class="sig-paren">(</span><em>rect</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate._sp_R_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate._sp_R_2" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rect</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Rectangular" title="siegpy.functions.Rectangular"><em>Rectangular</em></a>) – Rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Value of the analytic scalar product between an eigenstate
+and a rectangular function spreading over region <em>II</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float or complex</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPEigenstate._sp_R_2_other_cases">
+<code class="descname">_sp_R_2_other_cases</code><span class="sig-paren">(</span><em>rect</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate._sp_R_2_other_cases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate._sp_R_2_other_cases" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an asbtract method.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rect</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Rectangular" title="siegpy.functions.Rectangular"><em>Rectangular</em></a>) – Rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Value of the analytic scalar product of an eigenstate with a
+rectangular test function in region <em>II</em> when the result is
+not obviously 0.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">complex or float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPEigenstate._sp_R_3">
+<code class="descname">_sp_R_3</code><span class="sig-paren">(</span><em>rect</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPEigenstate._sp_R_3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPEigenstate._sp_R_3" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rect</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Rectangular" title="siegpy.functions.Rectangular"><em>Rectangular</em></a>) – Rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Value of the analytic scalar product of an eigenstate with a
+rectangular test function in region <em>III</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">complex or float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.swpeigenstates.SWPSiegert">
+<em class="property">class </em><code class="descclassname">siegpy.swpeigenstates.</code><code class="descname">SWPSiegert</code><span class="sig-paren">(</span><em>ks</em>, <em>parity</em>, <em>potential</em>, <em>grid=None</em>, <em>analytic=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPSiegert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPSiegert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.swpeigenstates.SWPEigenstate" title="siegpy.swpeigenstates.SWPEigenstate"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.swpeigenstates.SWPEigenstate</span></code></a>, <a class="reference internal" href="AnalyticEigenstates.html#siegpy.analyticeigenstates.AnalyticSiegert" title="siegpy.analyticeigenstates.AnalyticSiegert"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.analyticeigenstates.AnalyticSiegert</span></code></a></p>
+<p>This class defines a Siegert state in the case of the 1D SWP.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ks</strong> (<em>complex</em>) – Wavenumber of the Siegert state.</li>
+<li><strong>parity</strong> (<em>str</em>) – Parity of the Siegert state (<code class="docutils literal notranslate"><span class="pre">'e'</span></code> for even, <code class="docutils literal notranslate"><span class="pre">'o'</span></code> for
+odd).</li>
+<li><strong>potential</strong> (<a class="reference internal" href="SWPotential.html#siegpy.swpotential.SWPotential" title="siegpy.swpotential.SWPotential"><em>SWPotential</em></a>) – 1D Square-Well Potential giving rise to this eigenstate.</li>
+<li><strong>grid</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Discretization grid (optional).</li>
+<li><strong>analytic</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the scalar products must be computed
+analytically (default to <code class="docutils literal notranslate"><span class="pre">True</span></code>).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#siegpy.swpeigenstates.ParityError" title="siegpy.swpeigenstates.ParityError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ParityError</span></code></a> – If the parity is inconsistent with the Siegert state
+wavenumber.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPSiegert._even_wf_1">
+<code class="descname">_even_wf_1</code><span class="sig-paren">(</span><em>grid_1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPSiegert._even_wf_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPSiegert._even_wf_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the even Siegert state wavefunction over the grid
+points in region <em>I</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid_1</strong> (<em>numpy array</em>) – Grid in region <em>I</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Even Siegert state wavefunction discretized over the grid in
+region <em>I</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPSiegert._even_wf_2">
+<code class="descname">_even_wf_2</code><span class="sig-paren">(</span><em>grid_2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPSiegert._even_wf_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPSiegert._even_wf_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the even Siegert state wavefunction over the grid
+points in region <em>II</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid_2</strong> (<em>numpy array</em>) – Grid in region <em>II</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Even Siegert state wavefunction discretized over the grid in
+region <em>II</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPSiegert._odd_wf_1">
+<code class="descname">_odd_wf_1</code><span class="sig-paren">(</span><em>grid_1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPSiegert._odd_wf_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPSiegert._odd_wf_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the odd Siegert state wavefunction over the grid points
+in region <em>I</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid_1</strong> (<em>numpy array</em>) – Grid in region <em>I</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Odd Siegert state wavefunction discretized over the grid in
+region <em>I</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPSiegert._odd_wf_2">
+<code class="descname">_odd_wf_2</code><span class="sig-paren">(</span><em>grid_2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPSiegert._odd_wf_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPSiegert._odd_wf_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the odd Siegert state wavefunction over the grid points
+in region <em>II</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid_2</strong> (<em>numpy array</em>) – Grid in region <em>II</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Odd Siegert state wavefunction discretized over the grid in
+region <em>II</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPSiegert._sp_even_gauss">
+<code class="descname">_sp_even_gauss</code><span class="sig-paren">(</span><em>gaussian</em>, <em>expkp</em>, <em>expkm</em>, <em>expqp</em>, <em>expqm</em>, <em>zkpp</em>, <em>zkmp</em>, <em>zkpm</em>, <em>zkmm</em>, <em>zqpp</em>, <em>zqmp</em>, <em>zqpm</em>, <em>zqmm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPSiegert._sp_even_gauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPSiegert._sp_even_gauss" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gaussian</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><em>Gaussian</em></a>) – Gaussian function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Analytical value of the c-product between an even Siegert
+state and a Gaussian test function.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float or complex</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPSiegert._sp_odd_gauss">
+<code class="descname">_sp_odd_gauss</code><span class="sig-paren">(</span><em>gaussian</em>, <em>expkp</em>, <em>expkm</em>, <em>expqp</em>, <em>expqm</em>, <em>zkpp</em>, <em>zkmp</em>, <em>zkpm</em>, <em>zkmm</em>, <em>zqpp</em>, <em>zqmp</em>, <em>zqpm</em>, <em>zqmm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPSiegert._sp_odd_gauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPSiegert._sp_odd_gauss" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gaussian</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><em>Gaussian</em></a>) – Gaussian function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Analytical value of the c-product between an odd Siegert
+state and a Gaussian test function.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float or complex</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPSiegert._sp_R_1">
+<code class="descname">_sp_R_1</code><span class="sig-paren">(</span><em>rect</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPSiegert._sp_R_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPSiegert._sp_R_1" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rect</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Rectangular" title="siegpy.functions.Rectangular"><em>Rectangular</em></a>) – Rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Value of the analytic scalar product of a Siegert state with
+a rectangular function spreading over region <em>I</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">complex or float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPSiegert._sp_R_2_other_cases">
+<code class="descname">_sp_R_2_other_cases</code><span class="sig-paren">(</span><em>rect</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPSiegert._sp_R_2_other_cases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPSiegert._sp_R_2_other_cases" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rect</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Rectangular" title="siegpy.functions.Rectangular"><em>Rectangular</em></a>) – Rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Value of the analytic scalar product of a Siegert state with
+a rectangular function spreading over region <em>II</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">complex or float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPSiegert.MLE_strength_function">
+<code class="descname">MLE_strength_function</code><span class="sig-paren">(</span><em>test</em>, <em>kgrid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPSiegert.MLE_strength_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPSiegert.MLE_strength_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the contribution of a Siegert state to the
+Mittag-Leffler expansion of the strength function, for a given
+test function discretized on a grid of wavenumbers <code class="docutils literal notranslate"><span class="pre">kgrid</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>test</strong> (<em>Wavefunction</em>) – Test function.</li>
+<li><strong>kgrid</strong> (<em>numpy array</em>) – Discretization grid of the wavenumber.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Contribution of the Siegert state to the strength function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.swpeigenstates.SWPContinuum">
+<em class="property">class </em><code class="descclassname">siegpy.swpeigenstates.</code><code class="descname">SWPContinuum</code><span class="sig-paren">(</span><em>k</em>, <em>parity</em>, <em>potential</em>, <em>grid=None</em>, <em>analytic=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPContinuum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPContinuum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.swpeigenstates.SWPEigenstate" title="siegpy.swpeigenstates.SWPEigenstate"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.swpeigenstates.SWPEigenstate</span></code></a>, <a class="reference internal" href="AnalyticEigenstates.html#siegpy.analyticeigenstates.AnalyticContinuum" title="siegpy.analyticeigenstates.AnalyticContinuum"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.analyticeigenstates.AnalyticContinuum</span></code></a></p>
+<p>Class defining a continuum state of the 1D Square-Well potential.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>k</strong> (<em>complex</em>) – Wavenumber of the continuum state.</li>
+<li><strong>parity</strong> (<em>str</em>) – Parity of the continuum state (<code class="docutils literal notranslate"><span class="pre">'e'</span></code> for even, <code class="docutils literal notranslate"><span class="pre">'o'</span></code> for
+odd).</li>
+<li><strong>potential</strong> (<a class="reference internal" href="SWPotential.html#siegpy.swpotential.SWPotential" title="siegpy.swpotential.SWPotential"><em>SWPotential</em></a>) – 1D Square-Well Potential giving rise to this eigenstate.</li>
+<li><strong>grid</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Discretization grid (optional).</li>
+<li><strong>analytic</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the scalar products must be computed
+analytically (default to <code class="docutils literal notranslate"><span class="pre">True</span></code>).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#siegpy.swpeigenstates.ParityError" title="siegpy.swpeigenstates.ParityError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ParityError</span></code></a> – If the parity is not <code class="docutils literal notranslate"><span class="pre">'e'</span></code> (even) or <code class="docutils literal notranslate"><span class="pre">'o'</span></code> (odd).</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPContinuum._even_wf_1">
+<code class="descname">_even_wf_1</code><span class="sig-paren">(</span><em>grid_1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPContinuum._even_wf_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPContinuum._even_wf_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the even eigenstate wavefunction over the grid points
+in region <em>I</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid_1</strong> (<em>numpy array</em>) – Grid in region <em>I</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Even eigenstate wavefunction discretized over the grid in
+region <em>I</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPContinuum._even_wf_2">
+<code class="descname">_even_wf_2</code><span class="sig-paren">(</span><em>grid_2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPContinuum._even_wf_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPContinuum._even_wf_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the even Siegert state wavefunction over the grid
+points in region <em>II</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid_2</strong> (<em>numpy array</em>) – Grid in region <em>II</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Even Siegert state wavefunction discretized over the grid in
+region <em>II</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPContinuum._odd_wf_1">
+<code class="descname">_odd_wf_1</code><span class="sig-paren">(</span><em>grid_1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPContinuum._odd_wf_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPContinuum._odd_wf_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the odd eigenstate wavefunction over the grid points
+in region <em>I</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid_1</strong> (<em>numpy array</em>) – Grid in region <em>I</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Odd eigenstate wavefunction discretized over the grid in
+region <em>I</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPContinuum._odd_wf_2">
+<code class="descname">_odd_wf_2</code><span class="sig-paren">(</span><em>grid_2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPContinuum._odd_wf_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPContinuum._odd_wf_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the odd Siegert state wavefunction over the grid
+points in region <em>II</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid_2</strong> (<em>numpy array</em>) – Grid in region <em>II</em>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Odd Siegert state wavefunction discretized over the grid in
+region <em>II</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPContinuum._sp_even_gauss">
+<code class="descname">_sp_even_gauss</code><span class="sig-paren">(</span><em>gaussian</em>, <em>expkp</em>, <em>expkm</em>, <em>expqp</em>, <em>expqm</em>, <em>zkpp</em>, <em>zkmp</em>, <em>zkpm</em>, <em>zkmm</em>, <em>zqpp</em>, <em>zqmp</em>, <em>zqpm</em>, <em>zqmm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPContinuum._sp_even_gauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPContinuum._sp_even_gauss" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gaussian</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><em>Gaussian</em></a>) – Gaussian function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Analytical value of the c-product between an even continuum
+state and a Gaussian test function.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float or complex</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPContinuum._sp_odd_gauss">
+<code class="descname">_sp_odd_gauss</code><span class="sig-paren">(</span><em>gaussian</em>, <em>expkp</em>, <em>expkm</em>, <em>expqp</em>, <em>expqm</em>, <em>zkpp</em>, <em>zkmp</em>, <em>zkpm</em>, <em>zkmm</em>, <em>zqpp</em>, <em>zqmp</em>, <em>zqpm</em>, <em>zqmm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPContinuum._sp_odd_gauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPContinuum._sp_odd_gauss" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gaussian</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><em>Gaussian</em></a>) – Gaussian function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Analytical value of the c-product between an odd continuum
+state and a Gaussian test function.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float or complex</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPContinuum._sp_R_1">
+<code class="descname">_sp_R_1</code><span class="sig-paren">(</span><em>rect</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPContinuum._sp_R_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPContinuum._sp_R_1" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rect</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Rectangular" title="siegpy.functions.Rectangular"><em>Rectangular</em></a>) – Rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Value of the analytic scalar product of a continuum state
+with a Rectangular function spreading over region <em>I</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">complex or float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.swpeigenstates.SWPContinuum._sp_R_2_other_cases">
+<code class="descname">_sp_R_2_other_cases</code><span class="sig-paren">(</span><em>rect</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#SWPContinuum._sp_R_2_other_cases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.SWPContinuum._sp_R_2_other_cases" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rect</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Rectangular" title="siegpy.functions.Rectangular"><em>Rectangular</em></a>) – Rectangular function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Value of the analytic scalar product of an even continuum
+state with a Rectangular function spreading over region
+<em>II</em>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">complex or float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="siegpy.swpeigenstates.ParityError">
+<em class="property">exception </em><code class="descclassname">siegpy.swpeigenstates.</code><code class="descname">ParityError</code><a class="reference internal" href="_modules/siegpy/swpeigenstates.html#ParityError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.swpeigenstates.ParityError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error thrown if the parity of an eigenstate is incorrect.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="General1DCase.html" class="btn btn-neutral float-right" title="General 1D Case" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="SWPotential.html" class="btn btn-neutral" title="SWPotential" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

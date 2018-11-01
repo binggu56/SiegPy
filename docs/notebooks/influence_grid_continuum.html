@@ -1,0 +1,1087 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Influence of the grid for continuum states &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Influence of the grid for Siegert states" href="influence_grid_siegerts.html" />
+    <link rel="prev" title="Influence of the coordinate mapping parameters: case study of the ErfKGCoordMap" href="influence_coordMap_siegerts_1.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../notebooks.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-analytical-case">1D Square-Well Potential: the analytical case</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-numerical-case">1D Square-Well Potential: the numerical case</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="find_numerical_bound_and_continuum.html">Numerical potential: bound and continuum states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="completeness_relation_numerical_bound_and_continuum.html">Completeness relation using numerical bound and continuum states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="find_numerical_Siegert.html">Numerical potential: Siegert states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="completeness_relation_numerical_Siegert.html">Completeness relation with numerical Siegert states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="influence_virials_siegerts.html">Virial operators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="influence_filters_siegerts.html">Influence of the filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="influence_coordMap_siegerts_1.html">Influence of the coordinate mapping parameters: case study of the ErfKGCoordMap</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Influence of the grid for continuum states</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Initialization">Initialization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Influence-of-the-grid-step">Influence of the grid step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Influence-of-the-grid-extension">Influence of the grid extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="influence_grid_siegerts.html">Influence of the grid for Siegert states</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#other-numerical-potentials">Other numerical potentials</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../notebooks.html">Tutorial</a> &raquo;</li>
+        
+      <li>Influence of the grid for continuum states</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/influence_grid_continuum.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Influence-of-the-grid-for-continuum-states">
+<h1>Influence of the grid for continuum states<a class="headerlink" href="#Influence-of-the-grid-for-continuum-states" title="Permalink to this headline">¶</a></h1>
+<p>Last but not least, the grid is a very important parameter when it comes
+to find the eigenstates of a Hamiltonian matrix. Two parameters
+characterize a 1D grid: the grid spacing (the distance between two grid
+points) and the grid extension (the range spanned by the
+<span class="math notranslate nohighlight">\(x\)</span>-axis). Let us find out how these parameters influence the
+continuum and bound states found numerically.</p>
+<div class="section" id="Initialization">
+<h2>Initialization<a class="headerlink" href="#Initialization" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Import-some-modules-and-classes">
+<h3>Import some modules and classes<a class="headerlink" href="#Import-some-modules-and-classes" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">siegpy</span> <span class="k">import</span> <span class="p">(</span><span class="n">Hamiltonian</span><span class="p">,</span> <span class="n">SWPotential</span><span class="p">,</span> <span class="n">UniformCoordMap</span><span class="p">,</span>
+                    <span class="n">SWPBasisSet</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Define-a-potential">
+<h3>Define a potential<a class="headerlink" href="#Define-a-potential" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">siegerts</span> <span class="o">=</span> <span class="n">SWPBasisSet</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;siegerts.dat&quot;</span><span class="p">)</span>
+<span class="n">pot</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">potential</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Influence-of-the-grid-step">
+<h2>Influence of the grid step<a class="headerlink" href="#Influence-of-the-grid-step" title="Permalink to this headline">¶</a></h2>
+<p>Having two parameters to consider, we’ll vary one while keeping the
+other constant. Let us begin with the grid step. The grid extension
+being constant, this amounts to using different number of grid points.</p>
+<div class="section" id="Define-the-same-potential-with-multiple-grid-steps">
+<h3>Define the same potential with multiple grid steps<a class="headerlink" href="#Define-the-same-potential-with-multiple-grid-steps" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Set the grid extension</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mf">7.5</span>
+<span class="c1"># Set the various grids</span>
+<span class="n">factors</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">]</span>
+<span class="n">npts_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">*</span><span class="mi">50</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">factors</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;npts_list:&#39;</span><span class="p">,</span> <span class="n">npts_list</span><span class="p">)</span>
+<span class="n">xgrids</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">npts</span><span class="p">)</span> <span class="k">for</span> <span class="n">npts</span> <span class="ow">in</span> <span class="n">npts_list</span><span class="p">]</span>
+<span class="c1"># List the grid steps</span>
+<span class="n">hx_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">xgrids</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;grid spacings:&quot;</span><span class="p">,</span> <span class="n">hx_list</span><span class="p">)</span>
+<span class="c1"># Discretize the potential over the multiple grid steps</span>
+<span class="n">pots</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">xgrid</span> <span class="ow">in</span> <span class="n">xgrids</span><span class="p">:</span>
+    <span class="n">pots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">pot</span><span class="p">))</span>
+    <span class="n">pots</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">xgrid</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+npts_list: [51, 101, 201, 401, 801]
+grid spacings: [0.29999999999999982, 0.15000000000000036, 0.075000000000000178, 0.037499999999999645, 0.018749999999999822]
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Define-the-coordinate-mapping">
+<h3>Define the coordinate mapping<a class="headerlink" href="#Define-the-coordinate-mapping" title="Permalink to this headline">¶</a></h3>
+<p>The same coordinate mapping will be used throughout this notebook.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">UniformCoordMap</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Define-the-Hamiltonians">
+<h3>Define the Hamiltonians<a class="headerlink" href="#Define-the-Hamiltonians" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">hams_hx</span> <span class="o">=</span> <span class="p">[</span><span class="n">Hamiltonian</span><span class="p">(</span><span class="n">pot</span><span class="p">,</span> <span class="n">cm</span><span class="p">)</span> <span class="k">for</span> <span class="n">pot</span> <span class="ow">in</span> <span class="n">pots</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Solve-the-Hamiltonians">
+<h3>Solve the Hamiltonians<a class="headerlink" href="#Solve-the-Hamiltonians" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">basissets_hx</span> <span class="o">=</span> <span class="p">[</span><span class="n">ham</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span> <span class="k">for</span> <span class="n">ham</span> <span class="ow">in</span> <span class="n">hams_hx</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Compare-the-spectra">
+<h3>Compare the spectra<a class="headerlink" href="#Compare-the-spectra" title="Permalink to this headline">¶</a></h3>
+<p>As usual, the easiest way is to plot the energies of the eigenstates and
+their virial values:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">basis</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">basissets_hx</span><span class="p">):</span>
+    <span class="n">tit</span> <span class="o">=</span> <span class="s2">&quot;$h_x$ = </span><span class="si">{:.3e}</span><span class="s2">; npts = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hx_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">basis</span><span class="p">))</span>
+    <span class="n">basis</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">tit</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_16_0.png" src="../_images/notebooks_influence_grid_continuum_16_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_16_1.png" src="../_images/notebooks_influence_grid_continuum_16_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_16_2.png" src="../_images/notebooks_influence_grid_continuum_16_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_16_3.png" src="../_images/notebooks_influence_grid_continuum_16_3.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_16_4.png" src="../_images/notebooks_influence_grid_continuum_16_4.png" />
+</div>
+</div>
+<p>By decreasing the grid step (<em>i.e.</em>, increasing the number of grid
+points), the energy range of continuum states increases, and so does the
+virial values range (lower virial values are obtained if more grid
+points are used, <em>i.e.</em> the quality of the eigenstates is better).</p>
+<p>Let us zoom in close to the 0 energy, to have a clearer view:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">basis</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">basissets_hx</span><span class="p">):</span>
+    <span class="n">tit</span> <span class="o">=</span> <span class="s2">&quot;$h_x$ = </span><span class="si">{:.3e}</span><span class="s2">; npts = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hx_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">basis</span><span class="p">))</span>
+    <span class="n">basis</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="n">tit</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_18_0.png" src="../_images/notebooks_influence_grid_continuum_18_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_18_1.png" src="../_images/notebooks_influence_grid_continuum_18_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_18_2.png" src="../_images/notebooks_influence_grid_continuum_18_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_18_3.png" src="../_images/notebooks_influence_grid_continuum_18_3.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_18_4.png" src="../_images/notebooks_influence_grid_continuum_18_4.png" />
+</div>
+</div>
+<p>This shows that the spectrum in this range is slighty modified by the
+grid spacing: the results are almost converged in this energy range,
+even for the lowest number of grid points. Still, it requires much more
+grid points to have good enough virial values to have a good
+discrimination of the bound and continuum states.</p>
+<p>Finally, the next cell shows the convergence of some low energy bound
+and continuum states as a function of the decreasing grid spacing:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Show convergence of bound states energies</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bound state n° </span><span class="si">{}</span><span class="s2">:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">basis</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">basissets_hx</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hx = </span><span class="si">{:.3e}</span><span class="s2">; E = </span><span class="si">{:.4e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hx_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">basis</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">real</span><span class="p">))</span>
+<span class="c1"># Show convergence of continuum states energies</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Continuum state n° </span><span class="si">{}</span><span class="s2">:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">basis</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">basissets_hx</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hx = </span><span class="si">{:.3e}</span><span class="s2">; E = </span><span class="si">{:.4e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hx_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">basis</span><span class="o">.</span><span class="n">continuum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">real</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Bound state n° 1:
+hx = 3.000e-01; E = -9.8030e+00
+hx = 1.500e-01; E = -9.7871e+00
+hx = 7.500e-02; E = -9.7926e+00
+hx = 3.750e-02; E = -9.7955e+00
+hx = 1.875e-02; E = -9.7939e+00
+Bound state n° 2:
+hx = 3.000e-01; E = -9.2128e+00
+hx = 1.500e-01; E = -9.1499e+00
+hx = 7.500e-02; E = -9.1720e+00
+hx = 3.750e-02; E = -9.1836e+00
+hx = 1.875e-02; E = -9.1771e+00
+Bound state n° 3:
+hx = 3.000e-01; E = -8.2322e+00
+hx = 1.500e-01; E = -8.0936e+00
+hx = 7.500e-02; E = -8.1434e+00
+hx = 3.750e-02; E = -8.1694e+00
+hx = 1.875e-02; E = -8.1549e+00
+Bound state n° 4:
+hx = 3.000e-01; E = -6.8672e+00
+hx = 1.500e-01; E = -6.6289e+00
+hx = 7.500e-02; E = -6.7175e+00
+hx = 3.750e-02; E = -6.7633e+00
+hx = 1.875e-02; E = -6.7381e+00
+Bound state n° 5:
+hx = 3.000e-01; E = -5.1297e+00
+hx = 1.500e-01; E = -4.7772e+00
+hx = 7.500e-02; E = -4.9152e+00
+hx = 3.750e-02; E = -4.9856e+00
+hx = 1.875e-02; E = -4.9474e+00
+Bound state n° 6:
+hx = 3.000e-01; E = -3.0481e+00
+hx = 1.500e-01; E = -2.5889e+00
+hx = 7.500e-02; E = -2.7830e+00
+hx = 3.750e-02; E = -2.8806e+00
+hx = 1.875e-02; E = -2.8288e+00
+Bound state n° 7:
+hx = 3.000e-01; E = -7.3081e-01
+hx = 1.500e-01; E = -2.8027e-01
+hx = 7.500e-02; E = -4.9385e-01
+hx = 3.750e-02; E = -6.0378e-01
+hx = 1.875e-02; E = -5.4730e-01
+Continuum state n° 1:
+hx = 3.000e-01; E = 1.5328e-01
+hx = 1.500e-01; E = 1.6071e-01
+hx = 7.500e-02; E = 1.6387e-01
+hx = 3.750e-02; E = 1.6528e-01
+hx = 1.875e-02; E = 1.6652e-01
+Continuum state n° 11:
+hx = 3.000e-01; E = 4.2292e+00
+hx = 1.500e-01; E = 4.4525e+00
+hx = 7.500e-02; E = 4.5239e+00
+hx = 3.750e-02; E = 5.4710e+00
+hx = 1.875e-02; E = 5.5180e+00
+Continuum state n° 21:
+hx = 3.000e-01; E = 1.3607e+01
+hx = 1.500e-01; E = 1.5289e+01
+hx = 7.500e-02; E = 1.5444e+01
+hx = 3.750e-02; E = 1.5531e+01
+hx = 1.875e-02; E = 1.5622e+01
+Continuum state n° 31:
+hx = 3.000e-01; E = 2.9786e+01
+hx = 1.500e-01; E = 2.9469e+01
+hx = 7.500e-02; E = 2.8429e+01
+hx = 3.750e-02; E = 2.8670e+01
+hx = 1.875e-02; E = 2.8809e+01
+</pre></div></div>
+</div>
+</div>
+</div>
+<div class="section" id="Influence-of-the-grid-extension">
+<h2>Influence of the grid extension<a class="headerlink" href="#Influence-of-the-grid-extension" title="Permalink to this headline">¶</a></h2>
+<p>Let us now review how the grid extension influences the eigenstates.</p>
+<div class="section" id="Define-the-same-potential-with-multiple-grid-extensions">
+<h3>Define the same potential with multiple grid extensions<a class="headerlink" href="#Define-the-same-potential-with-multiple-grid-extensions" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Set the grid spacing</span>
+<span class="n">hx</span> <span class="o">=</span> <span class="mf">0.0375</span>
+<span class="c1"># Set the various grids via the grid extension</span>
+<span class="n">factors</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">xmax_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">*</span><span class="mi">100</span><span class="o">*</span><span class="n">hx</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">factors</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;xmax_list:&#39;</span><span class="p">,</span> <span class="n">xmax_list</span><span class="p">)</span>
+<span class="n">xgrids</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="o">+</span><span class="n">hx</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">hx</span><span class="p">)</span> <span class="k">for</span> <span class="n">xmax</span> <span class="ow">in</span> <span class="n">xmax_list</span><span class="p">]</span>
+<span class="c1"># List the number of points</span>
+<span class="n">npts_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">xgrids</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;npts_list:&#39;</span><span class="p">,</span> <span class="n">npts_list</span><span class="p">)</span>
+<span class="c1"># Discretize the potential over the multiple grid steps</span>
+<span class="n">pots</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">xgrid</span> <span class="ow">in</span> <span class="n">xgrids</span><span class="p">:</span>
+    <span class="n">pots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">pot</span><span class="p">))</span>
+    <span class="n">pots</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">xgrid</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+xmax_list: [3.75, 7.5, 11.25, 15.0, 18.75]
+npts_list: [201, 401, 601, 801, 1001]
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Define-the-Hamiltonians">
+<h3>Define the Hamiltonians<a class="headerlink" href="#Define-the-Hamiltonians" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># The same uniform coordinate mapping is used</span>
+<span class="n">hams_xmax</span> <span class="o">=</span> <span class="p">[</span><span class="n">Hamiltonian</span><span class="p">(</span><span class="n">pot</span><span class="p">,</span> <span class="n">cm</span><span class="p">)</span> <span class="k">for</span> <span class="n">pot</span> <span class="ow">in</span> <span class="n">pots</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Solve-the-Hamiltonians">
+<h3>Solve the Hamiltonians<a class="headerlink" href="#Solve-the-Hamiltonians" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">basissets_xmax</span> <span class="o">=</span> <span class="p">[</span><span class="n">ham</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span> <span class="k">for</span> <span class="n">ham</span> <span class="ow">in</span> <span class="n">hams_xmax</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Compare-the-spectra">
+<h3>Compare the spectra<a class="headerlink" href="#Compare-the-spectra" title="Permalink to this headline">¶</a></h3>
+<p>As usual, the easiest way is to plot the energies of the eigenstates and
+their virial values:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">basis</span> <span class="ow">in</span> <span class="n">basissets_xmax</span><span class="p">:</span>
+    <span class="n">tit</span> <span class="o">=</span> <span class="s2">&quot;xmax = </span><span class="si">{:.2f}</span><span class="s2">; npts = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">basis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">basis</span><span class="p">))</span>
+    <span class="n">basis</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">tit</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_29_0.png" src="../_images/notebooks_influence_grid_continuum_29_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_29_1.png" src="../_images/notebooks_influence_grid_continuum_29_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_29_2.png" src="../_images/notebooks_influence_grid_continuum_29_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_29_3.png" src="../_images/notebooks_influence_grid_continuum_29_3.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_29_4.png" src="../_images/notebooks_influence_grid_continuum_29_4.png" />
+</div>
+</div>
+<p>By increasing the grid extension while keeping the same grid step, the
+energy range of continuum states increases and the virial values range
+is not modified, even though the number of eigenstates is larger.</p>
+<p>Let us zoom in close to the 0 energy, to have a clearer view:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">basis</span> <span class="ow">in</span> <span class="n">basissets_xmax</span><span class="p">:</span>
+    <span class="n">tit</span> <span class="o">=</span> <span class="s2">&quot;xmax = </span><span class="si">{:.2f}</span><span class="s2">; npts = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">basis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">basis</span><span class="p">))</span>
+    <span class="n">basis</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="n">tit</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_31_0.png" src="../_images/notebooks_influence_grid_continuum_31_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_31_1.png" src="../_images/notebooks_influence_grid_continuum_31_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_31_2.png" src="../_images/notebooks_influence_grid_continuum_31_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_31_3.png" src="../_images/notebooks_influence_grid_continuum_31_3.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_influence_grid_continuum_31_4.png" src="../_images/notebooks_influence_grid_continuum_31_4.png" />
+</div>
+</div>
+<p>These plots show that the spectrum in this range is largely modified by
+the grid extension: there is a convergence of the bound states, but not
+of the continuum states. The latter fact is known as the continuum
+collapse, and is related to the confinement (<em>i.e.</em>, it is as if the 1D
+square-well potential was embedded inside a larger, infinite square well
+potential). It causes trouble whenever one is interested in having a
+finer sampling of the high energy spectrum of continuum states, because
+using a larger grid extension causes an accumulation above the threshold
+energy (here 0). This is actually one motivation for using the Siegert
+states instead of continuum states: thanks to the smooth exterior
+complex scaling, there is no need to largely increase the grid
+extension, because then the resonant states resemble bound states. This
+will be presented in the next notebook.</p>
+<p>The bound states being normalizable, then can however easily converge
+with respect to the grid extension: it has to be large enough to
+accomodate for the exponential tails of the highest energy bound states.</p>
+<p>These facts are evidenced by the next cells:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Show convergence of bound states energies</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bound state n° </span><span class="si">{}</span><span class="s2">:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">basis</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">basissets_xmax</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;xmax = </span><span class="si">{:.2f}</span><span class="s2">; E = </span><span class="si">{:.4e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xmax_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">basis</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">real</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Bound state n° 1:
+xmax = 3.75; E = -9.7955e+00
+xmax = 7.50; E = -9.7955e+00
+xmax = 11.25; E = -9.7955e+00
+xmax = 15.00; E = -9.7955e+00
+xmax = 18.75; E = -9.7955e+00
+Bound state n° 2:
+xmax = 3.75; E = -9.1836e+00
+xmax = 7.50; E = -9.1836e+00
+xmax = 11.25; E = -9.1836e+00
+xmax = 15.00; E = -9.1836e+00
+xmax = 18.75; E = -9.1836e+00
+Bound state n° 3:
+xmax = 3.75; E = -8.1694e+00
+xmax = 7.50; E = -8.1694e+00
+xmax = 11.25; E = -8.1694e+00
+xmax = 15.00; E = -8.1694e+00
+xmax = 18.75; E = -8.1694e+00
+Bound state n° 4:
+xmax = 3.75; E = -6.7633e+00
+xmax = 7.50; E = -6.7633e+00
+xmax = 11.25; E = -6.7633e+00
+xmax = 15.00; E = -6.7633e+00
+xmax = 18.75; E = -6.7633e+00
+Bound state n° 5:
+xmax = 3.75; E = -4.9855e+00
+xmax = 7.50; E = -4.9856e+00
+xmax = 11.25; E = -4.9856e+00
+xmax = 15.00; E = -4.9856e+00
+xmax = 18.75; E = -4.9856e+00
+Bound state n° 6:
+xmax = 3.75; E = -2.8798e+00
+xmax = 7.50; E = -2.8806e+00
+xmax = 11.25; E = -2.8806e+00
+xmax = 15.00; E = -2.8806e+00
+xmax = 18.75; E = -2.8806e+00
+Bound state n° 7:
+xmax = 3.75; E = -5.8033e-01
+xmax = 7.50; E = -6.0378e-01
+xmax = 11.25; E = -6.0378e-01
+xmax = 15.00; E = -6.0378e-01
+xmax = 18.75; E = -6.0378e-01
+</pre></div></div>
+</div>
+<p>The convergence of the bound states is easier for the ones of lowest
+energy, because they require a smaller grid extension to accomodate for
+their exponential tail.</p>
+<p>The situation is completely for the continuum states:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Show convergence of continuum states energies</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Continuum state n° </span><span class="si">{}</span><span class="s2">:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">basis</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">basissets_xmax</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;xmax = </span><span class="si">{:.2f}</span><span class="s2">; E = </span><span class="si">{:.4e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xmax_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">basis</span><span class="o">.</span><span class="n">continuum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+        <span class="n">show_plots</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Set to True to show plots instead</span>
+        <span class="k">if</span> <span class="n">show_plots</span><span class="p">:</span>
+            <span class="n">basis</span><span class="o">.</span><span class="n">continuum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Continuum state n° 1:
+xmax = 3.75; E = 1.2714e+00
+xmax = 7.50; E = 1.6528e-01
+xmax = 11.25; E = 5.8330e-02
+xmax = 15.00; E = 2.9455e-02
+xmax = 18.75; E = 1.7712e-02
+Continuum state n° 11:
+xmax = 3.75; E = 1.9194e+01
+xmax = 7.50; E = 5.4710e+00
+xmax = 11.25; E = 1.8837e+00
+xmax = 15.00; E = 1.0282e+00
+xmax = 18.75; E = 6.2960e-01
+Continuum state n° 21:
+xmax = 3.75; E = 6.1785e+01
+xmax = 7.50; E = 1.5531e+01
+xmax = 11.25; E = 6.4879e+00
+xmax = 15.00; E = 3.1642e+00
+xmax = 18.75; E = 1.8083e+00
+Continuum state n° 31:
+xmax = 3.75; E = 1.1872e+02
+xmax = 7.50; E = 2.8670e+01
+xmax = 11.25; E = 1.2183e+01
+xmax = 15.00; E = 7.0408e+00
+xmax = 18.75; E = 4.1276e+00
+</pre></div></div>
+</div>
+<p>The continuum collapse is clearly evidenced here: the energy of the
+<span class="math notranslate nohighlight">\(n\)</span>-th continuum state decreases when the grid extension
+increases. By plotting the wavefunctions of these states, one could see
+that the wavefunctions of these states are not always related to
+eachother.</p>
+</div>
+</div>
+<div class="section" id="Conclusion">
+<h2>Conclusion<a class="headerlink" href="#Conclusion" title="Permalink to this headline">¶</a></h2>
+<p>The two grid step and the grid extension are the two parameters to
+consider to reach a convergence of the numerical eigenstates (at least
+when using grids where the points are not evenly distributed). They have
+two distincts influence on the obtained spectra:</p>
+<ul class="simple">
+<li>Decreasing the grid step allows for states of better quality (<em>i.e.</em>,
+of lower virial), and the bound and continuum states converge to a
+given value, even though the convergence is rather slow (<em>e.g.</em>, it
+may require a large number of grid points). It also allows to define
+continuum states of higher energy.</li>
+<li>Increasing the grid extension allows for a convergence of the bound
+states only (the grid extension must be large enough for their
+exponential tail to vanish), but not for the continuum states, where
+an accumulation of states above the zero energy is observed (known as
+the continuum collapse) while leaving the range of energies and
+virial values unchanged. This means that there is no need to increase
+the grid extension if the bound states are converged with respect to
+this parameter and if the discretization of the continuum states
+allows to reach high enough energies with a sufficient precision.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="influence_grid_siegerts.html" class="btn btn-neutral float-right" title="Influence of the grid for Siegert states" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="influence_coordMap_siegerts_1.html" class="btn btn-neutral" title="Influence of the coordinate mapping parameters: case study of the ErfKGCoordMap" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

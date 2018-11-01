@@ -1,0 +1,852 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Symbolic Potential &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CoordMap" href="CoordMap.html" />
+    <link rel="prev" title="Potential" href="Potential.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_objects.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1DSWPCase.html">1D Square-Well Potential Case</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="General1DCase.html">General 1D Case</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="BasisSet.html">BasisSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Potential.html">Potential</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Symbolic Potential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CoordMap.html">CoordMap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Hamiltonian.html">Hamiltonian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Eigenstate.html">Eigenstate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SmoothFunctions.html">SmoothFunction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Filters.html">Filters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="AbstractClasses.html">Abstract classes for further analytic cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Other.html">The Function class and its children</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api_objects.html">Code Documentation</a> &raquo;</li>
+        
+          <li><a href="General1DCase.html">General 1D Case</a> &raquo;</li>
+        
+      <li>Symbolic Potential</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/SymbolicPotentials.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="module-siegpy.symbolicpotentials">
+<span id="symbolic-potential"></span><h1>Symbolic Potential<a class="headerlink" href="#module-siegpy.symbolicpotentials" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="#siegpy.symbolicpotentials.SymbolicPotential" title="siegpy.symbolicpotentials.SymbolicPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">SymbolicPotential</span></code></a> class is defined below, along with some
+child classes:</p>
+<ul class="simple">
+<li>the <a class="reference internal" href="#siegpy.symbolicpotentials.WoodsSaxonPotential" title="siegpy.symbolicpotentials.WoodsSaxonPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">WoodsSaxonPotential</span></code></a> class,</li>
+<li>the <a class="reference internal" href="#siegpy.symbolicpotentials.TwoGaussianPotential" title="siegpy.symbolicpotentials.TwoGaussianPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwoGaussianPotential</span></code></a> class,</li>
+<li>the <a class="reference internal" href="#siegpy.symbolicpotentials.FourGaussianPotential" title="siegpy.symbolicpotentials.FourGaussianPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">FourGaussianPotential</span></code></a> class.</li>
+</ul>
+<dl class="class">
+<dt id="siegpy.symbolicpotentials.SymbolicPotential">
+<em class="property">class </em><code class="descclassname">siegpy.symbolicpotentials.</code><code class="descname">SymbolicPotential</code><span class="sig-paren">(</span><em>sym_func</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/symbolicpotentials.html#SymbolicPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.symbolicpotentials.SymbolicPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="Potential.html#siegpy.potential.Potential" title="siegpy.potential.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.potential.Potential</span></code></a></p>
+<p>A Symbolic potential is defined by a symbolic function using the
+sympy package. The symbolic function can be encoded in a string.
+The function must be a function of <code class="docutils literal notranslate"><span class="pre">x</span></code> only (no other parameters).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sym_func</strong> (<em>str</em><em> or </em><em>sympy symbolic function</em>) – Symbolic function of the potential.</li>
+<li><strong>grid</strong> (<em>list</em><em> or </em><em>numpy array</em><em> or </em><em>NoneType</em>) – Discretization grid of the potential (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If a parameter of the symbolic function is not <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples</p>
+<p>The symbolic function can be a string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="s2">&quot;1 / (x**2 + 1)&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pot</span> <span class="o">=</span> <span class="n">SymbolicPotential</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Updating the grid automatically updates the values of the
+potential:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xgrid</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pot</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">xgrid</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pot</span><span class="o">.</span><span class="n">values</span>
+<span class="go">array([ 0.5,  1. ,  0.5])</span>
+</pre></div>
+</div>
+<p>The symbolic function must be a function of x only:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sympy.abc</span> <span class="k">import</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">a</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SymbolicPotential</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">ValueError</span>: <span class="n">The only variable of the analytic function should be x.</span>
+</pre></div>
+</div>
+<p>This means you must assign values to the parameters beforehand:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pot</span> <span class="o">=</span> <span class="n">SymbolicPotential</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">subs</span><span class="p">([(</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]),</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pot</span><span class="o">.</span><span class="n">values</span>
+<span class="go">array([ 0.5,  1. ,  0.5])</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.SymbolicPotential.symbolic">
+<code class="descname">symbolic</code><a class="headerlink" href="#siegpy.symbolicpotentials.SymbolicPotential.symbolic" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Symbolic function of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Sympy symbolic function</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.SymbolicPotential.grid">
+<code class="descname">grid</code><a class="headerlink" href="#siegpy.symbolicpotentials.SymbolicPotential.grid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Values of the grid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">NoneType or numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.symbolicpotentials.SymbolicPotential._compute_values">
+<code class="descname">_compute_values</code><span class="sig-paren">(</span><em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/symbolicpotentials.html#SymbolicPotential._compute_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.symbolicpotentials.SymbolicPotential._compute_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the values of the potential for a given grid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid</strong> (<em>list</em><em> or </em><em>numpy array</em>) – Discretization grid or complex scaled grid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Values of the potential according to its grid.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.symbolicpotentials.SymbolicPotential.complex_scaled_values">
+<code class="descname">complex_scaled_values</code><span class="sig-paren">(</span><em>coord_map</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/symbolicpotentials.html#SymbolicPotential.complex_scaled_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.symbolicpotentials.SymbolicPotential.complex_scaled_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the complex scaled potential for a given coordinate
+mapping.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coord_map</strong> (<a class="reference internal" href="CoordMap.html#siegpy.coordinatemappings.CoordMap" title="siegpy.coordinatemappings.CoordMap"><em>CoordMap</em></a>) – Coordinate mapping.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Complex scaled values of the potential.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.symbolicpotentials.SymbolicPotential.__add__">
+<code class="descname">__add__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/symbolicpotentials.html#SymbolicPotential.__add__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.symbolicpotentials.SymbolicPotential.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<a class="reference internal" href="Potential.html#siegpy.potential.Potential" title="siegpy.potential.Potential"><em>Potential</em></a>) – Another potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Sum of both potentials.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#siegpy.symbolicpotentials.SymbolicPotential" title="siegpy.symbolicpotentials.SymbolicPotential">SymbolicPotential</a> or <a class="reference internal" href="Potential.html#siegpy.potential.Potential" title="siegpy.potential.Potential">Potential</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the other potential is not symbolic and both potentials
+have no grid.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.symbolicpotentials.WoodsSaxonPotential">
+<em class="property">class </em><code class="descclassname">siegpy.symbolicpotentials.</code><code class="descname">WoodsSaxonPotential</code><span class="sig-paren">(</span><em>l</em>, <em>V0</em>, <em>lbda</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/symbolicpotentials.html#WoodsSaxonPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.symbolicpotentials.WoodsSaxonPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.symbolicpotentials.SymbolicPotential" title="siegpy.symbolicpotentials.SymbolicPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.symbolicpotentials.SymbolicPotential</span></code></a></p>
+<p>This class defines a symmetric and smooth Woods-Saxon potential of
+the form:</p>
+<div class="math notranslate nohighlight">
+\[V(x) = V_0 \left( \frac{1}{1 + e^{\lambda(x+l/2)}}
+- \frac{1}{1 + e^{\lambda(x-l/2)}} \right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(V_0\)</span> is the potential depth, <span class="math notranslate nohighlight">\(l\)</span> is the potential
+characteristic width and <span class="math notranslate nohighlight">\(\lambda\)</span> is the sharpness
+parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>l</strong> (<em>float</em>) – Characteristic width of the potential.</li>
+<li><strong>V0</strong> (<em>float</em>) – Potential depth (if negative, it corresponds to a potential
+barrier).</li>
+<li><strong>lbda</strong> (<em>float</em>) – Sharpness of the potential.</li>
+<li><strong>grid</strong> (<em>numpy array</em>) – Discretization grid of the potential (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the width or the sharpness parameters is strictly
+negative.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.WoodsSaxonPotential.width">
+<code class="descname">width</code><a class="headerlink" href="#siegpy.symbolicpotentials.WoodsSaxonPotential.width" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Width of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.WoodsSaxonPotential.depth">
+<code class="descname">depth</code><a class="headerlink" href="#siegpy.symbolicpotentials.WoodsSaxonPotential.depth" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Depth of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.WoodsSaxonPotential.sharpness">
+<code class="descname">sharpness</code><a class="headerlink" href="#siegpy.symbolicpotentials.WoodsSaxonPotential.sharpness" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Sharpness of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.symbolicpotentials.MultipleGaussianPotential">
+<em class="property">class </em><code class="descclassname">siegpy.symbolicpotentials.</code><code class="descname">MultipleGaussianPotential</code><span class="sig-paren">(</span><em>sym_func</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/symbolicpotentials.html#MultipleGaussianPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.symbolicpotentials.MultipleGaussianPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.symbolicpotentials.SymbolicPotential" title="siegpy.symbolicpotentials.SymbolicPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.symbolicpotentials.SymbolicPotential</span></code></a></p>
+<p>This class avoids some code repetition inside the classes
+<a class="reference internal" href="#siegpy.symbolicpotentials.TwoGaussianPotential" title="siegpy.symbolicpotentials.TwoGaussianPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwoGaussianPotential</span></code></a> and <a class="reference internal" href="#siegpy.symbolicpotentials.FourGaussianPotential" title="siegpy.symbolicpotentials.FourGaussianPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">FourGaussianPotential</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sym_func</strong> (<em>str</em><em> or </em><em>sympy symbolic function</em>) – Symbolic function of the potential.</li>
+<li><strong>grid</strong> (<em>list</em><em> or </em><em>numpy array</em><em> or </em><em>NoneType</em>) – Discretization grid of the potential (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If a parameter of the symbolic function is not <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples</p>
+<p>The symbolic function can be a string:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="s2">&quot;1 / (x**2 + 1)&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pot</span> <span class="o">=</span> <span class="n">SymbolicPotential</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Updating the grid automatically updates the values of the
+potential:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xgrid</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pot</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">xgrid</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pot</span><span class="o">.</span><span class="n">values</span>
+<span class="go">array([ 0.5,  1. ,  0.5])</span>
+</pre></div>
+</div>
+<p>The symbolic function must be a function of x only:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sympy.abc</span> <span class="k">import</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">a</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SymbolicPotential</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">ValueError</span>: <span class="n">The only variable of the analytic function should be x.</span>
+</pre></div>
+</div>
+<p>This means you must assign values to the parameters beforehand:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pot</span> <span class="o">=</span> <span class="n">SymbolicPotential</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">subs</span><span class="p">([(</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]),</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pot</span><span class="o">.</span><span class="n">values</span>
+<span class="go">array([ 0.5,  1. ,  0.5])</span>
+</pre></div>
+</div>
+<dl class="classmethod">
+<dt id="siegpy.symbolicpotentials.MultipleGaussianPotential.from_Gaussians">
+<em class="property">classmethod </em><code class="descname">from_Gaussians</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/symbolicpotentials.html#MultipleGaussianPotential.from_Gaussians"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.symbolicpotentials.MultipleGaussianPotential.from_Gaussians" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an asbtract class method.</p>
+</div>
+<p>Initalization of the potential from Gaussian functions and not
+from the parameters allowing to define these Gaussian functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Potential initialized from multiple Gaussian functions.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#siegpy.symbolicpotentials.MultipleGaussianPotential" title="siegpy.symbolicpotentials.MultipleGaussianPotential">MultipleGaussianPotential</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.MultipleGaussianPotential.gaussians">
+<code class="descname">gaussians</code><a class="headerlink" href="#siegpy.symbolicpotentials.MultipleGaussianPotential.gaussians" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an asbtract property.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">All the Gaussian functions used to create the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.MultipleGaussianPotential.sigmas">
+<code class="descname">sigmas</code><a class="headerlink" href="#siegpy.symbolicpotentials.MultipleGaussianPotential.sigmas" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Sigma of the Gaussian functions of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.MultipleGaussianPotential.centers">
+<code class="descname">centers</code><a class="headerlink" href="#siegpy.symbolicpotentials.MultipleGaussianPotential.centers" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Center of the Gaussian functions of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.MultipleGaussianPotential.amplitudes">
+<code class="descname">amplitudes</code><a class="headerlink" href="#siegpy.symbolicpotentials.MultipleGaussianPotential.amplitudes" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Amplitude of the Gaussian functions of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.symbolicpotentials.TwoGaussianPotential">
+<em class="property">class </em><code class="descclassname">siegpy.symbolicpotentials.</code><code class="descname">TwoGaussianPotential</code><span class="sig-paren">(</span><em>sigma1</em>, <em>xc1</em>, <em>h1</em>, <em>sigma2</em>, <em>xc2</em>, <em>h2</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/symbolicpotentials.html#TwoGaussianPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.symbolicpotentials.TwoGaussianPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.symbolicpotentials.MultipleGaussianPotential" title="siegpy.symbolicpotentials.MultipleGaussianPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.symbolicpotentials.MultipleGaussianPotential</span></code></a></p>
+<p>This class defines a potential made of the sum of two Gaussian
+functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sigma1</strong> (<em>float</em>) – Sigma of the first Gaussian function.</li>
+<li><strong>xc1</strong> (<em>float</em>) – Center of the first Gaussian function.</li>
+<li><strong>h1</strong> (<em>float</em>) – Amplitude of the first Gaussian function.</li>
+<li><strong>sigma2</strong> (<em>float</em>) – Sigma of the second Gaussian function.</li>
+<li><strong>xc2</strong> (<em>float</em>) – Center of the second Gaussian function.</li>
+<li><strong>h2</strong> (<em>float</em>) – Amplitude of the second Gaussian function.</li>
+<li><strong>grid</strong> (<em>numpy array</em>) – Discretization grid of the potential (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="siegpy.symbolicpotentials.TwoGaussianPotential.from_Gaussians">
+<em class="property">classmethod </em><code class="descname">from_Gaussians</code><span class="sig-paren">(</span><em>gauss1</em>, <em>gauss2</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/symbolicpotentials.html#TwoGaussianPotential.from_Gaussians"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.symbolicpotentials.TwoGaussianPotential.from_Gaussians" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization of a TwoGaussianPotential instance from two
+Gaussian functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>gauss1</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><em>Gaussian</em></a>) – First Gaussian function.</li>
+<li><strong>gauss2</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><em>Gaussian</em></a>) – Second Gaussian function.</li>
+<li><strong>grid</strong> (<em>numpy array</em>) – Discretization grid of the potential (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Potential initialized from two Gaussian functions.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#siegpy.symbolicpotentials.TwoGaussianPotential" title="siegpy.symbolicpotentials.TwoGaussianPotential">TwoGaussianPotential</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.TwoGaussianPotential.gaussian1">
+<code class="descname">gaussian1</code><a class="headerlink" href="#siegpy.symbolicpotentials.TwoGaussianPotential.gaussian1" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">First Gaussian function of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian">Gaussian</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.TwoGaussianPotential.gaussian2">
+<code class="descname">gaussian2</code><a class="headerlink" href="#siegpy.symbolicpotentials.TwoGaussianPotential.gaussian2" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Second Gaussian function of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian">Gaussian</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.TwoGaussianPotential.gaussians">
+<code class="descname">gaussians</code><a class="headerlink" href="#siegpy.symbolicpotentials.TwoGaussianPotential.gaussians" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Both Gaussian functions of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.symbolicpotentials.FourGaussianPotential">
+<em class="property">class </em><code class="descclassname">siegpy.symbolicpotentials.</code><code class="descname">FourGaussianPotential</code><span class="sig-paren">(</span><em>sigma1</em>, <em>xc1</em>, <em>h1</em>, <em>sigma2</em>, <em>xc2</em>, <em>h2</em>, <em>sigma3</em>, <em>xc3</em>, <em>h3</em>, <em>sigma4</em>, <em>xc4</em>, <em>h4</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/symbolicpotentials.html#FourGaussianPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.symbolicpotentials.FourGaussianPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.symbolicpotentials.MultipleGaussianPotential" title="siegpy.symbolicpotentials.MultipleGaussianPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.symbolicpotentials.MultipleGaussianPotential</span></code></a></p>
+<p>This class defines a potential made of the sum of four Gaussian
+functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sigma1</strong> (<em>float</em>) – Sigma of the first Gaussian function.</li>
+<li><strong>xc1</strong> (<em>float</em>) – Center of the first Gaussian function.</li>
+<li><strong>h1</strong> (<em>float</em>) – Amplitude of the first Gaussian function.</li>
+<li><strong>sigma2</strong> (<em>float</em>) – Sigma of the second Gaussian function.</li>
+<li><strong>xc2</strong> (<em>float</em>) – Center of the second Gaussian function.</li>
+<li><strong>h2</strong> (<em>float</em>) – Amplitude of the second Gaussian function.</li>
+<li><strong>sigma3</strong> (<em>float</em>) – Sigma of the third Gaussian function.</li>
+<li><strong>xc3</strong> (<em>float</em>) – Center of the third Gaussian function.</li>
+<li><strong>h3</strong> (<em>float</em>) – Amplitude of the third Gaussian function.</li>
+<li><strong>sigma4</strong> (<em>float</em>) – Sigma of the fouth Gaussian function.</li>
+<li><strong>xc4</strong> (<em>float</em>) – Center of the fouth Gaussian function.</li>
+<li><strong>h4</strong> (<em>float</em>) – Amplitude of the fouth Gaussian function.</li>
+<li><strong>grid</strong> (<em>numpy array</em>) – Discretization grid of the potential (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="siegpy.symbolicpotentials.FourGaussianPotential.from_Gaussians">
+<em class="property">classmethod </em><code class="descname">from_Gaussians</code><span class="sig-paren">(</span><em>gauss1</em>, <em>gauss2</em>, <em>gauss3</em>, <em>gauss4</em>, <em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/symbolicpotentials.html#FourGaussianPotential.from_Gaussians"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.symbolicpotentials.FourGaussianPotential.from_Gaussians" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization of a FourGaussianPotential instance from four
+Gaussian functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>gauss1</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><em>Gaussian</em></a>) – First Gaussian function.</li>
+<li><strong>gauss2</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><em>Gaussian</em></a>) – Second Gaussian function.</li>
+<li><strong>gauss3</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><em>Gaussian</em></a>) – Third Gaussian function.</li>
+<li><strong>gauss4</strong> (<a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><em>Gaussian</em></a>) – Fourth Gaussian function.</li>
+<li><strong>grid</strong> (<em>numpy array</em>) – Discretization grid of the potential (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Potential initialized from four Gaussian functions.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#siegpy.symbolicpotentials.FourGaussianPotential" title="siegpy.symbolicpotentials.FourGaussianPotential">FourGaussianPotential</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.FourGaussianPotential.gaussian1">
+<code class="descname">gaussian1</code><a class="headerlink" href="#siegpy.symbolicpotentials.FourGaussianPotential.gaussian1" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">First Gaussian function of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian">Gaussian</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.FourGaussianPotential.gaussian2">
+<code class="descname">gaussian2</code><a class="headerlink" href="#siegpy.symbolicpotentials.FourGaussianPotential.gaussian2" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Second Gaussian function of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian">Gaussian</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.FourGaussianPotential.gaussian3">
+<code class="descname">gaussian3</code><a class="headerlink" href="#siegpy.symbolicpotentials.FourGaussianPotential.gaussian3" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Third Gaussian function of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian">Gaussian</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.FourGaussianPotential.gaussian4">
+<code class="descname">gaussian4</code><a class="headerlink" href="#siegpy.symbolicpotentials.FourGaussianPotential.gaussian4" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Fouth Gaussian function of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian">Gaussian</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.symbolicpotentials.FourGaussianPotential.gaussians">
+<code class="descname">gaussians</code><a class="headerlink" href="#siegpy.symbolicpotentials.FourGaussianPotential.gaussians" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Four Gaussian functions of the potential.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="CoordMap.html" class="btn btn-neutral float-right" title="CoordMap" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Potential.html" class="btn btn-neutral" title="Potential" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

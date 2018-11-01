@@ -1,0 +1,1506 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>siegpy.coordinatemappings &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>siegpy.coordinatemappings</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for siegpy.coordinatemappings</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*</span>
+<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Various classes are defined to represent different **coordinate mappings**.</span>
+<span class="sd">They define the coordinate transformation (and its derivatives) so that</span>
+<span class="sd">the Reflection-Free Complex Absorbing Potentials and the virial operator</span>
+<span class="sd">can be easily discretized over the discretization grid.</span>
+
+<span class="sd">The :class:`CoordMap` class is the most basic one. It is an abstract</span>
+<span class="sd">class, requiring only a complex scaling angle :math:`\theta` and a</span>
+<span class="sd">discretization grid.</span>
+
+<span class="sd">The **Uniform Complex Scaling** (UCS) transformation</span>
+<span class="sd">:math:`F_{UCS}: x \mapsto x e^{i \theta}` is easily derived from it in</span>
+<span class="sd">the :class:`UniformCoordMap` class.</span>
+
+<span class="sd">Another well-known transformation is the **Exterior Complex Scaling**</span>
+<span class="sd">(ECS), that leaves the potential unscaled inside a region</span>
+<span class="sd">:math:`[-x_0, x_0]` (*i.e.*, :math:`F_{ECS}: x \mapsto x`), while</span>
+<span class="sd">amounting to the UCS outside (*i.e.* :math:`(x - x_0) e^{i \theta}` for</span>
+<span class="sd">:math:`x &gt; x_0`). This has the advantage of leaving the innermost</span>
+<span class="sd">potential unscaled.</span>
+
+<span class="sd">However, the most efficient coordinate transformations discussed in the</span>
+<span class="sd">literature (when it comes to finding Siegert states numerically) are</span>
+<span class="sd">know as **Smooth Exterior Complex Scaling** (SECS). Contrary to the</span>
+<span class="sd">usual ECS, there are smooth transitions between both regimes, hence</span>
+<span class="sd">their name. The sharpness of these transitions is then controlled by</span>
+<span class="sd">another parameter, :math:`\lambda`. The abstract base class</span>
+<span class="sd">:class:`SmoothExtCoordMap` allows for the representation of such</span>
+<span class="sd">coordinate transformations.</span>
+
+<span class="sd">A SECS generally relies on a function :math:`q` that smoothly goes from</span>
+<span class="sd">0 to 1 around :math:`\pm x_0`. This is why a :class:`SmoothFuncCoordMap`</span>
+<span class="sd">class is also defined as an abstract base class deriving from the</span>
+<span class="sd">:class:`SmoothExtCoordMap` class. In practice, all the implemented SECS</span>
+<span class="sd">implemented in SiegPy derive from the :class:`SmoothFuncCoordMap` class.</span>
+
+<span class="sd">There are two main possibilites to define a smooth coordinate</span>
+<span class="sd">transformations by using a smooth function :math:`q`:</span>
+
+<span class="sd">* :math:`F_{KG}: x \mapsto x e^{i \theta q(x)}`, that will be called the</span>
+<span class="sd">  Kalita-Gupta (KG) coordinate transformation,</span>
+<span class="sd">* :math:`F_{S}: x \mapsto F_S(x)` such that its derivative with respect to</span>
+<span class="sd">  :math:`x` is :math:`F_S^\prime = f_S: x \mapsto 1 + (e^{i \theta} - 1) q(x)`.</span>
+<span class="sd">  This will be labeled as the Simon coordinate transformation.</span>
+
+<span class="sd">This is the reason why two other abstract base classes were defined:</span>
+
+<span class="sd">* the :class:`KGCoordMap` class,</span>
+<span class="sd">* and the :class:`SimonCoordMap` class.</span>
+
+<span class="sd">They both require a smooth function :math:`q` as parameters.</span>
+
+<span class="sd">Two main types of smooth functions are implemented in SiegPy: one based</span>
+<span class="sd">on the error function :math:`\text{erf}`, the other on :math:`\tanh`,</span>
+<span class="sd">hence giving rise to four classes that can readily be used to find</span>
+<span class="sd">Siegert states numerically:</span>
+
+<span class="sd">* the :class:`ErfKGCoordMap` class,</span>
+<span class="sd">* the :class:`ErfSimonCoordMap` class,</span>
+<span class="sd">* the :class:`TanhKGCoordMap` class,</span>
+<span class="sd">* the :class:`TanhSimonCoordMap` class.</span>
+
+<span class="sd">See :class:`~siegpy.smoothfunctions` for more details on the smooth</span>
+<span class="sd">functions.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="k">import</span> <span class="n">erf</span>
+<span class="kn">from</span> <span class="nn">.smoothfunctions</span> <span class="k">import</span> <span class="n">ErfSmoothFunction</span><span class="p">,</span> <span class="n">TanhSmoothFunction</span>
+
+
+<div class="viewcode-block" id="CoordMap"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap">[docs]</a><span class="k">class</span> <span class="nc">CoordMap</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    .. note:: This is an abstract class.</span>
+
+<span class="sd">    Base class of all the other coordinate mappings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">PARAMETERS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;theta&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">GCVT</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theta: float</span>
+<span class="sd">            Complex scaling angle.</span>
+<span class="sd">        grid: numpy array or None</span>
+<span class="sd">            Discretization grid.</span>
+<span class="sd">        GCVT: bool</span>
+<span class="sd">            Stands for Generalized Complex Virial Theorem. If it is set</span>
+<span class="sd">            to ``True``, then only one virial value is computed, else</span>
+<span class="sd">            there are one per coordinate mapping parameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_theta</span> <span class="o">=</span> <span class="n">theta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_GCVT</span> <span class="o">=</span> <span class="n">GCVT</span>
+        <span class="k">if</span> <span class="n">grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">theta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Complex scaling angle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_theta</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">GCVT</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            Parameter stating which virial operator(s) have to be used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_GCVT</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">grid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Discretization grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span>
+
+    <span class="nd">@grid</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_grid</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setter of the grid, updating the values of the coordinate</span>
+<span class="sd">        transformation, its derivatives, the Reflection-Free Complex</span>
+<span class="sd">        Absorbing Potentials (RF-CAP) and the potentials of the virial</span>
+<span class="sd">        operator.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        new_grid: numpy array</span>
+<span class="sd">            New discretization grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_be_updated</span><span class="p">(</span><span class="n">new_grid</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span> <span class="o">=</span> <span class="n">new_grid</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_all_values</span><span class="p">()</span>
+
+<div class="viewcode-block" id="CoordMap._to_be_updated"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._to_be_updated">[docs]</a>    <span class="k">def</span> <span class="nf">_to_be_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_grid</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        new_grid: numpy array</span>
+<span class="sd">            New discretization grid.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the grid has to be updated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_grid&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span><span class="p">,</span> <span class="n">new_grid</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the coordinate transorfmation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">f_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first derivative of the coordinate</span>
+<span class="sd">            transorfmation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">f_dx_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the second derivative of the coordinate</span>
+<span class="sd">            transorfmation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_dx_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">f_dx2_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the third derivative of the coordinate</span>
+<span class="sd">            transorfmation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_dx2_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dxi_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first derivative with respect to all the</span>
+<span class="sd">            parameters of the coordinate transorfmation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dxi_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">f_dxi_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first derivative with respect to all the</span>
+<span class="sd">            parameters of the first derivative of the coordinate</span>
+<span class="sd">            transorfmation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_dxi_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">V0_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first additional RF-CAP.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_V0_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">V1_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the second additional RF-CAP.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_V1_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">V2_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the third additional RF-CAP.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_V2_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">U0_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first additional virial operator potential.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_U0_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">U1_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the second additional virial operator potential.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_U1_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">U2_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the third additional virial operator potential.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_U2_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">U11_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the fourth additional virial operator potential.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_U11_values</span>
+
+<div class="viewcode-block" id="CoordMap._update_all_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._update_all_values">[docs]</a>    <span class="k">def</span> <span class="nf">_update_all_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the values of the coordinate mapping and its derivatives</span>
+<span class="sd">        with respect to :math:`x` and with respect to the coordinate</span>
+<span class="sd">        mapping parameters, as well as related quantities such as the</span>
+<span class="sd">        Reflection-Free Complex Absorbing Potential and the virial</span>
+<span class="sd">        operator.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_x_deriv_values</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_param_deriv_values</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_RFCAP_values</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_virial_values</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CoordMap._update_x_deriv_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._update_x_deriv_values">[docs]</a>    <span class="k">def</span> <span class="nf">_update_x_deriv_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the values of the coordinate mapping and its three first</span>
+<span class="sd">        derivatives with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_x_deriv_from_grid</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_f_values</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_f_dx_values</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_f_dx2_values</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="CoordMap._update_x_deriv_from_grid"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._update_x_deriv_from_grid">[docs]</a>    <span class="k">def</span> <span class="nf">_update_x_deriv_from_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the values of the coordinate mapping and its three first</span>
+<span class="sd">        derivatives with respect to :math:`x`, if the grid is not</span>
+<span class="sd">        ``None``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_values</span><span class="p">()</span>  <span class="c1"># pylint: disable=E1111</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_f_values</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_dx_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_f_dx_values</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_dx2_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_f_dx2_values</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CoordMap._update_param_deriv_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._update_param_deriv_values">[docs]</a>    <span class="k">def</span> <span class="nf">_update_param_deriv_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the values of the derivative with respect to the</span>
+<span class="sd">        coordinate mapping parameters of the coordinate mapping and its</span>
+<span class="sd">        first derivative with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">GCVT</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_param_deriv_from_grid</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dxi_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARAMETERS</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_f_dxi_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARAMETERS</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="CoordMap._update_param_deriv_from_grid"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._update_param_deriv_from_grid">[docs]</a>    <span class="k">def</span> <span class="nf">_update_param_deriv_from_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the values of the derivative with respect to the</span>
+<span class="sd">        coordinate mapping parameters of the coordinate mapping and its</span>
+<span class="sd">        first derivative with respect to :math:`x`, if the grid is not</span>
+<span class="sd">        ``None``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dxi_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dxi_values</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_dxi_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_f_dxi_values</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CoordMap._get_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._get_values">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note:: This is an abstract method.</span>
+
+<span class="sd">        Evaluate the values of the coordinate mapping with respect to</span>
+<span class="sd">        :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="CoordMap._get_f_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._get_f_values">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_f_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note:: This is an abstract method.</span>
+
+<span class="sd">        Evaluate the values of the first derivative of the coordinate</span>
+<span class="sd">        mapping with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="CoordMap._get_f_dx_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._get_f_dx_values">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_f_dx_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note:: This is an abstract method.</span>
+
+<span class="sd">        Evaluate the values of the second derivative of the coordinate</span>
+<span class="sd">        mapping with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="CoordMap._get_f_dx2_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._get_f_dx2_values">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_f_dx2_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note:: This is an abstract method.</span>
+
+<span class="sd">        Evaluate the values of the third derivative of the coordinate</span>
+<span class="sd">        mapping with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="CoordMap._get_dxi_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._get_dxi_values">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_dxi_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note:: This is an abstract method.</span>
+
+<span class="sd">        Evaluate the values of the first derivative of the coordinate</span>
+<span class="sd">        mapping with respect to the coordinate mapping parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="CoordMap._get_f_dxi_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._get_f_dxi_values">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_f_dxi_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note:: This is an abstract method.</span>
+
+<span class="sd">        Evaluate the values of the first derivative with respect to the</span>
+<span class="sd">        coordinate mapping parameters of the first derivative with</span>
+<span class="sd">        respect to :math:`x` of the coordinate mapping.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="CoordMap._update_RFCAP_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._update_RFCAP_values">[docs]</a>    <span class="k">def</span> <span class="nf">_update_RFCAP_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the various potentials used to define the Reflection-Free</span>
+<span class="sd">        Complex Absorbing Potentials</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_values</span>
+            <span class="n">f_dx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_dx_values</span>
+            <span class="n">f_dx2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_dx2_values</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_V0_values</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="o">*</span><span class="n">f_dx2</span><span class="o">/</span><span class="n">f</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="mi">5</span><span class="o">/</span><span class="mi">8</span><span class="o">*</span><span class="n">f_dx</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">f</span><span class="o">**</span><span class="mi">4</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_V1_values</span> <span class="o">=</span> <span class="n">f_dx</span><span class="o">/</span><span class="n">f</span><span class="o">**</span><span class="mi">3</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_V2_values</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">f</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_V0_values</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_V1_values</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_V2_values</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="CoordMap._update_virial_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.CoordMap._update_virial_values">[docs]</a>    <span class="k">def</span> <span class="nf">_update_virial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the values of the different potentials used to define the</span>
+<span class="sd">        various virial operators.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize some variables for readability</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_values</span>
+        <span class="n">f_dx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_dx_values</span>
+        <span class="n">f_dx2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_dx2_values</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">GCVT</span><span class="p">:</span>
+            <span class="c1"># Initialize the GCVT potentials if required</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># The virial operator potentials are numpy arrays</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_U0_values</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">F</span><span class="o">*</span><span class="n">f_dx</span><span class="o">/</span><span class="n">f</span><span class="o">**</span><span class="mi">2</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_U1_values</span> <span class="o">=</span> <span class="n">F</span><span class="o">/</span><span class="n">f</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_U0_values</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_U1_values</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_U2_values</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_U11_values</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Else initialize the usual virial potentials for each</span>
+            <span class="c1"># parameter. They are all stored in a dictionary, whose keys</span>
+            <span class="c1"># are the labels of the parameters.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">U0_factor</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">f_dx</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">f</span><span class="o">**</span><span class="mi">5</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="n">f_dx2</span><span class="o">/</span><span class="n">f</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span>
+                <span class="n">U1_factor</span> <span class="o">=</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="n">f_dx</span><span class="o">/</span><span class="n">f</span><span class="o">**</span><span class="mi">4</span>
+                <span class="n">U2_factor</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">f</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+                <span class="n">U11_factor</span> <span class="o">=</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">f</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_U0_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="n">U0_factor</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">f_dxi_values</span><span class="p">[</span><span class="n">param</span><span class="p">]</span>
+                                   <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARAMETERS</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_U1_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="n">U1_factor</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">f_dxi_values</span><span class="p">[</span><span class="n">param</span><span class="p">]</span>
+                                   <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARAMETERS</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_U2_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="n">U2_factor</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">f_dxi_values</span><span class="p">[</span><span class="n">param</span><span class="p">]</span>
+                                   <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARAMETERS</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_U11_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="n">U11_factor</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">f_dxi_values</span><span class="p">[</span><span class="n">param</span><span class="p">]</span>
+                                    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARAMETERS</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_U0_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARAMETERS</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_U1_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARAMETERS</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_U2_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARAMETERS</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_U11_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PARAMETERS</span><span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="UniformCoordMap"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.UniformCoordMap">[docs]</a><span class="k">class</span> <span class="nc">UniformCoordMap</span><span class="p">(</span><span class="n">CoordMap</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The uniform coordinate transformation corresponds to:</span>
+<span class="sd">    :math:`x \mapsto x e^{i \theta}`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">GCVT</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theta: float</span>
+<span class="sd">            Complex scaling angle.</span>
+<span class="sd">        GCVT: bool</span>
+<span class="sd">            Stands for Generalized Complex Virial Theorem. If it is set</span>
+<span class="sd">            to ``True``, then only one virial value is computed, else</span>
+<span class="sd">            there are one per parameter (here, :attr:`theta`). Defaults</span>
+<span class="sd">            to ``True``.</span>
+<span class="sd">        grid: numpy array</span>
+<span class="sd">            Discretization grid (optional).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">GCVT</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UniformCoordMap._get_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.UniformCoordMap._get_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the coordinate mapping with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UniformCoordMap._get_f_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.UniformCoordMap._get_f_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_f_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first derivative of the coordinate mapping</span>
+<span class="sd">            with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UniformCoordMap._get_f_dx_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.UniformCoordMap._get_f_dx_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_f_dx_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the second derivative of the coordinate mapping</span>
+<span class="sd">            with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="UniformCoordMap._get_f_dx2_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.UniformCoordMap._get_f_dx2_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_f_dx2_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the third derivative of the coordinate mapping</span>
+<span class="sd">            with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="UniformCoordMap._get_dxi_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.UniformCoordMap._get_dxi_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_dxi_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first derivative of the coordinate mapping</span>
+<span class="sd">            with respect to the coordinate mapping parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;theta&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="UniformCoordMap._get_f_dxi_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.UniformCoordMap._get_f_dxi_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_f_dxi_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first derivative with respect to the</span>
+<span class="sd">            coordinate mapping parameters of the first derivative with</span>
+<span class="sd">            respect to :math:`x` of the coordinate mapping.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;theta&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_values</span><span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="SmoothExtCoordMap"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SmoothExtCoordMap">[docs]</a><span class="k">class</span> <span class="nc">SmoothExtCoordMap</span><span class="p">(</span><span class="n">CoordMap</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    .. note:: This is an abstract class.</span>
+
+<span class="sd">    This is the base class for all the other classes implementing a</span>
+<span class="sd">    particular type of smooth exterior complex scaling.</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        This class must be used to create child classes if no smooth</span>
+<span class="sd">        function is actually required.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">PARAMETERS</span> <span class="o">=</span> <span class="n">CoordMap</span><span class="o">.</span><span class="n">PARAMETERS</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">,</span> <span class="s1">&#39;lbda&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lbda</span><span class="p">,</span> <span class="n">GCVT</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theta: float</span>
+<span class="sd">            Complex scaling angle.</span>
+<span class="sd">        x0: float</span>
+<span class="sd">            Inflection point.</span>
+<span class="sd">        lbda: float</span>
+<span class="sd">            Sharpness parameter</span>
+<span class="sd">        GCVT: bool</span>
+<span class="sd">            Stands for Generalized Complex Virial Theorem. If it is set</span>
+<span class="sd">            to ``True``, then only one virial value is computed, else</span>
+<span class="sd">            there are three, one for each parameter (here,</span>
+<span class="sd">            :attr:`theta`, :attr:`x0` and :attr:`lbda`).</span>
+<span class="sd">        grid: numpy array or None</span>
+<span class="sd">            Discretization grid.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the ``x0`` or ``lbda`` is not positive.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># LEAVE THIS COMMENT</span>
+        <span class="c1"># # The values must be checked if there is a child class that</span>
+        <span class="c1"># # does not require a smooth function.</span>
+        <span class="c1"># if x0 &lt;= 0:</span>
+        <span class="c1">#     raise ValueError(&quot;The inflection point must be positive.&quot;)</span>
+        <span class="c1"># if lbda &lt;= 0:</span>
+        <span class="c1">#     raise ValueError(&quot;The sharpness parameter must be positive.&quot;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span> <span class="o">=</span> <span class="n">x0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lbda</span> <span class="o">=</span> <span class="n">lbda</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">GCVT</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">x0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Inflection point.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">lbda</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Sharpness paramter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lbda</span></div>
+
+
+<div class="viewcode-block" id="SmoothFuncCoordMap"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SmoothFuncCoordMap">[docs]</a><span class="k">class</span> <span class="nc">SmoothFuncCoordMap</span><span class="p">(</span><span class="n">SmoothExtCoordMap</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    .. note:: This is an abstract class.</span>
+
+<span class="sd">    Class used to define methods that may not be generally shared by any</span>
+<span class="sd">    type of :class:`~siegpy.coordinatemappings.SmoothExtCoordMap` child</span>
+<span class="sd">    classes, because a Smooth Exterior Coordinate Mapping could be</span>
+<span class="sd">    defined without an explicit use of a smooth function.</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        This class must be used to create child classes if a smooth</span>
+<span class="sd">        function is required.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">smooth_func</span><span class="p">,</span> <span class="n">GCVT</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theta: float</span>
+<span class="sd">            Complex scaling angle.</span>
+<span class="sd">        smooth_func: SmoothFunction</span>
+<span class="sd">            Smooth function :math:`q`.</span>
+<span class="sd">        GCVT: bool</span>
+<span class="sd">            Stands for Generalized Complex Virial Theorem. If it is set</span>
+<span class="sd">            to ``True``, then only one virial value is computed, else</span>
+<span class="sd">            there are one per coordinate mapping parameter (including</span>
+<span class="sd">            :attr:`theta` here).</span>
+<span class="sd">        grid: numpy array or None</span>
+<span class="sd">            Discretization grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_smooth_func</span> <span class="o">=</span> <span class="n">smooth_func</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">smooth_func</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="n">smooth_func</span><span class="o">.</span><span class="n">lbda</span><span class="p">,</span> <span class="n">GCVT</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">smooth_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SmoothFunction</span>
+<span class="sd">            Smooth function :math:`q`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smooth_func</span>
+
+<div class="viewcode-block" id="SmoothFuncCoordMap._update_all_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SmoothFuncCoordMap._update_all_values">[docs]</a>    <span class="k">def</span> <span class="nf">_update_all_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the grid and values of the smooth function before using</span>
+<span class="sd">        the parent method updating all other values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_update_all_values</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SmoothFuncCoordMap._get_gp_and_gm"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SmoothFuncCoordMap._get_gp_and_gm">[docs]</a>    <span class="k">def</span> <span class="nf">_get_gp_and_gm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note::</span>
+
+<span class="sd">            This function only avoids code repetition in child classes.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple made of two numpy arrays</span>
+<span class="sd">            Two numpy arrays that are often used by the child</span>
+<span class="sd">            classes, while only being based on properties.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span>
+        <span class="n">lbda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lbda</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x0</span>
+        <span class="n">gp</span> <span class="o">=</span> <span class="n">lbda</span> <span class="o">*</span> <span class="p">(</span><span class="n">grid</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span>
+        <span class="n">gm</span> <span class="o">=</span> <span class="n">lbda</span> <span class="o">*</span> <span class="p">(</span><span class="n">grid</span> <span class="o">+</span> <span class="n">x0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gp</span><span class="p">,</span> <span class="n">gm</span></div></div>
+
+
+<div class="viewcode-block" id="SimonCoordMap"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SimonCoordMap">[docs]</a><span class="k">class</span> <span class="nc">SimonCoordMap</span><span class="p">(</span><span class="n">SmoothFuncCoordMap</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    .. note:: This is an abstract class.</span>
+
+<span class="sd">    This class allows the representation of the smooth exterior</span>
+<span class="sd">    coordinate mapping :math:`F: x \mapsto F(x)` such that its</span>
+<span class="sd">    derivative with respect to :math:`x` is equal to</span>
+<span class="sd">    :math:`1 + (e^{i \theta} - 1) q(x)`, where :math:`q` is a smooth</span>
+<span class="sd">    function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SimonCoordMap._update_x_deriv_from_grid"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SimonCoordMap._update_x_deriv_from_grid">[docs]</a>    <span class="k">def</span> <span class="nf">_update_x_deriv_from_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the values of the coordinate mapping and its three first</span>
+<span class="sd">        derivatives with respect to :math:`x`, if the grid is not</span>
+<span class="sd">        ``None``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set some variables for readability</span>
+        <span class="n">gp</span><span class="p">,</span> <span class="n">gm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_gp_and_gm</span><span class="p">()</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_m_values</span><span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">)</span>  <span class="c1"># pylint: disable=E1120</span>
+        <span class="c1"># Set the attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_values</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_f_values</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_dx_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_f_dx_values</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_dx2_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_f_dx2_values</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SimonCoordMap._update_param_deriv_from_grid"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SimonCoordMap._update_param_deriv_from_grid">[docs]</a>    <span class="k">def</span> <span class="nf">_update_param_deriv_from_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the values of the derivative with respect to the</span>
+<span class="sd">        coordinate mapping parameters of the coordinate mapping and its</span>
+<span class="sd">        first derivative with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set some variables for readability</span>
+        <span class="n">gp</span><span class="p">,</span> <span class="n">gm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_gp_and_gm</span><span class="p">()</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_m_values</span><span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">)</span>  <span class="c1"># pylint: disable=E1120</span>
+        <span class="n">m_dx0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_m_dx0_values</span><span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">)</span>  <span class="c1"># pylint: disable=E1120</span>
+        <span class="n">m_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_m_dl_values</span><span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">)</span>  <span class="c1"># pylint: disable=E1120</span>
+        <span class="c1"># Set the attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dxi_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dxi_values</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">m_dx0</span><span class="p">,</span> <span class="n">m_dl</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_dxi_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_f_dxi_values</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SimonCoordMap._get_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SimonCoordMap._get_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        m: numpy array</span>
+<span class="sd">            Values of the intermediary function which is the factor of</span>
+<span class="sd">            :math:`(e^{i \theta} - 1)` term in the coordinate mapping</span>
+<span class="sd">            function.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the second derivative of the coordinate</span>
+<span class="sd">            mapping with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">+</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">m</span></div>
+
+<div class="viewcode-block" id="SimonCoordMap._get_f_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SimonCoordMap._get_f_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_f_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first derivative of the coordinate</span>
+<span class="sd">            mapping with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">values</span></div>
+
+<div class="viewcode-block" id="SimonCoordMap._get_f_dx_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SimonCoordMap._get_f_dx_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_f_dx_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the second derivative of the coordinate</span>
+<span class="sd">            mapping with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">dx_values</span></div>
+
+<div class="viewcode-block" id="SimonCoordMap._get_f_dx2_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SimonCoordMap._get_f_dx2_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_f_dx2_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the third derivative of the coordinate</span>
+<span class="sd">            mapping with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">dx2_values</span></div>
+
+<div class="viewcode-block" id="SimonCoordMap._get_dxi_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SimonCoordMap._get_dxi_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_dxi_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">m_dx0</span><span class="p">,</span> <span class="n">m_dl</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        m: numpy array</span>
+<span class="sd">            Values of the intermadiary function.</span>
+<span class="sd">        m_dx0: numpy array</span>
+<span class="sd">            First derivative of the intermediary function with respect</span>
+<span class="sd">            to :attr:`x0`.</span>
+<span class="sd">        m_dl: numpy array</span>
+<span class="sd">            First derivative of the intermediary function with respect</span>
+<span class="sd">            to the sharpness parameter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first derivative of the coordinate</span>
+<span class="sd">            mapping with respect to the coordinate mapping parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">F_dth</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">m</span>
+        <span class="n">F_dx0</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">m_dx0</span>
+        <span class="n">F_dl</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">m_dl</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;theta&#39;</span><span class="p">:</span> <span class="n">F_dth</span><span class="p">,</span> <span class="s1">&#39;x0&#39;</span><span class="p">:</span> <span class="n">F_dx0</span><span class="p">,</span> <span class="s1">&#39;lbda&#39;</span><span class="p">:</span> <span class="n">F_dl</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="SimonCoordMap._get_f_dxi_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SimonCoordMap._get_f_dxi_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_f_dxi_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first derivative with respect to the</span>
+<span class="sd">            coordinate mapping parameters of the first derivative with</span>
+<span class="sd">            respect to :math:`x` of the coordinate mapping.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span>
+        <span class="n">f_dth</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">sf</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">f_dx0</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">sf</span><span class="o">.</span><span class="n">dxi_values</span><span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">]</span>
+        <span class="n">f_dl</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">sf</span><span class="o">.</span><span class="n">dxi_values</span><span class="p">[</span><span class="s1">&#39;lbda&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;theta&#39;</span><span class="p">:</span> <span class="n">f_dth</span><span class="p">,</span> <span class="s1">&#39;x0&#39;</span><span class="p">:</span> <span class="n">f_dx0</span><span class="p">,</span> <span class="s1">&#39;lbda&#39;</span><span class="p">:</span> <span class="n">f_dl</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="SimonCoordMap._get_m_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SimonCoordMap._get_m_values">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_m_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">lbda</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note:: This is an abstract method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        grid: numpy array</span>
+<span class="sd">            Discretization grid.</span>
+<span class="sd">        lbda: float</span>
+<span class="sd">            Sharpness parameter</span>
+<span class="sd">        gp: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+<span class="sd">        gm: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            The values of an intermediate function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="SimonCoordMap._get_m_dx0_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SimonCoordMap._get_m_dx0_values">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_m_dx0_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">lbda</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note:: This is an abstract method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        grid: numpy array</span>
+<span class="sd">            Discretization grid.</span>
+<span class="sd">        lbda: float</span>
+<span class="sd">            Sharpness parameter</span>
+<span class="sd">        gp: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+<span class="sd">        gm: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            The values of the first derivative with respect to</span>
+<span class="sd">            :attr:`x0` of an intermediate function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="SimonCoordMap._get_m_dl_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.SimonCoordMap._get_m_dl_values">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_m_dl_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">lbda</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note:: This is an abstract method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        grid: numpy array</span>
+<span class="sd">            Discretization grid.</span>
+<span class="sd">        lbda: float</span>
+<span class="sd">            Sharpness parameter</span>
+<span class="sd">        gp: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+<span class="sd">        gm: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            The values of the first derivative with respect to</span>
+<span class="sd">            the sharpness parameter :attr:`\lambda` of an intermediate</span>
+<span class="sd">            function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="TanhSimonCoordMap"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.TanhSimonCoordMap">[docs]</a><span class="k">class</span> <span class="nc">TanhSimonCoordMap</span><span class="p">(</span><span class="n">SimonCoordMap</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class defines the smooth exterior coordinate mapping of the</span>
+<span class="sd">    Simon type using the smooth function based on :math:`\tanh`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lbda</span><span class="p">,</span> <span class="n">GCVT</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theta: float</span>
+<span class="sd">            Complex scaling angle.</span>
+<span class="sd">        x0: float</span>
+<span class="sd">            Inflection point.</span>
+<span class="sd">        lbda: float</span>
+<span class="sd">            Sharpness parameter</span>
+<span class="sd">        GCVT: bool</span>
+<span class="sd">            Stands for Generalized Complex Virial Theorem. If it is set</span>
+<span class="sd">            to ``True``, then only one virial value is computed, else</span>
+<span class="sd">            there are one per coordinate mapping parameter (here,</span>
+<span class="sd">            :attr:`theta`, :attr:`x0` and :attr:`lbda`). Defaults to</span>
+<span class="sd">            ``True``.</span>
+<span class="sd">        grid: numpy array or None</span>
+<span class="sd">            Discretization grid (optional).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">smooth_func</span> <span class="o">=</span> <span class="n">TanhSmoothFunction</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">lbda</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">smooth_func</span><span class="p">,</span> <span class="n">GCVT</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TanhSimonCoordMap._get_m_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.TanhSimonCoordMap._get_m_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_m_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gp: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+<span class="sd">        gm: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            The values of an intermediate function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="n">gm</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">lbda</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TanhSimonCoordMap._get_m_dx0_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.TanhSimonCoordMap._get_m_dx0_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_m_dx0_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gp: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+<span class="sd">        gm: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            The values of the first derivative with respect to</span>
+<span class="sd">            :attr:`x0` of an intermediate function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">gm</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span></div>
+
+<div class="viewcode-block" id="TanhSimonCoordMap._get_m_dl_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.TanhSimonCoordMap._get_m_dl_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_m_dl_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gp: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+<span class="sd">        gm: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            The values of the first derivative with respect to</span>
+<span class="sd">            the sharpness parameter :attr:`\lambda` of an intermediate</span>
+<span class="sd">            function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">gp</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span> <span class="o">-</span> <span class="n">gm</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">gm</span><span class="p">)</span>
+                <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="n">gm</span><span class="p">)))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">lbda</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ErfSimonCoordMap"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.ErfSimonCoordMap">[docs]</a><span class="k">class</span> <span class="nc">ErfSimonCoordMap</span><span class="p">(</span><span class="n">SimonCoordMap</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class defines the smooth exterior coordinate mapping of the</span>
+<span class="sd">    Simon type using the smooth function based on :math:`\text{erf}`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lbda</span><span class="p">,</span> <span class="n">GCVT</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theta: float</span>
+<span class="sd">            Complex scaling angle.</span>
+<span class="sd">        x0: float</span>
+<span class="sd">            Inflection point.</span>
+<span class="sd">        lbda: float</span>
+<span class="sd">            Sharpness parameter</span>
+<span class="sd">        GCVT: bool</span>
+<span class="sd">            Stands for Generalized Complex Virial Theorem. If it is set</span>
+<span class="sd">            to ``True``, then only one virial value is computed, else</span>
+<span class="sd">            there are one per coordinate mapping parameter (here,</span>
+<span class="sd">            :attr:`theta`, :attr:`x0` and :attr:`lbda`). Defaults to</span>
+<span class="sd">            ``True``.</span>
+<span class="sd">        grid: numpy array or None</span>
+<span class="sd">            Discretization grid (optional).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">smooth_func</span> <span class="o">=</span> <span class="n">ErfSmoothFunction</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">lbda</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">smooth_func</span><span class="p">,</span> <span class="n">GCVT</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ErfSimonCoordMap._get_m_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.ErfSimonCoordMap._get_m_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_m_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gp: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+<span class="sd">        gm: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            The values of an intermediate function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">term1</span> <span class="o">=</span> <span class="n">gp</span><span class="o">*</span><span class="n">erf</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span> <span class="o">-</span> <span class="n">gm</span><span class="o">*</span><span class="n">erf</span><span class="p">(</span><span class="n">gm</span><span class="p">)</span>
+        <span class="n">term2</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">gp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">gm</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">+</span> <span class="p">(</span><span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">lbda</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ErfSimonCoordMap._get_m_dx0_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.ErfSimonCoordMap._get_m_dx0_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_m_dx0_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gp: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+<span class="sd">        gm: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            The values of the first derivative with respect to</span>
+<span class="sd">            :attr:`x0` of an intermediate function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="o">-</span> <span class="p">(</span><span class="n">erf</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span> <span class="o">+</span> <span class="n">erf</span><span class="p">(</span><span class="n">gm</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span></div>
+
+<div class="viewcode-block" id="ErfSimonCoordMap._get_m_dl_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.ErfSimonCoordMap._get_m_dl_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_m_dl_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">gm</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gp: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+<span class="sd">        gm: numpy array</span>
+<span class="sd">            Intermadiary value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            The values of the first derivative with respect to</span>
+<span class="sd">            the sharpness parameter :attr:`\lambda` of an intermediate</span>
+<span class="sd">            function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">gm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">gp</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">lbda</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="KGCoordMap"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.KGCoordMap">[docs]</a><span class="k">class</span> <span class="nc">KGCoordMap</span><span class="p">(</span><span class="n">SmoothFuncCoordMap</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    .. note:: This is an abstract class.</span>
+
+<span class="sd">    This class allows the representation of the smooth exterior</span>
+<span class="sd">    coordinate mapping :math:`F: x \mapsto x e^{i \theta q(x)}`, that we</span>
+<span class="sd">    will call the Kalita-Gupta (KG) coordinate mapping.</span>
+<span class="sd">    :math:`q` represents the smooth function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="KGCoordMap._update_x_deriv_from_grid"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.KGCoordMap._update_x_deriv_from_grid">[docs]</a>    <span class="k">def</span> <span class="nf">_update_x_deriv_from_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the values of the coordinate mapping and its three first</span>
+<span class="sd">        derivatives with respect to :math:`x`, if the grid is not</span>
+<span class="sd">        ``None``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the values &quot;recursively&quot;</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_values</span><span class="p">()</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_f_values</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+        <span class="n">f_dx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_f_dx_values</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="n">f_dx2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_f_dx2_values</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">f_dx</span><span class="p">)</span>
+        <span class="c1"># Set the properties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">F</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_values</span> <span class="o">=</span> <span class="n">f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_dx_values</span> <span class="o">=</span> <span class="n">f_dx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_dx2_values</span> <span class="o">=</span> <span class="n">f_dx2</span></div>
+
+<div class="viewcode-block" id="KGCoordMap._update_param_deriv_from_grid"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.KGCoordMap._update_param_deriv_from_grid">[docs]</a>    <span class="k">def</span> <span class="nf">_update_param_deriv_from_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the values of the derivative with respect to the</span>
+<span class="sd">        coordinate mapping parameters of the coordinate mapping and its</span>
+<span class="sd">        first derivative with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set some variables for readability</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">a_dx0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">dxi_values</span><span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">]</span>
+        <span class="n">a_dl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">dxi_values</span><span class="p">[</span><span class="s1">&#39;lbda&#39;</span><span class="p">]</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span>
+        <span class="c1"># Set the properties</span>
+        <span class="n">F_dth</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">F</span>
+        <span class="n">F_dx0</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">*</span> <span class="n">F</span> <span class="o">*</span> <span class="n">a_dx0</span>
+        <span class="n">F_dl</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">*</span> <span class="n">F</span> <span class="o">*</span> <span class="n">a_dl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dxi_values</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;theta&#39;</span><span class="p">:</span> <span class="n">F_dth</span><span class="p">,</span> <span class="s1">&#39;x0&#39;</span><span class="p">:</span> <span class="n">F_dx0</span><span class="p">,</span> <span class="s1">&#39;lbda&#39;</span><span class="p">:</span> <span class="n">F_dl</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_f_dxi_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_f_dxi_values</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F_dth</span><span class="p">,</span> <span class="n">F_dx0</span><span class="p">,</span> <span class="n">F_dl</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KGCoordMap._get_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.KGCoordMap._get_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the second derivative of the coordinate</span>
+<span class="sd">            mapping with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="o">*</span><span class="n">a</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KGCoordMap._get_f_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.KGCoordMap._get_f_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_f_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        F: numpy array</span>
+<span class="sd">            Values of the coordinate mapping.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first derivative of the coordinate</span>
+<span class="sd">            mapping with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">a_dx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">dx_values</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="o">*</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="o">*</span><span class="n">a_dx</span><span class="o">*</span><span class="n">F</span></div>
+
+<div class="viewcode-block" id="KGCoordMap._get_f_dx_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.KGCoordMap._get_f_dx_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_f_dx_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        F: numpy array</span>
+<span class="sd">            Values of the coordinate mapping.</span>
+<span class="sd">        f: numpy array</span>
+<span class="sd">            Values of the first derivative of the coordinate mapping</span>
+<span class="sd">            with respect to :math:`x`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the second derivative of the coordinate</span>
+<span class="sd">            mapping with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">a_dx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">dx_values</span>
+        <span class="n">a_dx2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">dx2_values</span>
+        <span class="c1"># Evaluate the derivative</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="o">*</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">*</span> <span class="p">(</span><span class="n">a_dx</span><span class="o">*</span><span class="n">factor</span> <span class="o">+</span> <span class="n">a_dx2</span><span class="o">*</span><span class="n">F</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KGCoordMap._get_f_dx2_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.KGCoordMap._get_f_dx2_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_f_dx2_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">f_dx</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        F: numpy array</span>
+<span class="sd">            Values of the coordinate mapping.</span>
+<span class="sd">        f: numpy array</span>
+<span class="sd">            Values of the first derivative of the coordinate mapping</span>
+<span class="sd">            with respect to :math:`x`.</span>
+<span class="sd">        f_dx: numpy array</span>
+<span class="sd">            Values of the second derivative of the coordinate mapping</span>
+<span class="sd">            with respect to :math:`x`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the third derivative of the coordinate mapping</span>
+<span class="sd">            with respect to :math:`x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">a_dx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">dx_values</span>
+        <span class="n">a_dx2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">dx2_values</span>
+        <span class="n">a_dx3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span><span class="o">.</span><span class="n">dx3_values</span>
+        <span class="c1"># Evaluate the derivative</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">a_dx2</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="o">*</span><span class="n">a_dx</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">*</span> <span class="p">(</span><span class="n">a_dx</span><span class="o">*</span><span class="n">f_dx</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">a_dx2</span><span class="o">*</span><span class="n">f</span> <span class="o">+</span> <span class="n">a_dx3</span><span class="o">*</span><span class="n">F</span>
+                                <span class="o">+</span> <span class="n">factor</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="o">*</span><span class="n">a</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="KGCoordMap._get_dxi_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.KGCoordMap._get_dxi_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_dxi_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Does nothing, as its role is already performed by the</span>
+<span class="sd">        :meth:`_update_param_deriv_from_grid` method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="KGCoordMap._get_f_dxi_values"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.KGCoordMap._get_f_dxi_values">[docs]</a>    <span class="k">def</span> <span class="nf">_get_f_dxi_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">F_dth</span><span class="p">,</span> <span class="n">F_dx0</span><span class="p">,</span> <span class="n">F_dl</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        F: numpy array</span>
+<span class="sd">            Values of the coordinate mapping.</span>
+<span class="sd">        F_dth: numpy array</span>
+<span class="sd">            Values of the first derivative of the coordinate mapping</span>
+<span class="sd">            with respect to the complex scaling angle.</span>
+<span class="sd">        F_dx0: numpy array</span>
+<span class="sd">            Values of the second derivative of the coordinate mapping</span>
+<span class="sd">            with respect to :attr:`x0`.</span>
+<span class="sd">        F_dl: numpy array</span>
+<span class="sd">            Values of the first derivative of the coordinate mapping</span>
+<span class="sd">            with respect to the sharpness parameter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Values of the first derivative with respect to the</span>
+<span class="sd">            coordinate mapping parameters of the first derivative with</span>
+<span class="sd">            respect to :math:`x` of the coordinate mapping.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span>
+        <span class="n">sf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_func</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">a_dx</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">dx_values</span>
+        <span class="n">a_dx0</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">dxi_values</span><span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">]</span>
+        <span class="n">a_dl</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">dxi_values</span><span class="p">[</span><span class="s1">&#39;lbda&#39;</span><span class="p">]</span>
+        <span class="n">a_dx_dx0</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">dx_dxi_values</span><span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">]</span>
+        <span class="n">a_dx_dl</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">dx_dxi_values</span><span class="p">[</span><span class="s1">&#39;lbda&#39;</span><span class="p">]</span>
+        <span class="c1"># Evaluate the derivatives</span>
+        <span class="n">f_dth</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">theta</span><span class="o">*</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">a_dx</span><span class="o">*</span><span class="p">(</span><span class="n">F</span> <span class="o">+</span> <span class="n">theta</span><span class="o">*</span><span class="n">F_dth</span><span class="p">))</span>
+        <span class="n">f_dx0</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">theta</span> <span class="o">*</span> <span class="p">(</span><span class="n">a_dx0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">theta</span><span class="o">*</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">a_dx_dx0</span><span class="o">*</span><span class="n">F</span> <span class="o">+</span> <span class="n">a_dx</span><span class="o">*</span><span class="n">F_dx0</span><span class="p">)</span>
+        <span class="n">f_dl</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">theta</span> <span class="o">*</span> <span class="p">(</span><span class="n">a_dl</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">theta</span><span class="o">*</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">a_dx_dl</span><span class="o">*</span><span class="n">F</span> <span class="o">+</span> <span class="n">a_dx</span><span class="o">*</span><span class="n">F_dl</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;theta&#39;</span><span class="p">:</span> <span class="n">f_dth</span><span class="p">,</span> <span class="s1">&#39;x0&#39;</span><span class="p">:</span> <span class="n">f_dx0</span><span class="p">,</span> <span class="s1">&#39;lbda&#39;</span><span class="p">:</span> <span class="n">f_dl</span><span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="TanhKGCoordMap"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.TanhKGCoordMap">[docs]</a><span class="k">class</span> <span class="nc">TanhKGCoordMap</span><span class="p">(</span><span class="n">KGCoordMap</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class defines the smooth exterior coordinate mapping of the</span>
+<span class="sd">    Kalita-Gupta type using the smooth function based on :math:`\tanh`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lbda</span><span class="p">,</span> <span class="n">GCVT</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theta: float</span>
+<span class="sd">            Complex scaling angle.</span>
+<span class="sd">        x0: float</span>
+<span class="sd">            Inflection point.</span>
+<span class="sd">        lbda: float</span>
+<span class="sd">            Sharpness parameter</span>
+<span class="sd">        GCVT: bool</span>
+<span class="sd">            Stands for Generalized Complex Virial Theorem. If it is set</span>
+<span class="sd">            to ``True``, then only one virial value is computed, else</span>
+<span class="sd">            there are one per coordinate mapping parameter (here,</span>
+<span class="sd">            :attr:`theta`, :attr:`x0` and :attr:`lbda`). Defaults to</span>
+<span class="sd">            ``True``.</span>
+<span class="sd">        grid: numpy array or None</span>
+<span class="sd">            Discretization grid (optional).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">smooth_func</span> <span class="o">=</span> <span class="n">TanhSmoothFunction</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">lbda</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">smooth_func</span><span class="p">,</span> <span class="n">GCVT</span><span class="o">=</span><span class="n">GCVT</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ErfKGCoordMap"><a class="viewcode-back" href="../../CoordMap.html#siegpy.coordinatemappings.ErfKGCoordMap">[docs]</a><span class="k">class</span> <span class="nc">ErfKGCoordMap</span><span class="p">(</span><span class="n">KGCoordMap</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class defines the smooth exterior coordinate mapping of the</span>
+<span class="sd">    Kalita-Gupta type using the smooth function based on</span>
+<span class="sd">    :math:`\text{erf}`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">lbda</span><span class="p">,</span> <span class="n">GCVT</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theta: float</span>
+<span class="sd">            Complex scaling angle.</span>
+<span class="sd">        x0: float</span>
+<span class="sd">            Inflection point.</span>
+<span class="sd">        lbda: float</span>
+<span class="sd">            Sharpness parameter</span>
+<span class="sd">        GCVT: bool</span>
+<span class="sd">            Stands for Generalized Complex Virial Theorem. If it is set</span>
+<span class="sd">            to ``True``, then only one virial value is computed, else</span>
+<span class="sd">            there are one per coordinate mapping parameter (here,</span>
+<span class="sd">            :attr:`theta`, :attr:`x0` and :attr:`lbda`). Defaults to</span>
+<span class="sd">            ``True``.</span>
+<span class="sd">        grid: numpy array</span>
+<span class="sd">            Discretization grid (optional).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">smooth_func</span> <span class="o">=</span> <span class="n">ErfSmoothFunction</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">lbda</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">smooth_func</span><span class="p">,</span> <span class="n">GCVT</span><span class="o">=</span><span class="n">GCVT</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

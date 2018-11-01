@@ -1,0 +1,512 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>siegpy.analyticeigenstates &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>siegpy.analyticeigenstates</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for siegpy.analyticeigenstates</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The classes defining the analytic eigenstates of a generic 1D potential</span>
+<span class="sd">with compact support are presented below:</span>
+<span class="sd">* :class:`AnalyticEigenstate` is the base class of the other two,</span>
+<span class="sd">* :class:`AnalyticSiegert` is meant to represent analytic Siegert states,</span>
+<span class="sd">* :class:`AnalyticContinuum` is meant to represent analytic continuum</span>
+<span class="sd">  states</span>
+
+<span class="sd">They all are abstract base classes:</span>
+
+<span class="sd">A new exception is also defined:</span>
+<span class="sd">:class:`~siegpy/analyticeigenstates/WavenumberError`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">.eigenstates</span> <span class="k">import</span> <span class="n">Eigenstate</span>
+<span class="kn">from</span> <span class="nn">.functions</span> <span class="k">import</span> <span class="n">AnalyticFunction</span>
+
+
+<div class="viewcode-block" id="AnalyticEigenstate"><a class="viewcode-back" href="../../AnalyticEigenstates.html#siegpy.analyticeigenstates.AnalyticEigenstate">[docs]</a><span class="k">class</span> <span class="nc">AnalyticEigenstate</span><span class="p">(</span><span class="n">AnalyticFunction</span><span class="p">,</span> <span class="n">Eigenstate</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class gathering the attributes and methods necessary to define an</span>
+<span class="sd">    analytic eigenstate of any analytical problem (such as the 1D</span>
+<span class="sd">    Square-Well Potential case).</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        To consider a case as analytic, the wavefunctions of the</span>
+<span class="sd">        Siegert and continuum states should be known analytically. The</span>
+<span class="sd">        analytic scalar product of both types of eigenstates with at</span>
+<span class="sd">        least one type of test function should also be defined.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># You should be able to define the type of an analytical eigenstate</span>
+    <span class="n">SIEGERT_TYPES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s2">&quot;bound&quot;</span><span class="p">,</span> <span class="s1">&#39;ab&#39;</span><span class="p">:</span> <span class="s2">&quot;anti-bound&quot;</span><span class="p">,</span>
+                     <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="s2">&quot;resonant&quot;</span><span class="p">,</span> <span class="s1">&#39;ar&#39;</span><span class="p">:</span> <span class="s2">&quot;anti-resonant&quot;</span><span class="p">,</span>
+                     <span class="kc">None</span><span class="p">:</span> <span class="s2">&quot;continuum&quot;</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">analytic</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        k: complex</span>
+<span class="sd">            Wavenumber of the eigenstate.</span>
+<span class="sd">        potential: Potential</span>
+<span class="sd">            Potential for which the analytic eigenstate is known.</span>
+<span class="sd">        grid: list or set or numpy array</span>
+<span class="sd">            Discretization grid.</span>
+<span class="sd">        analytic: bool</span>
+<span class="sd">            If ``True``, the scalar products must be computed</span>
+<span class="sd">            analytically.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        WavenumberError</span>
+<span class="sd">            If the inferred Siegert type is unknown.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">S_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_Siegert_type</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">S_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">SIEGERT_TYPES</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_Siegert_type</span> <span class="o">=</span> <span class="n">S_type</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Error only if bad implementation, hence no coverage</span>
+            <span class="k">raise</span> <span class="n">WavenumberError</span><span class="p">()</span>  <span class="c1"># pragma: no cover</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wavenumber</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="o">=</span> <span class="n">k</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="n">potential</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analytic</span> <span class="o">=</span> <span class="n">analytic</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex or float</span>
+<span class="sd">            Potential for which the eigenstate is a solution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">wavenumber</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex or float</span>
+<span class="sd">            Wavenumber of the eigenstate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wavenumber</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex or float</span>
+<span class="sd">            Energy of the Eigenstate</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span>
+
+<div class="viewcode-block" id="AnalyticEigenstate._find_Siegert_type"><a class="viewcode-back" href="../../AnalyticEigenstates.html#siegpy.analyticeigenstates.AnalyticEigenstate._find_Siegert_type">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_find_Siegert_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note:: This is an asbtract method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        k: float or complex</span>
+<span class="sd">            Wavenumber of the eigenstate</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str or NoneType</span>
+<span class="sd">            Type of the eigenstate from its wavenumber k (``&#39;b&#39;`` for</span>
+<span class="sd">            bound states, ``&#39;ab&#39;`` for anti-bound states, ``&#39;r&#39;`` for</span>
+<span class="sd">            resonant states, ``&#39;ar&#39;`` for anti-resonant states, and</span>
+<span class="sd">            ``None`` for continuum states).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">analytic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            Analyticity of the scalar products.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analytic</span>
+
+    <span class="nd">@analytic</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">analytic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setter of the analyticity of the eigenstate.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        new_value: bool</span>
+<span class="sd">            New value of the analyticity of the scalar products.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If ``new_value`` is not a Boolean.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_analytic</span> <span class="o">=</span> <span class="n">new_value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;analytic must be a Boolean (cannot be </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_value</span><span class="p">))</span>
+
+<div class="viewcode-block" id="AnalyticEigenstate.__eq__"><a class="viewcode-back" href="../../AnalyticEigenstates.html#siegpy.analyticeigenstates.AnalyticEigenstate.__eq__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Two analytic eigenstates are the same if they share the same</span>
+<span class="sd">        wavenumber, potential and Siegert_type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other: object</span>
+<span class="sd">            Another object</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if both eigenstates are the same.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">AnalyticEigenstate</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavenumber</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">wavenumber</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">potential</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Siegert_type</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">Siegert_type</span><span class="p">))</span>
+        <span class="c1"># Not any else or elif covered, since there is only one</span>
+        <span class="c1"># analytical case actually implemented (SWP case)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Representation of an analytic eigenstate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Siegert_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SIEGERT_TYPES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Siegert_type</span><span class="p">]</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> eigenstate of energy </span><span class="si">{:.3f}</span><span class="s2">&quot;</span>\
+               <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Siegert_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AnalyticEigenstate.scal_prod"><a class="viewcode-back" href="../../AnalyticEigenstates.html#siegpy.analyticeigenstates.AnalyticEigenstate.scal_prod">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">scal_prod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note:: This is an asbtract method.</span>
+
+<span class="sd">        Evaluate the scalar product between the state and a test</span>
+<span class="sd">        function ``other``. It ensures that the numerical scalar product</span>
+<span class="sd">        is computed when the analytical scalar product with test</span>
+<span class="sd">        functions is not implemented in the child class.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other: Function</span>
+<span class="sd">            Test function.</span>
+<span class="sd">        xlim: tuple(float, float)</span>
+<span class="sd">            Bounds of the space grid defining the interval over which</span>
+<span class="sd">            the scalar product must be computed.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float or complex</span>
+<span class="sd">            Value of the scalar product of the state with a test</span>
+<span class="sd">            function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">scal_prod</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="AnalyticSiegert"><a class="viewcode-back" href="../../AnalyticEigenstates.html#siegpy.analyticeigenstates.AnalyticSiegert">[docs]</a><span class="k">class</span> <span class="nc">AnalyticSiegert</span><span class="p">(</span><span class="n">AnalyticEigenstate</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class specifying the abstract method allowing to find the type of</span>
+<span class="sd">    the analytic eigenstate, in the case it is a Siegert state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AnalyticSiegert._find_Siegert_type"><a class="viewcode-back" href="../../AnalyticEigenstates.html#siegpy.analyticeigenstates.AnalyticSiegert._find_Siegert_type">[docs]</a>    <span class="k">def</span> <span class="nf">_find_Siegert_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        k: complex</span>
+<span class="sd">            Wavenumber of the Siegert state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The type of the Siegert state, namely:</span>
+
+<span class="sd">            * ``&#39;b&#39;`` for a bound state</span>
+<span class="sd">            * ``&#39;ab&#39;`` for an anti-bound state</span>
+<span class="sd">            * ``&#39;r&#39;`` for a resonant state</span>
+<span class="sd">            * ``&#39;ar&#39;`` for an anti-resonant state</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        WavenumberError</span>
+<span class="sd">            If the wavenumber is equal to zero.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># If its real part is zero, then it&#39;s either a bound</span>
+        <span class="c1"># or an antibound state</span>
+        <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">real</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">imag</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">:</span>
+                <span class="n">S_type</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span>
+            <span class="k">elif</span> <span class="n">k</span><span class="o">.</span><span class="n">imag</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">:</span>
+                <span class="n">S_type</span> <span class="o">=</span> <span class="s1">&#39;ab&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># This is a very rare case, hence no coverage</span>
+                <span class="k">raise</span> <span class="n">WavenumberError</span><span class="p">(</span><span class="s2">&quot;The wavenumber is zero: impossible to &quot;</span>
+                                      <span class="s2">&quot;define the parity.&quot;</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+        <span class="c1"># Else, if its real part is positive...</span>
+        <span class="k">elif</span> <span class="n">k</span><span class="o">.</span><span class="n">real</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">:</span>
+            <span class="c1"># ... if it has a negative imaginary part,</span>
+            <span class="c1"># then it&#39;s a resonant state</span>
+            <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">imag</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">:</span>
+                <span class="n">S_type</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span>
+        <span class="c1"># Finally, if the real part is negative...</span>
+        <span class="k">elif</span> <span class="n">k</span><span class="o">.</span><span class="n">real</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">:</span>
+            <span class="c1"># ... if it has a negative imaginary part,</span>
+            <span class="c1"># then it&#39;s an anti-resonant state</span>
+            <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">imag</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">:</span>
+                <span class="n">S_type</span> <span class="o">=</span> <span class="s1">&#39;ar&#39;</span>
+        <span class="k">return</span> <span class="n">S_type</span></div></div>
+
+
+<div class="viewcode-block" id="AnalyticContinuum"><a class="viewcode-back" href="../../AnalyticEigenstates.html#siegpy.analyticeigenstates.AnalyticContinuum">[docs]</a><span class="k">class</span> <span class="nc">AnalyticContinuum</span><span class="p">(</span><span class="n">AnalyticEigenstate</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class specifying the abstract method allowing to find the type of</span>
+<span class="sd">    the analytic eigenstate, in the case it is a continuum state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AnalyticContinuum._find_Siegert_type"><a class="viewcode-back" href="../../AnalyticEigenstates.html#siegpy.analyticeigenstates.AnalyticContinuum._find_Siegert_type">[docs]</a>    <span class="k">def</span> <span class="nf">_find_Siegert_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        k: float</span>
+<span class="sd">            Wavenumber of the continuum state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NoneType</span>
+<span class="sd">            ``None``, given that a continuum state is not a Siegert</span>
+<span class="sd">            state.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        WavenumberError</span>
+<span class="sd">            If the wavenumber is imaginary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">WavenumberError</span><span class="p">(</span>
+                <span class="s2">&quot;A continuum state cannot have an imaginary wavenumber&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">WavenumberError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error thrown if the wavenumber of an eigenstate is incorrect.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

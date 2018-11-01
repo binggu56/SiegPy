@@ -1,0 +1,762 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Strength function: an introduction &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Strength function: convergence of the Mittag-Leffler expansion" href="convergence_MLE_strength_function.html" />
+    <link rel="prev" title="Completeness relation: a wider picture" href="completeness_relation_multiple_test_functions.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../notebooks.html">Tutorial</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-analytical-case">1D Square-Well Potential: the analytical case</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="find_Siegerts_1DSWP.html">Find the Siegert and continuum states of a 1D Square-Well Potential case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="completeness_relation.html">Completeness relation: an introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="completeness_relation_problematic_cases.html">Completeness relation: some problematic cases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="completeness_relation_multiple_test_functions.html">Completeness relation: a wider picture</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Strength function: an introduction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Initialization:-create-the-basis-sets">Initialization: create the basis sets</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Case-1:-strength-function-for-a-Gaussian-test-function">Case 1: strength function for a Gaussian test function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Case-2:-strength-function-for-a-rectangular-test-function">Case 2: strength function for a rectangular test function</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="convergence_MLE_strength_function.html">Strength function: convergence of the Mittag-Leffler expansion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time_propagation.html">Time propagation: an introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time_propagation_initial_momentum.html">Time propagation: wavepacket with an initial momentum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="time_propagation_error_estimation.html">Time propagation: error estimation of the Siegert states expansions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-numerical-case">1D Square-Well Potential: the numerical case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#other-numerical-potentials">Other numerical potentials</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../notebooks.html">Tutorial</a> &raquo;</li>
+        
+      <li>Strength function: an introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/strength_function.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Strength-function:-an-introduction">
+<h1>Strength function: an introduction<a class="headerlink" href="#Strength-function:-an-introduction" title="Permalink to this headline">¶</a></h1>
+<p>We saw that the exact completeness relation using the bound and
+continuum states can be efficiently approximated by a discrete basis set
+made of continuum states. Still, this is not a quantity of physical
+interest: it could be interesting to find such a quantity which strongly
+relies on the continuum states in order to replace them by Siegert
+states.</p>
+<p>The first example we will provide in this tutorial concerns the
+<strong>strength function (SF)</strong>:</p>
+<p><span class="math notranslate nohighlight">\(S(k) = - \frac{1}{\pi} \Im \left\langle g | G(k) | g \right\rangle\)</span></p>
+<p>where <span class="math notranslate nohighlight">\(G\)</span> is the <strong>Green’s function</strong> (or resolvent) of the
+Hamiltonian of the considered system and <span class="math notranslate nohighlight">\(g\)</span> is a test function.</p>
+<p>The exact Green’s function may be written as follows:</p>
+<p><span class="math notranslate nohighlight">\(G(k) = \sum_b \frac{\left| \varphi_b \right\rangle \left\langle \varphi_b \right|}{k^2/2 - {k_b}^2/2}  + \sum_{p = \pm} \int_0^{+\infty} \text{d} k_1 \frac{\left| \varphi_p \right\rangle \left\langle \varphi_p \right|}{k^2/2 - {k_1}^2/2}\)</span></p>
+<p>where the first sum runs over the bound states of the system (of
+wavenumber <span class="math notranslate nohighlight">\(k_b\)</span>), while the second one runs over the continuum
+states of wavenumber (<span class="math notranslate nohighlight">\(k_1\)</span>), which can be even (subscript
+<span class="math notranslate nohighlight">\(+\)</span>) or odd (subscript <span class="math notranslate nohighlight">\(-\)</span>).</p>
+<p>We will compare this exact result with the one obtained by using the
+approximated Green’s function given by the <strong>Mittag-Leffler expansion</strong>
+(MLE):</p>
+<p><span class="math notranslate nohighlight">\(G_{MLE}(k) = \sum_{S = a, b, c, d} \frac{\left| \varphi_S \right) \left( \varphi_S \right|}{k_S (k - k_S)}\)</span></p>
+<p>where the sum runs over all the Siegert states of the system (of
+wavenumber <span class="math notranslate nohighlight">\(k_S\)</span>, where <span class="math notranslate nohighlight">\(S\)</span> represents a type of Siegert
+states: <span class="math notranslate nohighlight">\(a\)</span> for anti-bound, <span class="math notranslate nohighlight">\(b\)</span> for bound, <span class="math notranslate nohighlight">\(c\)</span> for
+resonant or capturing states and <span class="math notranslate nohighlight">\(d\)</span> for anti-resonant or decaying
+states).</p>
+<p>We still consider the case of a 1D Square-Well potential, where the
+Siegert and continuum states are known analytically. It is therefore
+possible to get the exact strength function and to compare it to the MLE
+of the SF.</p>
+<div class="section" id="Initialization:-create-the-basis-sets">
+<h2>Initialization: create the basis sets<a class="headerlink" href="#Initialization:-create-the-basis-sets" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Import-some-modules-and-classes">
+<h3>Import some modules and classes<a class="headerlink" href="#Import-some-modules-and-classes" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Make the notebook aware of some of the SiegPy module classes</span>
+<span class="kn">from</span> <span class="nn">siegpy</span> <span class="k">import</span> <span class="n">SWPBasisSet</span><span class="p">,</span> <span class="n">Rectangular</span><span class="p">,</span> <span class="n">Gaussian</span><span class="p">,</span> <span class="n">SWPotential</span>
+<span class="c1"># Other imports</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Create-a-basis-set-made-of-Siegert-states-only">
+<h3>Create a basis-set made of Siegert states only<a class="headerlink" href="#Create-a-basis-set-made-of-Siegert-states-only" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">siegerts</span> <span class="o">=</span> <span class="n">SWPBasisSet</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;siegerts.dat&quot;</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Create-an-exact-basis-set,-made-of-bound-and-continuum-states">
+<h3>Create an exact basis-set, made of bound and continuum states<a class="headerlink" href="#Create-an-exact-basis-set,-made-of-bound-and-continuum-states" title="Permalink to this headline">¶</a></h3>
+<p>The bound states are taken from the Siegert basis set while the
+continuum states are discretized over a grid of real wavenumbers.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Find the potential of the basis set made of Siegert states</span>
+<span class="n">potential</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">potential</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">width</span>
+
+<span class="c1"># Find some continuum states</span>
+<span class="n">k_max</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">siegerts</span><span class="o">.</span><span class="n">resonants</span><span class="o">.</span><span class="n">wavenumbers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">h_k</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">continuum</span> <span class="o">=</span> <span class="n">SWPBasisSet</span><span class="o">.</span><span class="n">find_continuum_states</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="n">k_max</span><span class="p">,</span> <span class="n">h_k</span><span class="p">)</span>
+
+<span class="c1"># Create the exact basis set</span>
+<span class="n">exact</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">bounds</span> <span class="o">+</span> <span class="n">continuum</span>
+</pre></div>
+</div>
+</div>
+<p><strong>This step is actually optional when running a real strength function
+calculation (but is mandatory for the purpose of this notebook), as
+using a dense basis set over a large range of wavenumbers leads to
+prohibitively long computation times to get a converged strength
+function.</strong> It is actually better to build a continuum basis set “on the
+fly” while computing each desired point of the strength function.</p>
+</div>
+<div class="section" id="Define-test-functions-to-evaluate-the-strength-function.">
+<h3>Define test functions to evaluate the strength function.<a class="headerlink" href="#Define-test-functions-to-evaluate-the-strength-function." title="Permalink to this headline">¶</a></h3>
+<p>The strength function (SF) is evaluated using a test function <span class="math notranslate nohighlight">\(g\)</span>.
+For the MLE of the SF to hold, this test function must lie in region
+<span class="math notranslate nohighlight">\(II\)</span> (inside the potential, where <span class="math notranslate nohighlight">\(|x| \leq l/2\)</span>). The cases
+of a Gaussian test function and of a rectangular test function are
+studied.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">x_c</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Center of the test functions</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="mf">2.</span>  <span class="c1"># Width of the rectangular function</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">l</span><span class="o">/</span><span class="mf">20.</span>  <span class="c1"># Width of the Gaussian</span>
+<span class="n">test_gauss</span> <span class="o">=</span> <span class="n">Gaussian</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">x_c</span><span class="p">)</span>  <span class="c1"># Gaussian test function</span>
+<span class="n">test_rect</span> <span class="o">=</span> <span class="n">Rectangular</span><span class="o">.</span><span class="n">from_width_and_center</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">x_c</span><span class="p">)</span>  <span class="c1"># Rectangular test function</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Create-the-grid-of-wavenumbers-where-the-strength-function-is-evaluated">
+<h3>Create the grid of wavenumbers where the strength function is evaluated<a class="headerlink" href="#Create-the-grid-of-wavenumbers-where-the-strength-function-is-evaluated" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">kgrid</span></code> defines the wavenumber grid used for plotting. It is not
+mandatory to keep the same dense grid used to initialize the continuum
+states. It is even rather strongly advised to make this grid as small as
+possible: this saves computation time, since a costly integration over
+the continuum states is performed for each point <span class="math notranslate nohighlight">\(k\)</span> in <code class="docutils literal notranslate"><span class="pre">kgrid</span></code>
+to evaluate the exact strength function .</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">step</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Grid-step for plotting</span>
+<span class="n">k_max</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># Maximal wavenumber for plotting</span>
+<span class="n">kgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">k_max</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Case-1:-strength-function-for-a-Gaussian-test-function">
+<h2>Case 1: strength function for a Gaussian test function<a class="headerlink" href="#Case-1:-strength-function-for-a-Gaussian-test-function" title="Permalink to this headline">¶</a></h2>
+<p>Both exact and approximate strength functions are calculated, the latter
+being very cheap to obtain, whereas the exact SF takes a long time due
+to the integrations over the continuum, that must extend to a large
+<code class="docutils literal notranslate"><span class="pre">k_max</span></code> and be very dense (small <code class="docutils literal notranslate"><span class="pre">h_k</span></code>). It is very difficult to get
+a converged result with respect to the amelioration of the continuum
+states basis (<em>i.e.</em> with smaller <code class="docutils literal notranslate"><span class="pre">h_k</span></code> and larger <code class="docutils literal notranslate"><span class="pre">k_max</span></code>).
+Learning from the numerical convergence of this scheme, it was possible
+to produce another scheme allowing a better convergence (using smaller
+<code class="docutils literal notranslate"><span class="pre">eta</span></code> and <code class="docutils literal notranslate"><span class="pre">h_k</span></code>) within a reasonable amount of time, by avoiding the
+need to discretize a dense basis set of continuum states over the whole
+range of wavenumbers.</p>
+<p>Note that there is no need to use a basis made of continuum states to
+compute the exact strength function “on the fly”. Some default values
+for <code class="docutils literal notranslate"><span class="pre">h_k</span></code>, <code class="docutils literal notranslate"><span class="pre">eta</span></code> and a tolerance parameters are passed to this
+method. They were found to give a good compromise between accuracy and
+speed for a large number of cases. Such default values for <code class="docutils literal notranslate"><span class="pre">eta</span></code> and
+<code class="docutils literal notranslate"><span class="pre">h_k</span></code> do not allow to get an exact SF using the other method in a
+limited amount of time.</p>
+<p>Compared to the exact calculations, computing the MLE of the SF is
+cheap.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">SF_MLE_gauss</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">MLE_strength_function</span><span class="p">(</span><span class="n">test_gauss</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+<span class="n">SF_exact_gauss</span> <span class="o">=</span> <span class="n">exact</span><span class="o">.</span><span class="n">exact_strength_function</span><span class="p">(</span><span class="n">test_gauss</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+<span class="n">SF_exact_gauss_other</span> <span class="o">=</span> <span class="n">siegerts</span><span class="o">.</span><span class="n">exact_strength_function_OTF</span><span class="p">(</span><span class="n">test_gauss</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The MLE of the SF reproduces perfectly the exact converged SF (evaluated
+with the minimal “on the fly” continuum basis set). The exact SF using
+the whole continuum basis set is not converged yet, even though it gives
+rather accurate results, especially for large <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Compare the exact SF to the MLE of the SF</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">SF_exact_gauss</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Exact&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">SF_exact_gauss_other</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#d73027&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Exact (converged)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">SF_MLE_gauss</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MLE&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$k$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$R(k)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">test_gauss</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_strength_function_16_0.png" src="../_images/notebooks_strength_function_16_0.png" />
+</div>
+</div>
+<p>The same plot can be obtained by applying the <code class="docutils literal notranslate"><span class="pre">plot_strength_function</span></code>
+method to a basis set made of Siegert states. The exact converged result
+are then computed. This method requires the same parameters: a test
+function and a wavenumber grid. You may also pass some other arguments,
+such as the filename <code class="docutils literal notranslate"><span class="pre">file_save</span></code> to save the plot in a file.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">siegerts</span><span class="o">.</span><span class="n">plot_strength_function</span><span class="p">(</span><span class="n">test_gauss</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">,</span> <span class="n">file_save</span><span class="o">=</span><span class="s1">&#39;SF_gauss_centered.pdf&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_strength_function_18_0.png" src="../_images/notebooks_strength_function_18_0.png" />
+</div>
+</div>
+<p>The main advantage of using the MLE of the strength function is that you
+gain substantial physical information on which resonance causes a
+particular peak of the strength function. Each peak of the strength
+function is indeed related to one particular resonant couple (in blue).
+The only exception is that the first peak correponds to the sum of the
+bound and anti-bound states contribution (in red).</p>
+<p>This is triggered by the optional <code class="docutils literal notranslate"><span class="pre">nres</span></code> parameter, that specifies the
+number of resonant couples that are used. Note that if <code class="docutils literal notranslate"><span class="pre">nres</span></code> is set
+to 0, then only the peak corresponding to the bound and anti-bound
+states contributions to the strength function is plotted.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">siegerts</span><span class="o">.</span><span class="n">plot_strength_function</span><span class="p">(</span><span class="n">test_gauss</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">,</span> <span class="n">exact</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_strength_function_20_0.png" src="../_images/notebooks_strength_function_20_0.png" />
+</div>
+</div>
+<p>As you can see, the position <strong>and</strong> the shape of a particular peak is
+related to one particular resonance.</p>
+</div>
+<div class="section" id="Case-2:-strength-function-for-a-rectangular-test-function">
+<h2>Case 2: strength function for a rectangular test function<a class="headerlink" href="#Case-2:-strength-function-for-a-rectangular-test-function" title="Permalink to this headline">¶</a></h2>
+<p>The same study can be done using the previously defined rectangular test
+function:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">siegerts</span><span class="o">.</span><span class="n">plot_strength_function</span><span class="p">(</span><span class="n">test_rect</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">,</span> <span class="n">file_save</span><span class="o">=</span><span class="s1">&#39;SF_rect_centered_half_width.pdf&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_strength_function_23_0.png" src="../_images/notebooks_strength_function_23_0.png" />
+</div>
+</div>
+<p>Regarding the relation between one peak to a resonance couple, it may
+happen that some resonant/anti-resonant couples contributions are purely
+negative. A particular example is when the rectangular function is
+centered and its width is half the potential width, as is the case here.
+Half of these couples give a contribution leading to a peak, while the
+contributions of the other half lead to zeros of the strength function:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">siegerts</span><span class="o">.</span><span class="n">plot_strength_function</span><span class="p">(</span><span class="n">test_rect</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">,</span> <span class="n">exact</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_strength_function_25_0.png" src="../_images/notebooks_strength_function_25_0.png" />
+</div>
+</div>
+<p>Another “funny” example is when the width of the rectangular function
+gets close to the width of the potential: the contribution of each
+resonant couple is then negative, as if it was “boring” through the
+bound/anti-bound states contribution. In this particular case, only the
+zeros of the strength function are related to the resonant couples:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">rect</span> <span class="o">=</span> <span class="n">Rectangular</span><span class="o">.</span><span class="n">from_width_and_center</span><span class="p">(</span><span class="mf">0.999</span><span class="o">*</span><span class="n">l</span><span class="p">,</span> <span class="n">x_c</span><span class="p">)</span>
+<span class="n">siegerts</span><span class="o">.</span><span class="n">plot_strength_function</span><span class="p">(</span><span class="n">rect</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_strength_function_27_0.png" src="../_images/notebooks_strength_function_27_0.png" />
+</div>
+</div>
+<p>Remember that the test function is close to the border of region
+<span class="math notranslate nohighlight">\(II\)</span>. This means that this is a problematic case for the
+completeness relation but, as you can see, it is not problematic at all
+when it comes to reproduce the strength function.</p>
+<p>This concludes the first notebook about the strength function using
+Siegert states. You saw that the strength function can be well
+approximated by using the Mittag-Leffler exapnsion of the Green’s
+function, even in some cases that were problematic for the completeness
+relation. By using Siegert states, you may also gain some physical
+information, by relating a peak to a particular resonance.</p>
+<p>You should now be able to compute the strength function of any 1D SW
+potential using any analytic test function available, such as the
+Gaussian and rectangular functions.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="convergence_MLE_strength_function.html" class="btn btn-neutral float-right" title="Strength function: convergence of the Mittag-Leffler expansion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="completeness_relation_multiple_test_functions.html" class="btn btn-neutral" title="Completeness relation: a wider picture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

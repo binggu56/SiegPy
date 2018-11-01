@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tutorial &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Find the Siegert and continuum states of a 1D Square-Well Potential case" href="notebooks/find_Siegerts_1DSWP.html" />
+    <link rel="prev" title="Getting started" href="getting_started.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#d-square-well-potential-the-analytical-case">1D Square-Well Potential: the analytical case</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/find_Siegerts_1DSWP.html">Find the Siegert and continuum states of a 1D Square-Well Potential case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/completeness_relation.html">Completeness relation: an introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/completeness_relation_problematic_cases.html">Completeness relation: some problematic cases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/completeness_relation_multiple_test_functions.html">Completeness relation: a wider picture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/strength_function.html">Strength function: an introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/convergence_MLE_strength_function.html">Strength function: convergence of the Mittag-Leffler expansion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/time_propagation.html">Time propagation: an introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/time_propagation_initial_momentum.html">Time propagation: wavepacket with an initial momentum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/time_propagation_error_estimation.html">Time propagation: error estimation of the Siegert states expansions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#d-square-well-potential-the-numerical-case">1D Square-Well Potential: the numerical case</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/find_numerical_bound_and_continuum.html">Numerical potential: bound and continuum states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/completeness_relation_numerical_bound_and_continuum.html">Completeness relation using numerical bound and continuum states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/find_numerical_Siegert.html">Numerical potential: Siegert states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/completeness_relation_numerical_Siegert.html">Completeness relation with numerical Siegert states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/influence_virials_siegerts.html">Virial operators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/influence_filters_siegerts.html">Influence of the filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/influence_coordMap_siegerts_1.html">Influence of the coordinate mapping parameters: case study of the ErfKGCoordMap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/influence_grid_continuum.html">Influence of the grid for continuum states</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/influence_grid_siegerts.html">Influence of the grid for Siegert states</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#other-numerical-potentials">Other numerical potentials</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/woods-saxon_potential.html">Symbolic Woods-Saxon potential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/gaussian_potentials.html">Multiple Gaussian potentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/other_symbolic_potentials.html">Defining a new symbolic potential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notebooks/numerical_strength_function.html">Strength function from numerical basis sets</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Tutorial</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/notebooks.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="tutorial">
+<span id="notebooks"></span><h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial is made of notebooks that are available in the
+<cite>Siegpy/doc/notebooks</cite> folder after cloning the project. The aim of these
+series of notebooks is to present the most relevant capabilities offered by
+the SiegPy module while giving an overview of the Siegert states and how
+useful they can be in order to reproduce results obtained using the
+cumbersome continuum of states.</p>
+<div class="section" id="d-square-well-potential-the-analytical-case">
+<h2>1D Square-Well Potential: the analytical case<a class="headerlink" href="#d-square-well-potential-the-analytical-case" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">First steps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/find_Siegerts_1DSWP.html">Find the Siegert and continuum states of a 1D Square-Well Potential case</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Completeness relation in the 1D Square-well Potential case</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/completeness_relation.html">Completeness relation: an introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/completeness_relation_problematic_cases.html">Completeness relation: some problematic cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/completeness_relation_multiple_test_functions.html">Completeness relation: a wider picture</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Strength function</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/strength_function.html">Strength function: an introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/convergence_MLE_strength_function.html">Strength function: convergence of the Mittag-Leffler expansion</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Time propagation of a wavepacket</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/time_propagation.html">Time propagation: an introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/time_propagation_initial_momentum.html">Time propagation: wavepacket with an initial momentum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/time_propagation_error_estimation.html">Time propagation: error estimation of the Siegert states expansions</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="d-square-well-potential-the-numerical-case">
+<h2>1D Square-Well Potential: the numerical case<a class="headerlink" href="#d-square-well-potential-the-numerical-case" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Numerical bound and continuum states</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/find_numerical_bound_and_continuum.html">Numerical potential: bound and continuum states</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/completeness_relation_numerical_bound_and_continuum.html">Completeness relation using numerical bound and continuum states</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Numerical Siegert states</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/find_numerical_Siegert.html">Numerical potential: Siegert states</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/completeness_relation_numerical_Siegert.html">Completeness relation with numerical Siegert states</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Influence of some parameters on the numerical basis sets</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/influence_virials_siegerts.html">Virial operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/influence_filters_siegerts.html">Influence of the filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/influence_coordMap_siegerts_1.html">Influence of the coordinate mapping parameters: case study of the ErfKGCoordMap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/influence_grid_continuum.html">Influence of the grid for continuum states</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/influence_grid_siegerts.html">Influence of the grid for Siegert states</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="other-numerical-potentials">
+<h2>Other numerical potentials<a class="headerlink" href="#other-numerical-potentials" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/woods-saxon_potential.html">Symbolic Woods-Saxon potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/gaussian_potentials.html">Multiple Gaussian potentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/other_symbolic_potentials.html">Defining a new symbolic potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/numerical_strength_function.html">Strength function from numerical basis sets</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="notebooks/find_Siegerts_1DSWP.html" class="btn btn-neutral float-right" title="Find the Siegert and continuum states of a 1D Square-Well Potential case" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="getting_started.html" class="btn btn-neutral" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,939 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>BasisSet &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Potential" href="Potential.html" />
+    <link rel="prev" title="General 1D Case" href="General1DCase.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_objects.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1DSWPCase.html">1D Square-Well Potential Case</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="General1DCase.html">General 1D Case</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">BasisSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Potential.html">Potential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SymbolicPotentials.html">Symbolic Potential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CoordMap.html">CoordMap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Hamiltonian.html">Hamiltonian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Eigenstate.html">Eigenstate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SmoothFunctions.html">SmoothFunction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Filters.html">Filters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="AbstractClasses.html">Abstract classes for further analytic cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Other.html">The Function class and its children</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api_objects.html">Code Documentation</a> &raquo;</li>
+        
+          <li><a href="General1DCase.html">General 1D Case</a> &raquo;</li>
+        
+      <li>BasisSet</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/BasisSet.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="basisset">
+<h1>BasisSet<a class="headerlink" href="#basisset" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="siegpy.basisset.BasisSet">
+<em class="property">class </em><code class="descclassname">siegpy.basisset.</code><code class="descname">BasisSet</code><span class="sig-paren">(</span><em>states=None</em>, <em>potential=None</em>, <em>coord_map=None</em>, <em>max_virial=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is arguably the most important one in the whole module
+since it defines all the main methods allowing to study the Siegert
+states of a given Hamiltonian (and compare their relevance with the
+traditional continuum states).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>states</strong> (<em>list of Eigenstate instances</em><em> or </em><a class="reference internal" href="Eigenstate.html#siegpy.eigenstates.Eigenstate" title="siegpy.eigenstates.Eigenstate"><em>Eigenstate</em></a><em> or </em><em>None</em>) – Eigenstates of a Hamiltonian. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, it means that the
+BasisSet instance will be empty.</li>
+<li><strong>potential</strong> (<a class="reference internal" href="Potential.html#siegpy.potential.Potential" title="siegpy.potential.Potential"><em>Potential</em></a><em> or </em><em>None</em>) – Potential leading to the eigenstates.</li>
+<li><strong>coord_map</strong> (<a class="reference internal" href="CoordMap.html#siegpy.coordinatemappings.CoordMap" title="siegpy.coordinatemappings.CoordMap"><em>CoordMap</em></a><em> or </em><em>None</em>) – Coordinate mapping used to find the eigenstates.</li>
+<li><strong>max_virial</strong> (<em>float</em><em> or </em><em>None</em>) – Maximal virial used to discriminate between Siegert states
+and other eigenstates.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the value of states is invalid.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.potential">
+<code class="descname">potential</code><a class="headerlink" href="#siegpy.basisset.BasisSet.potential" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Potential used to find the eigenstates.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="Potential.html#siegpy.potential.Potential" title="siegpy.potential.Potential">Potential</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.coord_map">
+<code class="descname">coord_map</code><a class="headerlink" href="#siegpy.basisset.BasisSet.coord_map" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Coordinate mapping used to find the eigenstates.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="CoordMap.html#siegpy.coordinatemappings.CoordMap" title="siegpy.coordinatemappings.CoordMap">CoordMap</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.max_virial">
+<code class="descname">max_virial</code><a class="headerlink" href="#siegpy.basisset.BasisSet.max_virial" title="Permalink to this definition">¶</a></dt>
+<dd><p>If updated, <a class="reference internal" href="#siegpy.basisset.BasisSet.max_virial" title="siegpy.basisset.BasisSet.max_virial"><code class="xref py py-attr docutils literal notranslate"><span class="pre">max_virial</span></code></a> updates the <code class="xref py py-attr docutils literal notranslate"><span class="pre">Siegert_type</span></code>
+attribute of the Siegert states in the basis set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Maximal virial for a state to be considered as a Siegert
+state.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.states">
+<code class="descname">states</code><a class="headerlink" href="#siegpy.basisset.BasisSet.states" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">States of a BasisSet instance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+<p>Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">BasisSet</span><span class="p">()</span><span class="o">.</span><span class="n">states</span>
+<span class="go">[]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the basis set in a binary file (using pickle).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) – Name of the file to be written.</td>
+</tr>
+</tbody>
+</table>
+<p>Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">BasisSet</span><span class="p">()</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tmp.dat&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="siegpy.basisset.BasisSet.from_file">
+<em class="property">classmethod </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize a basis set from a binary file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) – Name of a file containing a basis set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">NameError</span></code> – If a the file does not exist.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.__add__">
+<code class="descname">__add__</code><span class="sig-paren">(</span><em>states</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.__add__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a list of states or the states of another BasisSet instance
+to a BasisSet instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>states</strong> (<em>list of Eigenstate instances</em><em> or </em><a class="reference internal" href="#siegpy.basisset.BasisSet" title="siegpy.basisset.BasisSet"><em>BasisSet</em></a>) – Eigenstates of a Hamiltonian or another basis set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new basis set.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#siegpy.basisset.BasisSet" title="siegpy.basisset.BasisSet">BasisSet</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">TypeError</span></code> – If <code class="docutils literal notranslate"><span class="pre">states</span></code> is not a basis set or a list of eigenstates.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.__len__">
+<code class="descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.__len__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Length of the list of states</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.__eq__">
+<code class="descname">__eq__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.__eq__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if both basis sets contain the same states.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.is_empty">
+<code class="descname">is_empty</code><a class="headerlink" href="#siegpy.basisset.BasisSet.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the basis set is empty.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.is_not_empty">
+<code class="descname">is_not_empty</code><a class="headerlink" href="#siegpy.basisset.BasisSet.is_not_empty" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the basis set is not empty.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.bounds">
+<code class="descname">bounds</code><a class="headerlink" href="#siegpy.basisset.BasisSet.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Basis set made of all the bound states of the current basis
+set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#siegpy.basisset.BasisSet" title="siegpy.basisset.BasisSet">BasisSet</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.antibounds">
+<code class="descname">antibounds</code><a class="headerlink" href="#siegpy.basisset.BasisSet.antibounds" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Basis set made of all the anti-bound states of the current
+basis set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#siegpy.basisset.BasisSet" title="siegpy.basisset.BasisSet">BasisSet</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.resonants">
+<code class="descname">resonants</code><a class="headerlink" href="#siegpy.basisset.BasisSet.resonants" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Basis set made of all the resonant states of the current
+basis set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#siegpy.basisset.BasisSet" title="siegpy.basisset.BasisSet">BasisSet</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.antiresonants">
+<code class="descname">antiresonants</code><a class="headerlink" href="#siegpy.basisset.BasisSet.antiresonants" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Basis set made of all the anti-resonant states of the
+current basis set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#siegpy.basisset.BasisSet" title="siegpy.basisset.BasisSet">BasisSet</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.siegerts">
+<code class="descname">siegerts</code><a class="headerlink" href="#siegpy.basisset.BasisSet.siegerts" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Basis set made of all the Siegert states of the current
+basis set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#siegpy.basisset.BasisSet" title="siegpy.basisset.BasisSet">BasisSet</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.continuum">
+<code class="descname">continuum</code><a class="headerlink" href="#siegpy.basisset.BasisSet.continuum" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Basis set made of all the continuum states of the current
+basis set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#siegpy.basisset.BasisSet" title="siegpy.basisset.BasisSet">BasisSet</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.unknown">
+<code class="descname">unknown</code><a class="headerlink" href="#siegpy.basisset.BasisSet.unknown" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Basis set made of all the states of unknown type of the
+current basis set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#siegpy.basisset.BasisSet" title="siegpy.basisset.BasisSet">BasisSet</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.plot_wavefunctions">
+<code class="descname">plot_wavefunctions</code><span class="sig-paren">(</span><em>nres=None</em>, <em>nstates=None</em>, <em>xlim=None</em>, <em>ylim=None</em>, <em>title=None</em>, <em>file_save=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.plot_wavefunctions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.plot_wavefunctions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the bound, resonant and anti-resonant wavefunctions of the
+basis set along with the potential. The continuum states, if any
+in the basis set, are not plotted.</p>
+<p>The wavefunctions are translated along the y-axis by their
+energy (for bound states) or absolute value of their
+energy (for resonant and anti-resonant states).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nres</strong> (<em>int</em>) – Number of resonant wavefunctions to plot (optional).</li>
+<li><strong>nstates</strong> (<em>int</em>) – Number of wavefunctions to plot (optional).</li>
+<li><strong>xlim</strong> (<em>tuple</em><em>(</em><em>float</em><em> or </em><em>int</em><em>, </em><em>float</em><em> or </em><em>int</em><em>)</em>) – Range of the x axis of the plot (optional).</li>
+<li><strong>xlim</strong> – Range of the y axis of the plot (optional).</li>
+<li><strong>title</strong> (<em>str</em>) – Plot title (optional).</li>
+<li><strong>file_save</strong> (<em>str</em>) – Filename of the plot to be saved (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.energies">
+<code class="descname">energies</code><a class="headerlink" href="#siegpy.basisset.BasisSet.energies" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The energies of the states in the current basis set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.wavenumbers">
+<code class="descname">wavenumbers</code><a class="headerlink" href="#siegpy.basisset.BasisSet.wavenumbers" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The wavenumbers of the states in the curent basis set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.virials">
+<code class="descname">virials</code><a class="headerlink" href="#siegpy.basisset.BasisSet.virials" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Virial values of the states in the current basis set.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.basisset.BasisSet.no_coord_map">
+<code class="descname">no_coord_map</code><a class="headerlink" href="#siegpy.basisset.BasisSet.no_coord_map" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the coordinate mapping is such that
+<span class="math notranslate nohighlight">\(x \mapsto x\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.plot_wavenumbers">
+<code class="descname">plot_wavenumbers</code><span class="sig-paren">(</span><em>xlim=None</em>, <em>ylim=None</em>, <em>title=None</em>, <em>file_save=None</em>, <em>show_unknown=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.plot_wavenumbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.plot_wavenumbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the wavenumbers of the Siegert states in the basis set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xlim</strong> (<em>tuple</em><em>(</em><em>float</em><em> or </em><em>int</em><em>, </em><em>float</em><em> or </em><em>int</em><em>)</em>) – Range of the x axis of the plot (optional).</li>
+<li><strong>xlim</strong> – Range of the y axis of the plot (optional).</li>
+<li><strong>title</strong> (<em>str</em>) – Plot title (optional).</li>
+<li><strong>file_save</strong> (<em>str</em>) – Filename of the plot to be saved (optional).</li>
+<li><strong>show_unknown</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, plot the data of the states with an unknown
+type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.plot_energies">
+<code class="descname">plot_energies</code><span class="sig-paren">(</span><em>xlim=None</em>, <em>ylim=None</em>, <em>title=None</em>, <em>file_save=None</em>, <em>show_unknown=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.plot_energies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.plot_energies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the energies of the Siegert states in the basis set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xlim</strong> (<em>tuple</em><em>(</em><em>float</em><em> or </em><em>int</em><em>, </em><em>float</em><em> or </em><em>int</em><em>)</em>) – Range of the x axis of the plot (optional).</li>
+<li><strong>ylim</strong> (<em>tuple</em><em>(</em><em>float</em><em> or </em><em>int</em><em>, </em><em>float</em><em> or </em><em>int</em><em>)</em>) – Range of the y axis of the plot (optional).</li>
+<li><strong>title</strong> (<em>str</em>) – Plot title (optional).</li>
+<li><strong>file_save</strong> (<em>str</em>) – Filename of the plot to be saved (optional).</li>
+<li><strong>show_unknown</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, plot the data of the states with an unknown
+type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.scal_prod">
+<code class="descname">scal_prod</code><span class="sig-paren">(</span><em>test</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.scal_prod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.scal_prod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method computing the scalar product
+<span class="math notranslate nohighlight">\(\left\langle \varphi | test \right\rangle\)</span>
+for each state <span class="math notranslate nohighlight">\(\varphi\)</span> in the basis set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>test</strong> (<a class="reference internal" href="Functions.html#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Test function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Scalar product of all the states in the basis set with the
+test function.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.completeness_convergence">
+<code class="descname">completeness_convergence</code><span class="sig-paren">(</span><em>test</em>, <em>klim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.completeness_convergence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.completeness_convergence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the convergence of the completeness relation for the
+current basis set using a given test function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>test</strong> (<a class="reference internal" href="Functions.html#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Test function.</li>
+<li><strong>klim</strong> (<em>tuple</em><em>(</em><em>float</em><em> or </em><em>int</em><em>, </em><em>float</em><em> or </em><em>int</em><em>)</em>) – Wavenumber range where the completeness convergence must be
+computed (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A tuple made of the array of the states wavenumbers and the
+array of the convergence of the completeness relation using
+all the states (both have the same length).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">tuple(numpy array, numpy array)</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the wavenumber <code class="docutils literal notranslate"><span class="pre">klim</span></code> range covers negative values.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.Berggren_completeness_convergence">
+<code class="descname">Berggren_completeness_convergence</code><span class="sig-paren">(</span><em>test</em>, <em>klim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.Berggren_completeness_convergence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.Berggren_completeness_convergence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method evaluating the convergence of the CR using the Berggren
+expansion.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>test</strong> (<a class="reference internal" href="Functions.html#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Test function.</li>
+<li><strong>xlim</strong> (<em>tuple</em><em>(</em><em>float</em><em> or </em><em>int</em><em>, </em><em>float</em><em> or </em><em>int</em><em>)</em>) – Wavenumber range where the completeness convergence must be
+computed (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A tuple made of the array of the states wavenumbers
+and the array of the convergence of the Berggren
+completeness relation (both have the same length).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">tuple(numpy array, numpy array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.plot_completeness_convergence">
+<code class="descname">plot_completeness_convergence</code><span class="sig-paren">(</span><em>test</em>, <em>klim=None</em>, <em>title=None</em>, <em>file_save=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.plot_completeness_convergence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.plot_completeness_convergence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the convergence of the completeness relation using all or
+the fiest <code class="docutils literal notranslate"><span class="pre">nstates</span></code> in the basis set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>test</strong> (<a class="reference internal" href="Functions.html#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Test function.</li>
+<li><strong>klim</strong> (<em>tuple</em><em>(</em><em>float</em><em> or </em><em>int</em><em>, </em><em>float</em><em> or </em><em>int</em><em>)</em>) – Wavenumber range where the completeness convergence must be
+computed and range of the x axis of the plot (optional).</li>
+<li><strong>title</strong> (<em>str</em>) – Plot title (optional).</li>
+<li><strong>file_save</strong> (<em>str</em>) – Filename of the plot to be saved (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.MLE_strength_function">
+<code class="descname">MLE_strength_function</code><span class="sig-paren">(</span><em>test</em>, <em>kgrid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.MLE_strength_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.MLE_strength_function" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Only the peaks due to the resonant couples can be produced
+at the moment. Numerical anti-bound states are required for
+the true MLE of the strength function to be computed from a
+numerical basis set.</p>
+</div>
+<p>Evaluate the Mittag-Leffler expansion strength function of the
+basis set for a given test function, discretized on a grid of
+wavenumbers kgrid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>test</strong> (<a class="reference internal" href="Functions.html#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Test function.</li>
+<li><strong>kgrid</strong> (<em>numpy array</em>) – Wavenumbers for which the strength function is evaluated.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">MLE of the strength function evaluated on the kgrid.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.plot_strength_function">
+<code class="descname">plot_strength_function</code><span class="sig-paren">(</span><em>test</em>, <em>kgrid</em>, <em>nres=None</em>, <em>title=None</em>, <em>file_save=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.plot_strength_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.plot_strength_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the Mittag-Leffler Expansion of the strength function for a
+given test function.</p>
+<p>The MLE of the strength function evaluated using 1, …,
+<code class="docutils literal notranslate"><span class="pre">nres</span></code> resonant couples can also be plotted.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>test</strong> (<a class="reference internal" href="Functions.html#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Test function.</li>
+<li><strong>kgrid</strong> (<em>numpy array</em>) – Wavenumbers for which the strength function is evaluated.</li>
+<li><strong>nres</strong> (<em>int</em>) – Number of resonant couples contributions to be plotted
+(default to None, meaning that none are plotted; if
+<code class="docutils literal notranslate"><span class="pre">nres=0</span></code>, then only the sum of the bound and anti-bound
+states contributions is plotted).</li>
+<li><strong>title</strong> (<em>str</em>) – Plot title (optional).</li>
+<li><strong>file_save</strong> (<em>str</em>) – Filename of the plot to be saved (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet.Berggren_propagation">
+<code class="descname">Berggren_propagation</code><span class="sig-paren">(</span><em>test</em>, <em>time_grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet.Berggren_propagation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet.Berggren_propagation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the Berggren Expansion of the time-propagation of a
+test wavepacket over a given time grid. Only bound and resonant
+states are used, with a weight 1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>test</strong> (<a class="reference internal" href="Functions.html#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Test function.</li>
+<li><strong>time_grid</strong> (<em>numpy array</em><em> or </em><em>list of positive numbers</em>) – Times for which the propagation is evaluated. It must
+contain positive numbers only.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Berggren expansion of the propagated wavepacket for the
+different times of <code class="docutils literal notranslate"><span class="pre">time_grid</span></code>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.basisset.BasisSet._propagate">
+<code class="descname">_propagate</code><span class="sig-paren">(</span><em>test</em>, <em>time_grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/basisset.html#BasisSet._propagate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.basisset.BasisSet._propagate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the contribution of all the states to the time
+propagation of the initial wavepacket <code class="docutils literal notranslate"><span class="pre">test</span></code> for all the times
+in <code class="docutils literal notranslate"><span class="pre">time_grid</span></code>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The same default weight is used for all the states.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>test</strong> (<a class="reference internal" href="Functions.html#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Test function.</li>
+<li><strong>time_grid</strong> (<em>numpy array</em><em> or </em><em>list of positive numbers</em>) – Times for which the propagation is evaluated. It must
+contain positive numbers only.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Propagated wavepacket for the different times of <code class="docutils literal notranslate"><span class="pre">time_grid</span></code>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">2D numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Potential.html" class="btn btn-neutral float-right" title="Potential" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="General1DCase.html" class="btn btn-neutral" title="General 1D Case" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

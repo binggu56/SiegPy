@@ -1,0 +1,537 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>AnalyticEigenstates &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The Function class and its children" href="Other.html" />
+    <link rel="prev" title="AnalyticBasisSet" href="AnalyticBasisSet.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_objects.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1DSWPCase.html">1D Square-Well Potential Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="General1DCase.html">General 1D Case</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="AbstractClasses.html">Abstract classes for further analytic cases</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="AnalyticBasisSet.html">AnalyticBasisSet</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">AnalyticEigenstates</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Other.html">The Function class and its children</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api_objects.html">Code Documentation</a> &raquo;</li>
+        
+          <li><a href="AbstractClasses.html">Abstract classes for further analytic cases</a> &raquo;</li>
+        
+      <li>AnalyticEigenstates</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/AnalyticEigenstates.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="analyticeigenstates">
+<h1>AnalyticEigenstates<a class="headerlink" href="#analyticeigenstates" title="Permalink to this headline">¶</a></h1>
+<p>The classes documented below are the base classes you should consider
+subclassing before adding a new analytical case to the SiegPy module.</p>
+<p>The <a class="reference internal" href="#siegpy.analyticeigenstates.AnalyticEigenstate" title="siegpy.analyticeigenstates.AnalyticEigenstate"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalyticEigenstate</span></code></a> class is the base
+class for two other classes:</p>
+<ul class="simple">
+<li>the <a class="reference internal" href="#siegpy.analyticeigenstates.AnalyticSiegert" title="siegpy.analyticeigenstates.AnalyticSiegert"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalyticSiegert</span></code></a> class,</li>
+<li>and the <a class="reference internal" href="#siegpy.analyticeigenstates.AnalyticContinuum" title="siegpy.analyticeigenstates.AnalyticContinuum"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalyticContinuum</span></code></a> class.</li>
+</ul>
+<p>If your analytic case is already well defined by these last classes, you may
+only subclass these two. However, if you need to add some methods or
+attributes to both classes, you may also subclass
+<a class="reference internal" href="#siegpy.analyticeigenstates.AnalyticEigenstate" title="siegpy.analyticeigenstates.AnalyticEigenstate"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalyticEigenstate</span></code></a>.</p>
+<p>For instance, the parity of the analytic eigenstates in the 1D Square-Well
+Potential case made it mandatory.</p>
+<dl class="class">
+<dt id="siegpy.analyticeigenstates.AnalyticEigenstate">
+<em class="property">class </em><code class="descclassname">siegpy.analyticeigenstates.</code><code class="descname">AnalyticEigenstate</code><span class="sig-paren">(</span><em>k</em>, <em>potential</em>, <em>grid</em>, <em>analytic</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/analyticeigenstates.html#AnalyticEigenstate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.analyticeigenstates.AnalyticEigenstate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="Functions.html#siegpy.functions.AnalyticFunction" title="siegpy.functions.AnalyticFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.functions.AnalyticFunction</span></code></a>, <a class="reference internal" href="Eigenstate.html#siegpy.eigenstates.Eigenstate" title="siegpy.eigenstates.Eigenstate"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.eigenstates.Eigenstate</span></code></a></p>
+<p>Class gathering the attributes and methods necessary to define an
+analytic eigenstate of any analytical problem (such as the 1D
+Square-Well Potential case).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To consider a case as analytic, the wavefunctions of the
+Siegert and continuum states should be known analytically. The
+analytic scalar product of both types of eigenstates with at
+least one type of test function should also be defined.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>k</strong> (<em>complex</em>) – Wavenumber of the eigenstate.</li>
+<li><strong>potential</strong> (<a class="reference internal" href="Potential.html#siegpy.potential.Potential" title="siegpy.potential.Potential"><em>Potential</em></a>) – Potential for which the analytic eigenstate is known.</li>
+<li><strong>grid</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Discretization grid.</li>
+<li><strong>analytic</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the scalar products must be computed
+analytically.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">WavenumberError</span></code> – If the inferred Siegert type is unknown.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="siegpy.analyticeigenstates.AnalyticEigenstate.potential">
+<code class="descname">potential</code><a class="headerlink" href="#siegpy.analyticeigenstates.AnalyticEigenstate.potential" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Potential for which the eigenstate is a solution.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">complex or float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.analyticeigenstates.AnalyticEigenstate.wavenumber">
+<code class="descname">wavenumber</code><a class="headerlink" href="#siegpy.analyticeigenstates.AnalyticEigenstate.wavenumber" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Wavenumber of the eigenstate.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">complex or float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.analyticeigenstates.AnalyticEigenstate.energy">
+<code class="descname">energy</code><a class="headerlink" href="#siegpy.analyticeigenstates.AnalyticEigenstate.energy" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Energy of the Eigenstate</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">complex or float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.analyticeigenstates.AnalyticEigenstate._find_Siegert_type">
+<code class="descname">_find_Siegert_type</code><span class="sig-paren">(</span><em>k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/analyticeigenstates.html#AnalyticEigenstate._find_Siegert_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.analyticeigenstates.AnalyticEigenstate._find_Siegert_type" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an asbtract method.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>k</strong> (<em>float</em><em> or </em><em>complex</em>) – Wavenumber of the eigenstate</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Type of the eigenstate from its wavenumber k (<code class="docutils literal notranslate"><span class="pre">'b'</span></code> for
+bound states, <code class="docutils literal notranslate"><span class="pre">'ab'</span></code> for anti-bound states, <code class="docutils literal notranslate"><span class="pre">'r'</span></code> for
+resonant states, <code class="docutils literal notranslate"><span class="pre">'ar'</span></code> for anti-resonant states, and
+<code class="docutils literal notranslate"><span class="pre">None</span></code> for continuum states).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str or NoneType</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.analyticeigenstates.AnalyticEigenstate.analytic">
+<code class="descname">analytic</code><a class="headerlink" href="#siegpy.analyticeigenstates.AnalyticEigenstate.analytic" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Analyticity of the scalar products.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.analyticeigenstates.AnalyticEigenstate.__eq__">
+<code class="descname">__eq__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/analyticeigenstates.html#AnalyticEigenstate.__eq__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.analyticeigenstates.AnalyticEigenstate.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two analytic eigenstates are the same if they share the same
+wavenumber, potential and Siegert_type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>object</em>) – Another object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if both eigenstates are the same.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.analyticeigenstates.AnalyticEigenstate.scal_prod">
+<code class="descname">scal_prod</code><span class="sig-paren">(</span><em>other</em>, <em>xlim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/analyticeigenstates.html#AnalyticEigenstate.scal_prod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.analyticeigenstates.AnalyticEigenstate.scal_prod" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an asbtract method.</p>
+</div>
+<p>Evaluate the scalar product between the state and a test
+function <code class="docutils literal notranslate"><span class="pre">other</span></code>. It ensures that the numerical scalar product
+is computed when the analytical scalar product with test
+functions is not implemented in the child class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>other</strong> (<a class="reference internal" href="Functions.html#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Test function.</li>
+<li><strong>xlim</strong> (<em>tuple</em><em>(</em><em>float</em><em>, </em><em>float</em><em>)</em>) – Bounds of the space grid defining the interval over which
+the scalar product must be computed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Value of the scalar product of the state with a test
+function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float or complex</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.analyticeigenstates.AnalyticSiegert">
+<em class="property">class </em><code class="descclassname">siegpy.analyticeigenstates.</code><code class="descname">AnalyticSiegert</code><span class="sig-paren">(</span><em>k</em>, <em>potential</em>, <em>grid</em>, <em>analytic</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/analyticeigenstates.html#AnalyticSiegert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.analyticeigenstates.AnalyticSiegert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.analyticeigenstates.AnalyticEigenstate" title="siegpy.analyticeigenstates.AnalyticEigenstate"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.analyticeigenstates.AnalyticEigenstate</span></code></a></p>
+<p>Class specifying the abstract method allowing to find the type of
+the analytic eigenstate, in the case it is a Siegert state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>k</strong> (<em>complex</em>) – Wavenumber of the eigenstate.</li>
+<li><strong>potential</strong> (<a class="reference internal" href="Potential.html#siegpy.potential.Potential" title="siegpy.potential.Potential"><em>Potential</em></a>) – Potential for which the analytic eigenstate is known.</li>
+<li><strong>grid</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Discretization grid.</li>
+<li><strong>analytic</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the scalar products must be computed
+analytically.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">WavenumberError</span></code> – If the inferred Siegert type is unknown.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="siegpy.analyticeigenstates.AnalyticSiegert._find_Siegert_type">
+<code class="descname">_find_Siegert_type</code><span class="sig-paren">(</span><em>k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/analyticeigenstates.html#AnalyticSiegert._find_Siegert_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.analyticeigenstates.AnalyticSiegert._find_Siegert_type" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>k</strong> (<em>complex</em>) – Wavenumber of the Siegert state.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The type of the Siegert state, namely:<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">'b'</span></code> for a bound state</li>
+<li><code class="docutils literal notranslate"><span class="pre">'ab'</span></code> for an anti-bound state</li>
+<li><code class="docutils literal notranslate"><span class="pre">'r'</span></code> for a resonant state</li>
+<li><code class="docutils literal notranslate"><span class="pre">'ar'</span></code> for an anti-resonant state</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">WavenumberError</span></code> – If the wavenumber is equal to zero.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.analyticeigenstates.AnalyticContinuum">
+<em class="property">class </em><code class="descclassname">siegpy.analyticeigenstates.</code><code class="descname">AnalyticContinuum</code><span class="sig-paren">(</span><em>k</em>, <em>potential</em>, <em>grid</em>, <em>analytic</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/analyticeigenstates.html#AnalyticContinuum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.analyticeigenstates.AnalyticContinuum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.analyticeigenstates.AnalyticEigenstate" title="siegpy.analyticeigenstates.AnalyticEigenstate"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.analyticeigenstates.AnalyticEigenstate</span></code></a></p>
+<p>Class specifying the abstract method allowing to find the type of
+the analytic eigenstate, in the case it is a continuum state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>k</strong> (<em>complex</em>) – Wavenumber of the eigenstate.</li>
+<li><strong>potential</strong> (<a class="reference internal" href="Potential.html#siegpy.potential.Potential" title="siegpy.potential.Potential"><em>Potential</em></a>) – Potential for which the analytic eigenstate is known.</li>
+<li><strong>grid</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Discretization grid.</li>
+<li><strong>analytic</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the scalar products must be computed
+analytically.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">WavenumberError</span></code> – If the inferred Siegert type is unknown.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="siegpy.analyticeigenstates.AnalyticContinuum._find_Siegert_type">
+<code class="descname">_find_Siegert_type</code><span class="sig-paren">(</span><em>k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/analyticeigenstates.html#AnalyticContinuum._find_Siegert_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.analyticeigenstates.AnalyticContinuum._find_Siegert_type" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>k</strong> (<em>float</em>) – Wavenumber of the continuum state.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">None</span></code>, given that a continuum state is not a Siegert
+state.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">NoneType</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">WavenumberError</span></code> – If the wavenumber is imaginary.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Other.html" class="btn btn-neutral float-right" title="The Function class and its children" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="AnalyticBasisSet.html" class="btn btn-neutral" title="AnalyticBasisSet" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

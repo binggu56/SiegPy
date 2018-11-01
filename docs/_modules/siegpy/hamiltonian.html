@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>siegpy.hamiltonian &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>siegpy.hamiltonian</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for siegpy.hamiltonian</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*</span>
+<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The Hamiltonian class and its methods are defined hereafter.</span>
+
+<span class="sd">The main use of this class is to create a basis set made of the</span>
+<span class="sd">eigenstates of a numerical Hamiltonian, when given a potential and a</span>
+<span class="sd">coordinate mapping.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.linalg</span> <span class="k">as</span> <span class="nn">LA</span>
+<span class="kn">from</span> <span class="nn">siegpy</span> <span class="k">import</span> <span class="n">BasisSet</span><span class="p">,</span> <span class="n">Eigenstate</span><span class="p">,</span> <span class="n">UniformCoordMap</span><span class="p">,</span> <span class="n">Sym8_filters</span>
+
+
+<div class="viewcode-block" id="Hamiltonian"><a class="viewcode-back" href="../../Hamiltonian.html#siegpy.hamiltonian.Hamiltonian">[docs]</a><span class="k">class</span> <span class="nc">Hamiltonian</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Hamiltonian has to be defined when one is interested in finding</span>
+<span class="sd">    numerically the Siegert states of a potential when the eigenstates</span>
+<span class="sd">    are not known analytically.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span> <span class="n">coord_map</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="n">Sym8_filters</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A Hamiltonian is defined by a potential and a coordinate</span>
+<span class="sd">        mapping, which gives rise to extra potentials to be added, known</span>
+<span class="sd">        as the Reflection-Free Complex Absorbing Potentials (RF-CAP).</span>
+
+<span class="sd">        Filters allowing to define the gradient and laplacian operators</span>
+<span class="sd">        are also required. The default value corresponds to Daubechies</span>
+<span class="sd">        Wavelet filters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        potential: Potential</span>
+<span class="sd">            Potential studied.</span>
+<span class="sd">        coord_map: CoordMap</span>
+<span class="sd">            Coordinate mapping used.</span>
+<span class="sd">        filters: Filters</span>
+<span class="sd">            Filters used to define the Hamiltonian matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="n">potential</span>
+        <span class="c1"># Make sure that the coordinate mapping uses the correct grid</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">grid</span>
+        <span class="n">coord_map</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_coord_map</span> <span class="o">=</span> <span class="n">coord_map</span>
+        <span class="c1"># Define the filters according to the grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filters</span> <span class="o">=</span> <span class="n">filters</span>
+        <span class="n">npts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gradient_matrix</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">fill_gradient_matrix</span><span class="p">(</span><span class="n">npts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_laplacian_matrix</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">fill_laplacian_matrix</span><span class="p">(</span><span class="n">npts</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">filters</span><span class="p">,</span> <span class="s1">&#39;magic_filter&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_magic_matrix</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">fill_magic_matrix</span><span class="p">(</span><span class="n">npts</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_magic_matrix</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Set the Hamiltonian and virial operator matrices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_hamiltonian_matrix</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_virial_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_virial_matrix</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Potential</span>
+<span class="sd">            Potential considered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">coord_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        CoordMap</span>
+<span class="sd">            Complex scaling considered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coord_map</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Filters</span>
+<span class="sd">            Filters used to define the matrices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filters</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">gradient_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        2D numpy array</span>
+<span class="sd">            Gradient matrix used to define the matrices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gradient_matrix</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">laplacian_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        2D numpy array</span>
+<span class="sd">            Laplacian matrix used to define the matrices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_laplacian_matrix</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">magic_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        2D numpy array</span>
+<span class="sd">            Magic filter matrix used to define the matrices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_magic_matrix</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        2D numpy array</span>
+<span class="sd">            Hamiltonian matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">virial_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        2D numpy array</span>
+<span class="sd">            Virial operator matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_virial_matrix</span>
+
+<div class="viewcode-block" id="Hamiltonian._find_hamiltonian_matrix"><a class="viewcode-back" href="../../Hamiltonian.html#siegpy.hamiltonian.Hamiltonian._find_hamiltonian_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">_find_hamiltonian_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate the Hamiltonian matrix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        2D numpy array</span>
+<span class="sd">            Hamiltonian matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get initial values for the operators</span>
+        <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient_matrix</span>
+        <span class="n">laplac</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">laplacian_matrix</span>
+        <span class="c1"># Get the grid spacing</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">grid</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Set the values of the RF-CAP</span>
+        <span class="n">cm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">UniformCoordMap</span><span class="p">):</span>
+            <span class="n">VF</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">complex_scaled_values</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
+            <span class="n">ham</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pot_to_mat</span><span class="p">(</span><span class="n">VF</span><span class="p">)</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="n">j</span><span class="o">*</span><span class="n">cm</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">VF</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">ham</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">laplac</span><span class="o">/</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Use of a smooth exterior complex scaling</span>
+            <span class="n">VF</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">complex_scaled_values</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
+            <span class="n">V0</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">V0_values</span>
+            <span class="n">V1</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">V1_values</span>
+            <span class="n">V2</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">V2_values</span>
+            <span class="c1"># Create the Hamiltonian by converting the potential to matrices</span>
+            <span class="c1"># and multiplying them by the appropriate operator</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pot_to_mat</span><span class="p">(</span><span class="n">V2</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># add the kinetic term to V2</span>
+            <span class="n">ham</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">laplac</span><span class="o">/</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pot_to_mat</span><span class="p">(</span><span class="n">V1</span><span class="p">)</span>
+            <span class="n">ham</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">grad</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+            <span class="c1"># The operator applied to VF and V0 should be the identity,</span>
+            <span class="c1"># hence the matrices are already correct</span>
+            <span class="n">ham</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pot_to_mat</span><span class="p">(</span><span class="n">V0</span><span class="o">+</span><span class="n">VF</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ham</span></div>
+
+<div class="viewcode-block" id="Hamiltonian._find_virial_matrix"><a class="viewcode-back" href="../../Hamiltonian.html#siegpy.hamiltonian.Hamiltonian._find_virial_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">_find_virial_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate the virial operator matrix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        2D numpy array</span>
+<span class="sd">            Virial operator matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span>
+        <span class="c1"># Set the values of the virial potentials</span>
+        <span class="n">U0</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">U0_values</span>
+        <span class="n">U1</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">U1_values</span>
+        <span class="n">U2</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">U2_values</span>
+        <span class="n">U11</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">U11_values</span>
+        <span class="c1"># Create the virial matrix</span>
+        <span class="k">if</span> <span class="n">cm</span><span class="o">.</span><span class="n">GCVT</span><span class="p">:</span>
+            <span class="n">vir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_virial_matrix</span><span class="p">(</span><span class="n">U0</span><span class="p">,</span> <span class="n">U1</span><span class="p">,</span> <span class="n">U2</span><span class="p">,</span> <span class="n">U11</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># In this case, there is one virial operator per parameter</span>
+            <span class="n">vir</span> <span class="o">=</span> <span class="p">{</span><span class="n">xi</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_virial_matrix</span><span class="p">(</span><span class="n">U0</span><span class="p">[</span><span class="n">xi</span><span class="p">],</span> <span class="n">U1</span><span class="p">[</span><span class="n">xi</span><span class="p">],</span>
+                                                 <span class="n">U2</span><span class="p">[</span><span class="n">xi</span><span class="p">],</span> <span class="n">U11</span><span class="p">[</span><span class="n">xi</span><span class="p">])</span> <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">U0</span><span class="p">}</span>
+            <span class="c1"># Add the potential term to U0 (i.e.: V&#39;(F)*dF/dxi)</span>
+            <span class="n">pot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span>
+            <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">vir</span><span class="p">:</span>
+                <span class="n">vir</span><span class="p">[</span><span class="n">xi</span><span class="p">]</span> <span class="o">+=</span> <span class="n">pot</span><span class="o">.</span><span class="n">complex_scaled_values</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span> <span class="o">*</span> <span class="n">cm</span><span class="o">.</span><span class="n">dxi_values</span><span class="p">[</span><span class="n">xi</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">vir</span></div>
+
+<div class="viewcode-block" id="Hamiltonian._build_virial_matrix"><a class="viewcode-back" href="../../Hamiltonian.html#siegpy.hamiltonian.Hamiltonian._build_virial_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">_build_virial_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">U0</span><span class="p">,</span> <span class="n">U1</span><span class="p">,</span> <span class="n">U2</span><span class="p">,</span> <span class="n">U11</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build the matrix operator given a set of virial potentials.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        U0: numpy array</span>
+<span class="sd">            First virial potential.</span>
+<span class="sd">        U1: numpy array</span>
+<span class="sd">            Second virial potential.</span>
+<span class="sd">        U2: numpy array</span>
+<span class="sd">            Thirs virial potential.</span>
+<span class="sd">        U11: numpy array</span>
+<span class="sd">            Fourth virial potential.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        2D numpy array</span>
+<span class="sd">            Virial operator as a matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get initial values for the operators</span>
+        <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient_matrix</span>
+        <span class="n">laplac</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">laplacian_matrix</span>
+        <span class="c1"># Get the grid spacing h</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">grid</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Create the virial matrix by converting the potentials to</span>
+        <span class="c1"># matrices and then multiplying them by the appropriate operator</span>
+        <span class="n">vir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pot_to_mat</span><span class="p">(</span><span class="n">U0</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pot_to_mat</span><span class="p">(</span><span class="n">U1</span><span class="p">)</span>
+        <span class="n">vir</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">grad</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span><span class="o">.</span><span class="n">GCVT</span><span class="p">:</span>
+            <span class="n">vir</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad</span><span class="o">.</span><span class="n">T</span><span class="o">/</span><span class="n">h</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pot_to_mat</span><span class="p">(</span><span class="n">U11</span><span class="p">)</span>
+            <span class="n">vir</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad</span><span class="o">.</span><span class="n">T</span><span class="o">/</span><span class="n">h</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">grad</span><span class="o">/</span><span class="n">h</span><span class="p">))</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pot_to_mat</span><span class="p">(</span><span class="n">U2</span><span class="p">)</span>
+            <span class="n">vir</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">laplac</span><span class="o">/</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">vir</span></div>
+
+<div class="viewcode-block" id="Hamiltonian.solve"><a class="viewcode-back" href="../../Hamiltonian.html#siegpy.hamiltonian.Hamiltonian.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_virial</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find the eigenstates of the potential and evaluate the virial</span>
+<span class="sd">        for each of them. This is the main method of the Hamiltonian</span>
+<span class="sd">        class.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        max_virial</span>
+<span class="sd">            Maximal virial value for a state to be considered as a</span>
+<span class="sd">            Siegert state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BasisSet</span>
+<span class="sd">            Basis set made of the eigenstates of the Hamiltonian.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set initial values</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">grid</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># The maximal virial value must be positive</span>
+        <span class="k">if</span> <span class="n">max_virial</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">max_virial</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Solve the Hamiltonian</span>
+        <span class="n">energies</span><span class="p">,</span> <span class="n">vr</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="c1"># energies, vl, vr = LA.eig(self.matrix, left=True)</span>
+        <span class="c1"># Initialize a list (to be made of Eigenstate instances)</span>
+        <span class="c1"># ultimately used to initialize a BasisSet instance</span>
+        <span class="n">states</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Loop over the eigenstates</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">energy</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">energies</span><span class="p">):</span>
+            <span class="c1"># Normalize the right eigenvector</span>
+            <span class="n">vr_i</span> <span class="o">=</span> <span class="n">vr</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+            <span class="n">nrmr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vr_i</span><span class="p">,</span> <span class="n">vr_i</span><span class="p">)</span>
+            <span class="n">vr_i</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nrmr</span><span class="p">)</span>
+            <span class="c1"># vl_i = vl[:, i]</span>
+            <span class="c1"># nrml = np.dot(vl_i, vl_i)</span>
+            <span class="c1"># vl_i /= np.sqrt(nrml)</span>
+            <span class="c1"># Compute the virial associated to the eigenvector</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span><span class="o">.</span><span class="n">GCVT</span><span class="p">:</span>
+                <span class="n">virial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vr_i</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">virial_matrix</span><span class="p">,</span> <span class="n">vr_i</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">matrices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">virial_matrix</span>
+                <span class="n">virials</span> <span class="o">=</span> <span class="p">{</span><span class="n">xi</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vr_i</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">matrices</span><span class="p">[</span><span class="n">xi</span><span class="p">],</span> <span class="n">vr_i</span><span class="p">))</span>
+                           <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">matrices</span><span class="p">}</span>
+                <span class="n">virial_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">virials</span><span class="p">[</span><span class="n">xi</span><span class="p">]</span> <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">virials</span><span class="p">])</span>
+                <span class="n">virial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">virial_values</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
+                <span class="c1"># print(energy, virial)</span>
+                <span class="c1"># virial = np.dot(vl_i, np.dot(self.virial_matrix, vr_i))</span>
+            <span class="c1"># Add the eigenstate to the list of states</span>
+            <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Eigenstate</span><span class="p">(</span>
+                    <span class="n">grid</span><span class="p">,</span> <span class="n">vr_i</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">energy</span><span class="p">,</span> <span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="n">virial</span><span class="o">=</span><span class="n">virial</span><span class="p">))</span>
+        <span class="c1"># Sort the list of states by increasing virial values</span>
+        <span class="n">states</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">virial</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">BasisSet</span><span class="p">(</span><span class="n">states</span><span class="o">=</span><span class="n">states</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="p">,</span>
+                        <span class="n">coord_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span><span class="p">,</span> <span class="n">max_virial</span><span class="o">=</span><span class="n">max_virial</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Hamiltonian._pot_to_mat"><a class="viewcode-back" href="../../Hamiltonian.html#siegpy.hamiltonian.Hamiltonian._pot_to_mat">[docs]</a>    <span class="k">def</span> <span class="nf">_pot_to_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential_values</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the potential values to a diagonal matrix.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        potential_values: numpy array</span>
+<span class="sd">            Values of a potential.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        2D numpy array</span>
+<span class="sd">            Potential as a diagonal matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize the potential matrix as a diagonal matrix</span>
+        <span class="n">npts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">potential_values</span><span class="p">)</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">potential_values</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">npts</span><span class="p">)</span>
+        <span class="c1"># Apply the magic filter, if necessary</span>
+        <span class="n">magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_matrix</span>
+        <span class="k">if</span> <span class="n">magic</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">magic</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+            <span class="n">mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">magic</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mat</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

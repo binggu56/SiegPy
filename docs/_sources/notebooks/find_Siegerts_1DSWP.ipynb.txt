@@ -1,0 +1,635 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Find the Siegert and continuum states of a 1D Square-Well Potential case\n",
+    "\n",
+    "The goal of this tutorial is to present the basic objects of the SiegPy module that allows to find the Siegert states of a 1D Square-Well Potential (SWP)."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Import some classes of the SiegPy module\n",
+    "\n",
+    "After the installation of the SiegPy module with `pip` (see the online documentation), you can import it as any other Python package. \n",
+    "\n",
+    "To begin with the tutorial, from `siegpy` we import:\n",
+    "\n",
+    "- the `SWPotential` class, to describe a 1D SWP,\n",
+    "\n",
+    "- the `SWPBasisSet` class, to represent a basis set made of the eigenstates of a 1D SWP,\n",
+    "\n",
+    "- the `SWPSiegert` and the `SWPContinuum` classes, to represent the two types of eigenstates of the 1D SWP, namely its Siegert states and its continuum states."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from siegpy import SWPotential, SWPBasisSet, SWPSiegert, SWPContinuum\n",
+    "import numpy as np  # We also import numpy"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Define a 1D Square-Well Potential.\n",
+    "\n",
+    "A 1D SWP is caracterized by its width `l` and depth `V0`. For convenience, it is always centered on $x = 0$. A space grid may also be given, for the potential to be plotted."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Potential parameters\n",
+    "V0 = 8. # Depth of the potential\n",
+    "l  = 3. # Width of the potential\n",
+    "\n",
+    "# Space grid parameters\n",
+    "npts = 401 # Number of points of the grid\n",
+    "xmax = l   # Extension of the grid\n",
+    "xgrid = np.linspace(-l, l, npts)\n",
+    "\n",
+    "# Define a 1D SW potential\n",
+    "potential = SWPotential(l, V0, grid=xgrid)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "You can plot it, print it and check it is a SWPotential instance:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<matplotlib.figure.Figure at 0x1212b24a8>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "1D Square-Well Potential of width 3.00 and depth 8.00\n",
+      "True\n"
+     ]
+    }
+   ],
+   "source": [
+    "potential.plot()\n",
+    "print(potential)\n",
+    "print(isinstance(potential, SWPotential))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Find the Siegert states\n",
+    "\n",
+    "The search of the wavenumbers of the Siegert states is limited to a certain part of the complex wavenumber plane (here, the absolute value of the real part (resp. imaginary part) of the Siegert wavenumbers must not exceed `re_kmax` (resp. `im_kmax`).\n",
+    "\n",
+    "To find the wavenumbers, one has to define a grid of input-guess, made of complex wavenumbers. This grid is defined by a grid step on the real axis `re_hk` and an optional one on the imaginary axis `im_hk`. The search of the bound and anti bound states on the imaginary axis is carried out automatically (given that the number of states on this axis and the range over which they are to be found is defined by the depth and width of the potential).\n",
+    "\n",
+    "In the example below, `siegerts` is a basis set, and its elements are Siegert states. A Siegert state of the 1D SWP is an instance of the `SWPSiegert` class."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Look for Siegert states in the complex plane\n",
+    "re_kmax = 10.\n",
+    "im_kmax = 3.\n",
+    "re_hk = 1.\n",
+    "im_hk = 2.\n",
+    "siegerts = SWPBasisSet.find_Siegert_states(potential, re_kmax, re_hk, im_kmax,\n",
+    "                                           im_hk=im_hk, grid=xgrid)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The basis set is a made of Siegert states and is a `SWPBasisSet` instance:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# siegerts is a SWPBasisSet instance\n",
+    "assert isinstance(siegerts, SWPBasisSet)\n",
+    "\n",
+    "# Each state in the basis set is an instance of the SWPSiegert class\n",
+    "assert all([isinstance(state, SWPSiegert) for state in siegerts])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "You can easily iterate over the states in the basis set:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(\"Number of Siegert states in the basis set:\", len(siegerts))\n",
+    "\n",
+    "for i, state in enumerate(siegerts):\n",
+    "    print(\"State n°{}: {}\".format(i+1, state))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Note that the states are ordered by type (bound, then anti-bound, then resonant, and finally anti-resonant states), and that they are stored from the lowest to the highest energy for each type. You can easily create a basis set containing only a specific type of Siegert state:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "bnds = siegerts.bounds\n",
+    "assert isinstance(bnds, SWPBasisSet)\n",
+    "len(bnds)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "abnds = siegerts.antibounds\n",
+    "len(abnds)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "res = siegerts.resonants\n",
+    "len(res)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ares = siegerts.antiresonants\n",
+    "len(ares)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "This way, you can be sure that the total number of states correspond to the 20 Siegert states of the original basis set. You could also use the attributes `even` or `odd` to create a `SWPBasisSet` instance made of the Siegert states of a given parity."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Plot the Siegert states and the basis sets\n",
+    "\n",
+    "**Three types of plot are provided for that purpose:**\n",
+    "\n",
+    "1. The first one allows to plot the wavefunctions of any indivual Siegert states.\n",
+    "\n",
+    "* Another one represent the wavefunctions of all the Siegert states in the basis set on one plot.\n",
+    "\n",
+    "* The third type plots of the wavenumbers or the energies of the states in the basis set."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Wavefunction of a Siegert state \n",
+    "\n",
+    "Given that a grid was passed to the `find_Siegert_states` method, each Siegert state can be plotted with the `plot` method, just like the potential. You may also modify the range of the plot by specifying the optional arguments `xlim` and `ylim`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "scrolled": false
+   },
+   "outputs": [],
+   "source": [
+    "for state in siegerts:\n",
+    "    # Note the use of the representaton of a Siegert state as title\n",
+    "    state.plot(xlim=(-3*l/4., 3*l/4.), ylim=(-1, 1), title=repr(state))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Note that the resonant and antiresonant states go by pair: the wavefunction of an antiresonant state correspond to the conjugate of the resonant wavefunction, and the same relation exists for their energies. The wavefunction of any Siegert state that is not bound diverges for infinite $x$."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Plot all the wavefunctions of the basis set\n",
+    "\n",
+    "A `SWPBasisSet` instance has a `plot_wavefunctions` method to plot the wavefunctions of all the Siegert states in the basis set (except for the anti-bound states, for clarity). Each wavefunction is translated by the corresponding energy (or absolute value of the energy for resonant and anti-resonant states)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "siegerts.plot_wavefunctions()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "As you can see, the wavefunctions of a pair of resonant and anti-resonant states have the same real part and an opposite imaginary part.\n",
+    "\n",
+    "The number of resonant states wavefunctions to plot may be defined by `nres`. You may use `file_save` to define where to save the plot (the available file formats depend on your [matplotlib backend](https://matplotlib.org/faq/usage_faq.html#what-is-a-backend))."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "siegerts.plot_wavefunctions(nres=2, file_save='wavefunctions_2_res.pdf')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Note how the resonant couple is related to the bound states: the parity oscillates between even and odd for the bound states, and this order is kept for resonant states. Also note the number of antinodes that is increasing from bottom to top; in particular, the last bound state is even and has four antinodes inside the potential, while the first resonant couple is odd and exhibit five antinodes.\n",
+    "\n",
+    "Eventually, `xlim` and `ylim` are other optional parameters to set the plot range. If no resonant states are desired, then only the bound states are plotted"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "siegerts.plot_wavefunctions(nres=0, file_save='wavefunctions_no_res.pdf',\n",
+    "                            ylim=(-V0-0.5, 0.5))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Plot the wavenumbers and energies of the basis set\n",
+    "\n",
+    "The wavenumber and energy plots can also be saved in a file by defining the optional argument `file_save`. Again, the range of the axis of the plot can be defined by `xlim` and `ylim`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "siegerts.plot_wavenumbers(file_save=\"poles_wn.pdf\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "siegerts.plot_energies(xlim=(-V0, 20), ylim=(-7, 7), file_save=\"poles_en.pdf\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The four types of Siegert states are clearly visible:\n",
+    "\n",
+    "* the bound states have positive, purely imaginary wavenumbers (and therefore negative, purely real energies),\n",
+    "\n",
+    "* the anti-bound states have negative, purely imaginary wavenumbers (and therefore negative, purely real energies),\n",
+    "\n",
+    "* the wavenumber of a resonant state has a positive real part and a negative imaginary part (and therefore its energy has a positive real part and a negative imaginary part),\n",
+    "\n",
+    "* the wavenumber of an anti-resonant state has a negative real part and a negative imaginary part (and therefore its energy has a positive real part and a positive imaginary part),"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Variation of the potential depth\n",
+    "\n",
+    "It is then easy to compare the Siegert states found for different SW potentials. The example given here shows that a couple of resonant/anti-resonant states collapses into two anti-bound states as the depth of the potential is increased."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Define a some potential depths\n",
+    "depths = np.arange(4.65, 4.751, 0.01) # Multiple potential depths\n",
+    "l = 3.                                # One potential width\n",
+    "\n",
+    "# Parameters for the search of Siegert states in the complex \n",
+    "# wavenumber plane\n",
+    "re_kmax = 10.\n",
+    "im_kmax = 3.\n",
+    "re_hk = 1.\n",
+    "im_hk = 2.\n",
+    "\n",
+    "# Loop over the depths to create multiple potentials and \n",
+    "# find their Siegert states\n",
+    "basis_sets = []\n",
+    "for V0 in depths:\n",
+    "    pot = SWPotential(l, V0)\n",
+    "    basis_sets.append(SWPBasisSet.find_Siegert_states(pot, re_kmax, re_hk,\n",
+    "                                                      im_kmax, im_hk=im_hk))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "scrolled": false
+   },
+   "outputs": [],
+   "source": [
+    "# Plot the wavenumbers for all the potentials\n",
+    "xl=3.5\n",
+    "for siegerts in basis_sets:\n",
+    "    siegerts.plot_wavenumbers(xlim=(-xl,xl), title=\"$V_0 = {:.2f}$\".format(siegerts.potential.depth))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "As you can see, a resonant couple has coalesced into two anti-bound states, one moving down the imaginary axis, the other moving up:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(\"Anti-bound states:\")\n",
+    "for siegerts in basis_sets:\n",
+    "    abnds = siegerts.antibounds\n",
+    "    print(\"depth:\", abnds[0].potential.depth)\n",
+    "    for ab in abnds:\n",
+    "        print(\"...\", ab.wavenumber)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "If the potential were to be even more decreased, then the anti-bound state moving up would cross the real axis and become a bound state, keeping the same number of antinodes inside the potential than the original resonant state. It is as if the potential was not attractive enough to fit all the Siegert states as bound states."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Find the continuum states\n",
+    "\n",
+    "The continuum states are known analytically. They are in infinite number and have a positive energy (hence, continuum). This continuum can be discretized over a given grid of wavenumbers thanks to the `find_continuum` method, given a (strictly positive) maximum wavenumber `kmax` and a grid-step `hk`. An optional minimal wavenumber `kmin` can be passed as argument."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Let us go back to the initial potential\n",
+    "V0 = 8.\n",
+    "l  = 3.\n",
+    "potential = SWPotential(l, V0, grid=xgrid)\n",
+    "\n",
+    "# Find some continuum states of this potential, whose wavenumbers range\n",
+    "# fromn 1 to 2 with a wavenumber grid step of 0.25\n",
+    "hk = 0.25\n",
+    "kmax = 2\n",
+    "continuum = SWPBasisSet.find_continuum_states(potential, kmax, hk, kmin=1)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "You can check that the result is a `SWPBasisSet` instance whose states are `SWPContinuum` instances that have the expected wavenumbers:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# continuum is a SWPBasisSet instance:\n",
+    "assert isinstance(continuum, SWPBasisSet)\n",
+    "\n",
+    "# All the states in continuum are SWPContinuum instances:\n",
+    "assert all([isinstance(state, SWPContinuum) for state in continuum])\n",
+    "\n",
+    "# Their wavenumbers correspond to the expected values:\n",
+    "continuum.wavenumbers"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Note that each wavenumber is repeated twice: this is beacause there are an even and an odd continuum state for each positive wavenumber."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Continuum states around a resonance\n",
+    "\n",
+    "The antinodes of the wavefunctions of continuum states wavefunctions reach a maximum inside the potential for energies corresponding to the absolute value of resonant energies. This is only true for the continuum state of the same parity as the resonance.\n",
+    "\n",
+    "### Around the first resonance"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Find some of the Siegert states once again\n",
+    "siegerts = SWPBasisSet.find_Siegert_states(potential, 4, re_hk, im_kmax)\n",
+    "\n",
+    "# Get the first resonant state\n",
+    "ires = 0\n",
+    "res = siegerts.resonants[ires]\n",
+    "print(\"Resonance of absolute energy: {:.3f} (parity: {})\"\n",
+    "      .format(abs(res.energy), res.parity))\n",
+    "\n",
+    "# Define a grid of wavenumbers around that resonance \n",
+    "# and find the continuum states\n",
+    "hk = 0.25\n",
+    "kmid = abs(res.wavenumber)\n",
+    "kmin = kmid-hk\n",
+    "kmax = kmid+3*hk/2\n",
+    "continuum = SWPBasisSet.find_continuum_states(potential, kmax, hk, \n",
+    "                                              kmin=kmin, grid=xgrid)\n",
+    "\n",
+    "# Plot the even continuum states\n",
+    "for c in continuum.even:\n",
+    "    c.abs().plot(ylim=(0,0.6), title=repr(c))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "As you can see above, the maximum of amplitude is reached at the resonant absolute energy for the even continuum states, while it is not the case for the odd continuum states below:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "for c in continuum.odd:\n",
+    "    c.abs().plot(ylim=(0,0.6), title=repr(c))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Around the second resonance\n",
+    "\n",
+    "The second resonance being odd, it is the odd continuum state wavefunction that reaches a maximum for a wavenumbereauql to the absolute value of the resonant wavenumber:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Get the first resonant state\n",
+    "ires = 1\n",
+    "res = siegerts.resonants[ires]\n",
+    "print(\"Resonance of absolute energy: {:.3f} (parity: {})\"\n",
+    "      .format(abs(res.energy), res.parity))\n",
+    "\n",
+    "# Define a grid of wavenumbers around that resonance \n",
+    "# and find the continuum states\n",
+    "hk = 0.25\n",
+    "kmid = abs(res.wavenumber)\n",
+    "kmin = kmid-hk\n",
+    "kmax = kmid+3*hk/2\n",
+    "continuum = SWPBasisSet.find_continuum_states(potential, kmax, hk, \n",
+    "                                              kmin=kmin, grid=xgrid)\n",
+    "\n",
+    "# Plot the odd continuum states\n",
+    "for c in continuum.odd:\n",
+    "    c.abs().plot(ylim=(0,0.6), title=repr(c))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "This concludes this tutorial showing the basics of the SiegPy module. You should be able to:\n",
+    "\n",
+    "* define a square-well potential with the `SWPotential` class,\n",
+    "\n",
+    "* find Siegert and continuum states that are eigenstates of the Hamiltonian involving a square-well potential and store them into a `SWPBasisSet` instance,\n",
+    "\n",
+    "* use some of their attributes and methods, especially to plot some quantities of interest.\n",
+    "\n",
+    "You should also know that:\n",
+    "\n",
+    "* there are four different types of Siegert states,\n",
+    "\n",
+    "* the Siegert and continuum states of the SWP are instances of the `SWPSiegert` and `SWPContinuum` classes, respectively."
+   ]
+  }
+ ],
+ "metadata": {
+  "anaconda-cloud": {},
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

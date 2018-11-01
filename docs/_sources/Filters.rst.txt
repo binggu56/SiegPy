@@ -1,0 +1,4 @@
+Filters
+-------
+
+.. automodule:: siegpy.filters

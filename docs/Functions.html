@@ -1,0 +1,755 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Functions &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Test functions" href="TestFunctions.html" />
+    <link rel="prev" title="The Function class and its children" href="Other.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_objects.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1DSWPCase.html">1D Square-Well Potential Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="General1DCase.html">General 1D Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AbstractClasses.html">Abstract classes for further analytic cases</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="Other.html">The Function class and its children</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="TestFunctions.html">Test functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api_objects.html">Code Documentation</a> &raquo;</li>
+        
+          <li><a href="Other.html">The Function class and its children</a> &raquo;</li>
+        
+      <li>Functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Functions.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="functions">
+<h1>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h1>
+<p>This page contains the definitions of the <a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a>
+and the <a class="reference internal" href="#siegpy.functions.AnalyticFunction" title="siegpy.functions.AnalyticFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalyticFunction</span></code></a> classes.</p>
+<dl class="class">
+<dt id="siegpy.functions.Function">
+<em class="property">class </em><code class="descclassname">siegpy.functions.</code><code class="descname">Function</code><span class="sig-paren">(</span><em>grid</em>, <em>values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class defining a 1-dimendional (1D) function from its grid and
+the corresponding values.</p>
+<p>A function can be plotted, and different types of operations can
+be performed (<em>e.g.</em>, scalar product with another function,
+addition of another function). It is also possible to compute its
+norm, and return its conjugate and its absolute value as another
+function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>grid</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Discretization grid.</li>
+<li><strong>values</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Values of the function evaluated on the grid points.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the grid is not made of reals or if the <code class="docutils literal notranslate"><span class="pre">grid</span></code> and
+<code class="docutils literal notranslate"><span class="pre">values</span></code> arrays have incoherent lengths.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Example</span></code></p>
+</li>
+<li><p class="first">Note that both <code class="docutils literal notranslate"><span class="pre">grid</span></code> and <code class="docutils literal notranslate"><span class="pre">values</span></code> are converted to numpy</p>
+</li>
+<li><p class="first">arrays:</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">grid</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">array([-1,  0,  1])</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">array([1, 2, 3])</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="siegpy.functions.Function.grid">
+<code class="descname">grid</code><a class="headerlink" href="#siegpy.functions.Function.grid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul>
+<li><em>numpy array</em> – Grid of a Function instance.</li>
+<li><em>.. warning::</em> – The grid of a Function instance cannot be modified:<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">AttributeError</span>: <span class="n">can&#39;t set attribute</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Function.values">
+<code class="descname">values</code><a class="headerlink" href="#siegpy.functions.Function.values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul>
+<li><em>numpy array</em> – Values of a Function instance.</li>
+<li><em>.. warning::</em> – The values of a Function instance cannot be modified:<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">AttributeError</span>: <span class="n">can&#39;t set attribute</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Function.__eq__">
+<code class="descname">__eq__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Function.__eq__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Function.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two functions are equal if they have the same grid and values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<em>object</em>) – Another object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>bool</em> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if <code class="docutils literal notranslate"><span class="pre">other</span></code> is a Function instance with the same
+<a class="reference internal" href="#siegpy.functions.Function.grid" title="siegpy.functions.Function.grid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">grid</span></code></a> and <a class="reference internal" href="#siegpy.functions.Function.values" title="siegpy.functions.Function.values"><code class="xref py py-attr docutils literal notranslate"><span class="pre">values</span></code></a>.</li>
+<li><em>Examples</em></li>
+<li><em>&gt;&gt;&gt; f = Function([1, 2, 3], [1, 1, 1])</em></li>
+<li><em>&gt;&gt;&gt; Function([1, 2, 3], [1, 1, 1]) == f</em></li>
+<li><em>True</em></li>
+<li><em>&gt;&gt;&gt; Function([1, 2, 3], [-1, 0, 1]) == f</em></li>
+<li><em>False</em></li>
+<li><em>&gt;&gt;&gt; Function([-1, 0, 1], [1, 1, 1]) == f</em></li>
+<li><em>False</em></li>
+<li><em>&gt;&gt;&gt; f == 1</em></li>
+<li><em>False</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Function.__add__">
+<code class="descname">__add__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Function.__add__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Function.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add two functions, if both grids are the same.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>other</strong> (<a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Another function.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Sum of both functions.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function">Function</a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If both the <a class="reference internal" href="#siegpy.functions.Function.grid" title="siegpy.functions.Function.grid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">grid</span></code></a> of both functions differ.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Examples</span></code></p>
+</li>
+<li><p class="first">Two functions can be added:</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span> <span class="n">Function</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f2</span> <span class="o">=</span> <span class="n">Function</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">f2</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The grid of the new function is the same, and its values are</p>
+</li>
+<li><p class="first">the sum of both values:</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">grid</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">array([1, 2, 3])</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">array([1, 0, 1])</p>
+</li>
+<li><p class="first">It leaves the other functions unchanged:</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">array([1, 1, 1])</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f2</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">array([ 0, -1,  0])</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Function.is_even">
+<code class="descname">is_even</code><a class="headerlink" href="#siegpy.functions.Function.is_even" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>bool</em> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if the function is even, <code class="docutils literal notranslate"><span class="pre">False</span></code> if not.</li>
+<li><em>Examples</em></li>
+<li><em>&gt;&gt;&gt; Function([1, 2, 3], [1j, 1j, 1j]).is_even</em></li>
+<li><em>False</em></li>
+<li><em>&gt;&gt;&gt; Function([-1, 0, 1], [1j, 1j, 1j]).is_even</em></li>
+<li><em>True</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.Function.is_odd">
+<code class="descname">is_odd</code><a class="headerlink" href="#siegpy.functions.Function.is_odd" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>bool</em> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if the function is odd, <code class="docutils literal notranslate"><span class="pre">False</span></code> if not.</li>
+<li><em>Examples</em></li>
+<li><em>&gt;&gt;&gt; Function([-1, 0, 1], [-1j, 0j, 1j]).is_odd</em></li>
+<li><em>True</em></li>
+<li><em>&gt;&gt;&gt; Function([1, 2, 3], [-1j, 0j, 1j]).is_odd</em></li>
+<li><em>False</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Function.plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><em>xlim=None</em>, <em>ylim=None</em>, <em>title=None</em>, <em>file_save=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Function.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Function.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the real and imaginary parts of the function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xlim</strong> (<em>tuple</em><em>(</em><em>float</em><em> or </em><em>int</em><em>, </em><em>float</em><em> or </em><em>int</em><em>)</em>) – Range of the x axis of the plot (optional).</li>
+<li><strong>ylim</strong> (<em>tuple</em><em>(</em><em>float</em><em> or </em><em>int</em><em>, </em><em>float</em><em> or </em><em>int</em><em>)</em>) – Range of the y axis of the plot (optional).</li>
+<li><strong>title</strong> (<em>str</em>) – Title for the plot.</li>
+<li><strong>file_save</strong> (<em>str</em>) – Filename of the plot to be saved (optional).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Function.abs">
+<code class="descname">abs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Function.abs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Function.abs" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>Function</em> – Absolute value of the function.</li>
+<li><em>Example</em></li>
+<li>Applying the <a class="reference internal" href="#siegpy.functions.Function.abs" title="siegpy.functions.Function.abs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">abs()</span></code></a> method to a <a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a> instance</li>
+<li>returns a new <a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a> instance (<em>i.e.</em>, the initial</li>
+<li><em>one is unchanged)</em></li>
+<li><em>&gt;&gt;&gt; f = Function([1, 2, 3], [1j, 1j, 1j])</em></li>
+<li><em>&gt;&gt;&gt; f.abs().values</em></li>
+<li><em>array([ 1.,  1.,  1.])</em></li>
+<li><em>&gt;&gt;&gt; f.values</em></li>
+<li><em>array([ 0.+1.j,  0.+1.j,  0.+1.j])</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Function.conjugate">
+<code class="descname">conjugate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Function.conjugate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Function.conjugate" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>Function</em> – Conjugate of the function.</li>
+<li><em>Example</em></li>
+<li>Applying the <a class="reference internal" href="#siegpy.functions.Function.conjugate" title="siegpy.functions.Function.conjugate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">conjugate()</span></code></a> method to a <a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a></li>
+<li>instance returns a new <a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a> instance (<em>i.e.</em> the</li>
+<li><em>initial one is unchanged)</em></li>
+<li><em>&gt;&gt;&gt; f = Function([1, 2, 3], [1j, 1j, 1j])</em></li>
+<li><em>&gt;&gt;&gt; f.conjugate().values</em></li>
+<li><em>array([ 0.-1.j,  0.-1.j,  0.-1.j])</em></li>
+<li><em>&gt;&gt;&gt; f.values</em></li>
+<li><em>array([ 0.+1.j,  0.+1.j,  0.+1.j])</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Function.scal_prod">
+<code class="descname">scal_prod</code><span class="sig-paren">(</span><em>other</em>, <em>xlim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Function.scal_prod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Function.scal_prod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the usual scalar product of two functions f and g:</p>
+<p><span class="math notranslate nohighlight">\(\langle f | g \rangle = \int f^*(x)  g(x) \text{d}x\)</span></p>
+<p>where <cite>*</cite> represents the conjugation.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>The trapezoidal integration rule is used.</li>
+</ul>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>other</strong> (<a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a>) – Another function.</li>
+<li><strong>xlim</strong> (<em>tuple</em><em>(</em><em>float</em><em> or </em><em>int</em><em>, </em><em>float</em><em> or </em><em>int</em><em>)</em>) – Range of the x-axis for the integration (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Value of the scalar product</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">float</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the grid of both functions are different or if the
+interval given by <code class="docutils literal notranslate"><span class="pre">xlim</span></code> is not inside the one defined by
+the discretization grid.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Example</span></code></p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">grid</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">scal_prod</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">1.0</span></code></p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.Function.norm">
+<code class="descname">norm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#Function.norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.Function.norm" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>float</em> – Norm of the function.</li>
+<li><em>Example</em></li>
+<li><em>&gt;&gt;&gt; Function([-1, 0, 1], [2j, 0, 2j]).norm()</em></li>
+<li><em>(4+0j)</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.functions.AnalyticFunction">
+<em class="property">class </em><code class="descclassname">siegpy.functions.</code><code class="descname">AnalyticFunction</code><span class="sig-paren">(</span><em>grid=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#AnalyticFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.AnalyticFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.functions.Function</span></code></a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>This is an abstract class.</strong> A child class must implement the
+<a class="reference internal" href="#siegpy.functions.AnalyticFunction._compute_values" title="siegpy.functions.AnalyticFunction._compute_values"><code class="xref py py-class docutils literal notranslate"><span class="pre">_compute_values</span></code></a>
+class. Examples of such child classes are:</p>
+<ul class="last simple">
+<li>the <a class="reference internal" href="TestFunctions.html#siegpy.functions.Rectangular" title="siegpy.functions.Rectangular"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rectangular</span></code></a> class,</li>
+<li>the <a class="reference internal" href="TestFunctions.html#siegpy.functions.Gaussian" title="siegpy.functions.Gaussian"><code class="xref py py-class docutils literal notranslate"><span class="pre">Gaussian</span></code></a> class.</li>
+</ul>
+</div>
+<p>The main change with respect to the
+<a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.functions.Function</span></code></a> class is that the grid is an
+optional parameter, so that, if it is modified, then the values of
+the function are updated accordingly.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>numpy array</em>) – Discretization grid (optional).</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="siegpy.functions.AnalyticFunction.evaluate">
+<code class="descname">evaluate</code><span class="sig-paren">(</span><em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#AnalyticFunction.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.AnalyticFunction.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for the
+<a class="reference internal" href="#siegpy.functions.AnalyticFunction._compute_values" title="siegpy.functions.AnalyticFunction._compute_values"><code class="xref py py-func docutils literal notranslate"><span class="pre">_compute_values()</span></code></a> to
+evaluate the analytic function either for a grid of points or a
+single point in the 1-dimensional space.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid</strong> (<em>int</em><em> or </em><em>float</em><em> or </em><em>numpy array</em>) – Discretization grid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Values of the function for all the grid points.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float or complex or numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.AnalyticFunction._compute_values">
+<code class="descname">_compute_values</code><span class="sig-paren">(</span><em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#AnalyticFunction._compute_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.AnalyticFunction._compute_values" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an abstract method.</p>
+</div>
+<p>Compute the values of the function given a discretization grid
+that has been converted to a numpy array by the
+<a class="reference internal" href="#siegpy.functions.AnalyticFunction.evaluate" title="siegpy.functions.AnalyticFunction.evaluate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate()</span></code></a> method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>grid</strong> (<em>numpy array</em>) – Discretization grid.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Values of the analytic function over the provided <code class="docutils literal notranslate"><span class="pre">grid</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.functions.AnalyticFunction.grid">
+<code class="descname">grid</code><a class="headerlink" href="#siegpy.functions.AnalyticFunction.grid" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#siegpy.functions.AnalyticFunction.grid" title="siegpy.functions.AnalyticFunction.grid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">grid</span></code></a> still is an attribute, but it is more powerful than
+for a <a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a> instance: when the
+grid of an <a class="reference internal" href="#siegpy.functions.AnalyticFunction" title="siegpy.functions.AnalyticFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalyticFunction</span></code></a> instance is updated, so are
+its values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.functions.AnalyticFunction.__add__">
+<code class="descname">__add__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/functions.html#AnalyticFunction.__add__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.functions.AnalyticFunction.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function"><em>Function</em></a><em>, or </em><em>any class inheriting from it</em>) – Another Function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Sum of an <a class="reference internal" href="#siegpy.functions.AnalyticFunction" title="siegpy.functions.AnalyticFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalyticFunction</span></code></a> instance with
+another function. It requires that at least one of both
+functions has a grid that is not <code class="docutils literal notranslate"><span class="pre">None</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#siegpy.functions.Function" title="siegpy.functions.Function">Function</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If both functions have grids set to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="TestFunctions.html" class="btn btn-neutral float-right" title="Test functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Other.html" class="btn btn-neutral" title="The Function class and its children" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

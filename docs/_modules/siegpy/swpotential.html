@@ -1,0 +1,448 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>siegpy.swpotential &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>siegpy.swpotential</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for siegpy.swpotential</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The :class:`SWPotential` class representing a 1D Square-Well Potential</span>
+<span class="sd">(1DSWP) is defined below.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">siegpy</span> <span class="k">import</span> <span class="n">Potential</span><span class="p">,</span> <span class="n">Rectangular</span>
+
+
+<div class="viewcode-block" id="SWPotential"><a class="viewcode-back" href="../../SWPotential.html#siegpy.swpotential.SWPotential">[docs]</a><span class="k">class</span> <span class="nc">SWPotential</span><span class="p">(</span><span class="n">Rectangular</span><span class="p">,</span> <span class="n">Potential</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A 1D SW potential is nothing but a rectangular function that is</span>
+<span class="sd">    considered as a potential. This class therefore inherits from and</span>
+<span class="sd">    extends the :class:`~siegpy.functions.Rectangular` and</span>
+<span class="sd">    :class:`~siegpy.potential.Potential` classes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">V0</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A 1D SWP is initialized from a width :math:`l` and a depth</span>
+<span class="sd">        :math:`V_0`. If a grid is given, the potential is discretized</span>
+<span class="sd">        over this grid.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        l: float</span>
+<span class="sd">            Width of the potential.</span>
+<span class="sd">        V0: float</span>
+<span class="sd">            Depth of the potential.</span>
+<span class="sd">        grid: numpy array or list or set</span>
+<span class="sd">            Discretization grid of the potential (optional).</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the depth and width of the potential are not strictly</span>
+<span class="sd">            positive.</span>
+
+
+<span class="sd">        Examples</span>
+
+<span class="sd">        A SWPotential instance represents nothing but a centered</span>
+<span class="sd">        rectangular function with a negative amplitude:</span>
+
+<span class="sd">        &gt;&gt;&gt; xgrid = [-4, -2, 0, 2, 4]</span>
+<span class="sd">        &gt;&gt;&gt; pot = SWPotential(5, 10, grid=xgrid)</span>
+<span class="sd">        &gt;&gt;&gt; pot.width == 5 and pot.amplitude == -10</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; pot.center == 0 and pot.momentum == 0</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; pot.values</span>
+<span class="sd">        array([  0.+0.j, -10.+0.j, -10.+0.j, -10.+0.j,   0.+0.j])</span>
+
+<span class="sd">        Rather than dealing with a negative amplitude, the positive</span>
+<span class="sd">        depth of the SW potential is mainly used:</span>
+
+<span class="sd">        &gt;&gt;&gt; pot.depth</span>
+<span class="sd">        10</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check that V0 is positive</span>
+        <span class="k">if</span> <span class="n">V0</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The depth the potential must be strictly positive.&quot;</span><span class="p">)</span>
+        <span class="c1"># Initialization of the 1DSWP, that has a &#39;depth&#39; attribute</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">-</span><span class="n">l</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">l</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">h</span><span class="o">=-</span><span class="n">V0</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_depth</span> <span class="o">=</span> <span class="n">V0</span>
+
+<div class="viewcode-block" id="SWPotential.from_center_and_width"><a class="viewcode-back" href="../../SWPotential.html#siegpy.swpotential.SWPotential.from_center_and_width">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_center_and_width</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xc</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">k0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class method overriding the inherited</span>
+<span class="sd">        :func:`siegpy.functions.Rectangular.from_center_and_width`</span>
+<span class="sd">        class method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xc: float</span>
+<span class="sd">            Center of the potential (must be 0).</span>
+<span class="sd">        a: float</span>
+<span class="sd">            Width of the potential.</span>
+<span class="sd">        k0: float</span>
+<span class="sd">            Initial momentum of the potential (must be 0).</span>
+<span class="sd">        h: float</span>
+<span class="sd">            Depth of the potential (default to 1).</span>
+<span class="sd">        grid: list or numpy array</span>
+<span class="sd">            Discretization grid (optional).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SWPotential</span>
+<span class="sd">            An initialized 1D SW potential.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the initial momentum or the center is not zero.</span>
+
+
+<span class="sd">        Examples</span>
+
+<span class="sd">        &gt;&gt;&gt; pot = SWPotential.from_center_and_width(0, 5, h=-10)</span>
+<span class="sd">        &gt;&gt;&gt; pot.width == 5 and pot.depth == 10</span>
+<span class="sd">        True</span>
+
+<span class="sd">        A Potential cannot have a non-zero center nor an initial</span>
+<span class="sd">        momentum:</span>
+
+<span class="sd">        &gt;&gt;&gt; SWPotential.from_center_and_width(2, 5)</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: A SWPotential must be centered.</span>
+<span class="sd">        &gt;&gt;&gt; SWPotential.from_center_and_width(0, 5, k0=1)</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: A SWPotential cannot have an initial momentum.</span>
+
+<span class="sd">        The same is valid for the :meth:`from_width_and_center` class</span>
+<span class="sd">        method:</span>
+
+<span class="sd">        &gt;&gt;&gt; SWPotential.from_width_and_center(5, 2)</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: A SWPotential must be centered.</span>
+<span class="sd">        &gt;&gt;&gt; SWPotential.from_width_and_center(5, 0, k0=1)</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ValueError: A SWPotential cannot have an initial momentum.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check the values of the parameters</span>
+        <span class="k">if</span> <span class="n">xc</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;A SWPotential must be centered.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">k0</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;A SWPotential cannot have an initial momentum.&quot;</span><span class="p">)</span>
+        <span class="c1"># Return a SWPotential instance</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">depth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Depth of the 1D SW potential.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_depth</span>
+
+<div class="viewcode-block" id="SWPotential.__eq__"><a class="viewcode-back" href="../../SWPotential.html#siegpy.swpotential.SWPotential.__eq__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other: object</span>
+<span class="sd">            Any other object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if two SW potentials have the same width and depth.</span>
+
+
+<span class="sd">        Examples</span>
+
+<span class="sd">        &gt;&gt;&gt; SWPotential(5, 10) == SWPotential(5, 10, grid=[-1, 0, 1])</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; SWPotential(5, 10) == Potential([-1, 0, 1], [-10, -10, -10])</span>
+<span class="sd">        False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">SWPotential</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">width</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Representation of the square-well potential.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;1D Square-Well Potential of width </span><span class="si">{0.width:.2f}</span><span class="s2"> &quot;</span> \
+               <span class="s2">&quot;and depth </span><span class="si">{0.depth:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SWPotential.__add__"><a class="viewcode-back" href="../../SWPotential.html#siegpy.swpotential.SWPotential.__add__">[docs]</a>    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override of the addition, taking care of the case of the</span>
+<span class="sd">        addition of two SW potentials with the same width.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other: Potential</span>
+<span class="sd">            Another potential</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Potential or Function</span>
+<span class="sd">            The sum of both potentials.</span>
+
+
+<span class="sd">        Examples</span>
+
+<span class="sd">        The addition of two Square-Well potentials of the same width</span>
+<span class="sd">        keeps the analyticity:</span>
+
+<span class="sd">        &gt;&gt;&gt; xgrid = [-4, -2, 0, 2, 4]</span>
+<span class="sd">        &gt;&gt;&gt; pot = SWPotential(5, 10, grid=xgrid)</span>
+<span class="sd">        &gt;&gt;&gt; pot += SWPotential(5, 5)</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(pot, SWPotential)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; pot.amplitude == -15 and pot.depth == 15 and pot.width == 5</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; pot.values</span>
+<span class="sd">        array([  0.+0.j, -15.+0.j, -15.+0.j, -15.+0.j,   0.+0.j])</span>
+
+<span class="sd">        In any other case, the analyticity is lost, but the result</span>
+<span class="sd">        still is a potential:</span>
+
+<span class="sd">        &gt;&gt;&gt; pot += Potential(xgrid, [5, 5, 5, 5, 5])</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(pot, SWPotential)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(pot, Potential)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; pot.values</span>
+<span class="sd">        array([  5.+0.j, -10.+0.j, -10.+0.j, -10.+0.j,   5.+0.j])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">SWPotential</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">width</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SWPotential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="o">+</span><span class="n">other</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
+                               <span class="n">grid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SWPotential.complex_scaled_values"><a class="viewcode-back" href="../../SWPotential.html#siegpy.swpotential.SWPotential.complex_scaled_values">[docs]</a>    <span class="k">def</span> <span class="nf">complex_scaled_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord_map</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates the complex scaled SW potential. It actually amounts</span>
+<span class="sd">        to the potential without complex scaling, as the Square-Well</span>
+<span class="sd">        Potential is a piecewise function (the complex scaling has no</span>
+<span class="sd">        effect on it).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        coord_map: CoordMap</span>
+<span class="sd">            Coordinate mapping.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Complex scaled values of the potential.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

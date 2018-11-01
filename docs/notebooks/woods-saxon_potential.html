@@ -1,0 +1,998 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Symbolic Woods-Saxon potential &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Multiple Gaussian potentials" href="gaussian_potentials.html" />
+    <link rel="prev" title="Influence of the grid for Siegert states" href="influence_grid_siegerts.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../notebooks.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-analytical-case">1D Square-Well Potential: the analytical case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks.html#d-square-well-potential-the-numerical-case">1D Square-Well Potential: the numerical case</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../notebooks.html#other-numerical-potentials">Other numerical potentials</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Symbolic Woods-Saxon potential</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Initialization">Initialization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Smooth-potential">Smooth potential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Sharper-potential">Sharper potential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Sharp-potential">Sharp potential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Square-Well-Potential">Square-Well Potential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Comparison-of-all-the-results">Comparison of all the results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gaussian_potentials.html">Multiple Gaussian potentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other_symbolic_potentials.html">Defining a new symbolic potential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="numerical_strength_function.html">Strength function from numerical basis sets</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../notebooks.html">Tutorial</a> &raquo;</li>
+        
+      <li>Symbolic Woods-Saxon potential</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/woods-saxon_potential.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Symbolic-Woods-Saxon-potential">
+<h1>Symbolic Woods-Saxon potential<a class="headerlink" href="#Symbolic-Woods-Saxon-potential" title="Permalink to this headline">¶</a></h1>
+<p>The Square-Well Potential (SWP) used in all the previous notebooks can
+actually be considered as a Woods-Saxon Potential (WSP) with an
+infinitely large sharpness parameter.</p>
+<p>In this notebooks, we will therefore obtain the resonant states of
+multiple WS potentials of varying sharpness parameters and compare the
+obtained spectra with the one obtained with the SW potential that
+corresponds to the infinite sharpness parameter.</p>
+<div class="section" id="Initialization">
+<h2>Initialization<a class="headerlink" href="#Initialization" title="Permalink to this headline">¶</a></h2>
+<p>Some more lines are required for matplotlib because a plotting function
+will be defined in the end of the notebook. The class describing the
+Woods-Saxon potential is also imported from SiegPy.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cm</span>
+<span class="kn">from</span> <span class="nn">siegpy</span> <span class="k">import</span> <span class="p">(</span><span class="n">SWPotential</span><span class="p">,</span> <span class="n">Hamiltonian</span><span class="p">,</span> <span class="n">BasisSet</span><span class="p">,</span>
+                    <span class="n">ErfKGCoordMap</span><span class="p">,</span> <span class="n">WoodsSaxonPotential</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Smooth-potential">
+<h2>Smooth potential<a class="headerlink" href="#Smooth-potential" title="Permalink to this headline">¶</a></h2>
+<p>The first Woods-Saxon potential has the smallest sharpness parameter
+considered in this notebook, and is discretized over a grid.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define a grid</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mf">9.0</span>
+<span class="n">xgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="mi">1201</span><span class="p">)</span>
+<span class="c1"># Define the parameters of the first Woods-Saxon potenti</span>
+<span class="n">V0</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">lbda1</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="c1"># Definition of the first Woods-Saxon potential</span>
+<span class="n">sym_pot_ws1</span> <span class="o">=</span> <span class="n">WoodsSaxonPotential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">V0</span><span class="p">,</span> <span class="n">lbda1</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+<span class="n">sym_pot_ws1</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_7_0.png" src="../_images/notebooks_woods-saxon_potential_7_0.png" />
+</div>
+</div>
+<p>This potential is then used to define a Hamiltonian that is finally
+solved.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Definition of the Hamiltonian to find the resonant states of this potential</span>
+<span class="n">cm_ws</span> <span class="o">=</span> <span class="n">ErfKGCoordMap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">xmax</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">ham_ws1</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">sym_pot_ws1</span><span class="p">,</span> <span class="n">cm_ws</span><span class="p">)</span>
+<span class="n">basis_ws1</span> <span class="o">=</span> <span class="n">ham_ws1</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">max_virial</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>Let us finally look at some plots:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Definition of all the parameters to get consistent plots for</span>
+<span class="c1"># all the potentials considered throughout this notebook</span>
+<span class="n">re_e_max</span> <span class="o">=</span> <span class="mi">21</span>
+<span class="n">im_e_min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">13</span>
+<span class="n">im_k_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">V0</span><span class="p">)</span>
+<span class="n">re_k_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">re_e_max</span><span class="p">)</span>
+<span class="n">re_e_lim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">V0</span><span class="p">,</span> <span class="n">re_e_max</span><span class="p">)</span>
+<span class="n">im_e_lim</span> <span class="o">=</span> <span class="p">(</span><span class="n">im_e_min</span><span class="p">,</span> <span class="o">-</span><span class="n">im_e_min</span><span class="o">/</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">re_k_lim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">re_k_max</span><span class="o">/</span><span class="mi">30</span><span class="p">,</span> <span class="n">re_k_max</span><span class="p">)</span>
+<span class="n">im_k_lim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">im_k_max</span><span class="p">,</span> <span class="n">im_k_max</span><span class="p">)</span>
+<span class="c1"># Plot the energies, wavenumbers and some eigenstates of the potential</span>
+<span class="n">basis_ws1</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_e_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_e_lim</span><span class="p">)</span>
+<span class="n">basis_ws1</span><span class="o">.</span><span class="n">plot_wavenumbers</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_k_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_k_lim</span><span class="p">)</span>
+<span class="n">basis_ws1</span><span class="o">.</span><span class="n">plot_wavefunctions</span><span class="p">(</span><span class="n">nstates</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_11_0.png" src="../_images/notebooks_woods-saxon_potential_11_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_11_1.png" src="../_images/notebooks_woods-saxon_potential_11_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_11_2.png" src="../_images/notebooks_woods-saxon_potential_11_2.png" />
+</div>
+</div>
+<p>Bound states are found, and they seem rather similar to the ones found
+for the Square-Well potential, with low virial values. On the other
+hand, the resonant states are more difficult to find because the values
+of the imaginary part of their energy is high (in absolute value), so
+that it requires a large complex scaling angles. It is therefore not
+surprising they have rather high virial values, not so far away from
+those of the rotated continuum states.</p>
+</div>
+<div class="section" id="Sharper-potential">
+<h2>Sharper potential<a class="headerlink" href="#Sharper-potential" title="Permalink to this headline">¶</a></h2>
+<p>Let us now consider the case of a sharper potential:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># A larger sharpness parameter gives a sharper potential.</span>
+<span class="c1"># All the other parameters are the same as in the previous case.</span>
+<span class="n">lbda2</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">sym_pot_ws2</span> <span class="o">=</span> <span class="n">WoodsSaxonPotential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">V0</span><span class="p">,</span> <span class="n">lbda2</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+<span class="n">sym_pot_ws2</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_15_0.png" src="../_images/notebooks_woods-saxon_potential_15_0.png" />
+</div>
+</div>
+<p>The new potential is used to define another Hamiltonian, that is finally
+solved:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ham_ws2</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">sym_pot_ws2</span><span class="p">,</span> <span class="n">cm_ws</span><span class="p">)</span>
+<span class="n">basis_ws2</span> <span class="o">=</span> <span class="n">ham_ws2</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">max_virial</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>Let us look at some plots:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">basis_ws2</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_e_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_e_lim</span><span class="p">)</span>
+<span class="n">basis_ws2</span><span class="o">.</span><span class="n">plot_wavenumbers</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_k_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_k_lim</span><span class="p">)</span>
+<span class="n">basis_ws2</span><span class="o">.</span><span class="n">plot_wavefunctions</span><span class="p">(</span><span class="n">nres</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_19_0.png" src="../_images/notebooks_woods-saxon_potential_19_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_19_1.png" src="../_images/notebooks_woods-saxon_potential_19_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_19_2.png" src="../_images/notebooks_woods-saxon_potential_19_2.png" />
+</div>
+</div>
+<p>This time, the resonant states are more easily found from the rest of
+the eigenstates: their imaginary value is closer to the axis
+<span class="math notranslate nohighlight">\(\text{Im}[E] = 0\)</span>, and it would therefore require a lower complex
+scaling angle than in the previous case. Note that the virial values are
+also smaller for the resonant states, compared to the previous case.</p>
+</div>
+<div class="section" id="Sharp-potential">
+<h2>Sharp potential<a class="headerlink" href="#Sharp-potential" title="Permalink to this headline">¶</a></h2>
+<p>The last Woods-Saxon that will be considered will be even sharper:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># The sharpness parameter is increased again</span>
+<span class="n">lbda3</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">sym_pot_ws3</span> <span class="o">=</span> <span class="n">WoodsSaxonPotential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">V0</span><span class="p">,</span> <span class="n">lbda3</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+<span class="n">sym_pot_ws3</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_23_0.png" src="../_images/notebooks_woods-saxon_potential_23_0.png" />
+</div>
+</div>
+<p>A new Hamiltonian is created, and it is solved again, allowing the
+production of more plots:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ham_ws3</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">sym_pot_ws3</span><span class="p">,</span> <span class="n">cm_ws</span><span class="p">)</span>
+<span class="n">basis_ws3</span> <span class="o">=</span> <span class="n">ham_ws3</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">max_virial</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">basis_ws3</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_e_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_e_lim</span><span class="p">)</span>
+<span class="n">basis_ws3</span><span class="o">.</span><span class="n">plot_wavenumbers</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_k_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_k_lim</span><span class="p">)</span>
+<span class="n">basis_ws3</span><span class="o">.</span><span class="n">plot_wavefunctions</span><span class="p">(</span><span class="n">nres</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_26_0.png" src="../_images/notebooks_woods-saxon_potential_26_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_26_1.png" src="../_images/notebooks_woods-saxon_potential_26_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_26_2.png" src="../_images/notebooks_woods-saxon_potential_26_2.png" />
+</div>
+</div>
+<p>Again, it can be seen that the resonant states of this sharp potential
+have lower imaginary part of energy (in absolute value) than for the
+previous two potentials. They also have lower virial values.</p>
+</div>
+<div class="section" id="Square-Well-Potential">
+<h2>Square-Well Potential<a class="headerlink" href="#Square-Well-Potential" title="Permalink to this headline">¶</a></h2>
+<p>Let us now study the case of the Square-Well potential that is the
+limiting case of the Woods-Saxon potentials presented above, in the
+limit where the sharpness parameter is infinitely large:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># The same width, depth and grid is used</span>
+<span class="n">sw_pot</span> <span class="o">=</span> <span class="n">SWPotential</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">V0</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">xgrid</span><span class="p">)</span>
+<span class="n">ham_sw</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">sw_pot</span><span class="p">,</span> <span class="n">cm_ws</span><span class="p">)</span>
+<span class="n">basis_sw</span> <span class="o">=</span> <span class="n">ham_sw</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">max_virial</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">basis_sw</span><span class="o">.</span><span class="n">plot_energies</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_e_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_e_lim</span><span class="p">)</span>
+<span class="n">basis_sw</span><span class="o">.</span><span class="n">plot_wavenumbers</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="n">re_k_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_k_lim</span><span class="p">)</span>
+<span class="n">basis_sw</span><span class="o">.</span><span class="n">plot_wavefunctions</span><span class="p">(</span><span class="n">nres</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_31_0.png" src="../_images/notebooks_woods-saxon_potential_31_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_31_1.png" src="../_images/notebooks_woods-saxon_potential_31_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_31_2.png" src="../_images/notebooks_woods-saxon_potential_31_2.png" />
+</div>
+</div>
+<p>This is not different from all the plots obtained in the previous
+notebooks. The states that are obtained seem close to those of the
+sharper Woods-Saxon Potential considered, which is not that surprising.
+One detail still has to draw the attention: the virial values are much
+higher in this case.</p>
+</div>
+<div class="section" id="Comparison-of-all-the-results">
+<h2>Comparison of all the results<a class="headerlink" href="#Comparison-of-all-the-results" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Siegert-states-and-virial-values">
+<h3>Siegert states and virial values<a class="headerlink" href="#Siegert-states-and-virial-values" title="Permalink to this headline">¶</a></h3>
+<p>In order to plot only the bound and resonant states of all the basis
+sets while using only one scale for the virial, a new function has to be
+defined:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">scatter_plot</span><span class="p">(</span><span class="n">data_kwd</span><span class="p">,</span> <span class="n">basissets</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">file_save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_unknown</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="c1"># Object-oriented plots</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="c1"># Add the real and imaginary axes</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># black line y=0</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># black line x=0</span>
+    <span class="c1"># Define the min and max values of the virial, in order to</span>
+    <span class="c1"># use the same normalized scale of for the virial values.</span>
+    <span class="n">allstates</span> <span class="o">=</span> <span class="n">BasisSet</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">basissets</span><span class="p">:</span>
+        <span class="n">allstates</span> <span class="o">+=</span> <span class="n">b</span>
+    <span class="n">vmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">allstates</span><span class="o">.</span><span class="n">virials</span><span class="p">))</span>
+    <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">allstates</span><span class="o">.</span><span class="n">virials</span><span class="p">))</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+    <span class="c1"># Define the markers used for each basis set (not more than four</span>
+    <span class="c1"># basis sets can be considered ; you can still add more markers here,</span>
+    <span class="c1"># but the plot might become difficult to read)</span>
+    <span class="n">markers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">]</span>
+    <span class="c1"># Loop over the basis sets to plot them</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">basissets</span><span class="p">):</span>
+        <span class="c1"># Select which states have to be plotted and store their virial</span>
+        <span class="n">to_plot</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">bounds</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">resonants</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">continuum</span>
+        <span class="k">if</span> <span class="n">show_unknown</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">unknown</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+            <span class="n">to_plot</span> <span class="o">+=</span> <span class="n">b</span><span class="o">.</span><span class="n">unknown</span>
+        <span class="n">virials</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">to_plot</span><span class="o">.</span><span class="n">virials</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># Set the x-axis label and get the data to be plotted, according</span>
+        <span class="c1"># to the value of data_kwd.</span>
+        <span class="k">if</span> <span class="n">data_kwd</span> <span class="o">==</span> <span class="s1">&#39;wavenumbers&#39;</span><span class="p">:</span>
+            <span class="n">data_label</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span>
+            <span class="n">plot_data</span> <span class="o">=</span> <span class="n">to_plot</span><span class="o">.</span><span class="n">wavenumbers</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">data_kwd</span> <span class="o">==</span> <span class="s1">&#39;energies&#39;</span><span class="p">:</span>
+            <span class="n">data_label</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span>
+            <span class="n">plot_data</span> <span class="o">=</span> <span class="n">to_plot</span><span class="o">.</span><span class="n">energies</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Else: raise a value error</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;data_kwd must be equal to &#39;wavenumbers&#39; &quot;</span>
+                             <span class="s2">&quot;or &#39;energies&#39; (here &#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_kwd</span><span class="p">))</span>
+        <span class="c1"># Plot all the data</span>
+        <span class="k">if</span> <span class="n">plot_data</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="c1"># normalized scale for the colors</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">CMRmap</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">virials</span><span class="p">))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">plot_data</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">plot_data</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+                       <span class="n">marker</span><span class="o">=</span><span class="n">markers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$V_</span><span class="si">{}</span><span class="s2">$&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="c1"># Set the colorbar and its title</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">CMRmap</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">set_array</span><span class="p">([])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$log_</span><span class="si">{10}</span><span class="s2">$(|virial|)&quot;</span><span class="p">)</span>
+    <span class="c1"># Set axis labels and range and the plot title</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Re[$</span><span class="si">{}</span><span class="s2">$]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_label</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Im[$</span><span class="si">{}</span><span class="s2">$]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_label</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">xlim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticks</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">ylim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="c1"># Save the plot and show it</span>
+    <span class="k">if</span> <span class="n">file_save</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">file_save</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>This new function is finally used to plot the most interesting states:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data_kwd</span> <span class="o">=</span> <span class="s1">&#39;energies&#39;</span>
+<span class="c1"># Uncomment the next line to plot the wavenumbers</span>
+<span class="c1"># data_kwd = &#39;wavenumbers&#39;</span>
+<span class="k">if</span> <span class="n">data_kwd</span> <span class="o">==</span> <span class="s1">&#39;energies&#39;</span><span class="p">:</span>
+    <span class="n">re_lim</span> <span class="o">=</span> <span class="n">re_e_lim</span>
+    <span class="n">im_lim</span> <span class="o">=</span> <span class="n">im_e_lim</span>
+<span class="k">elif</span> <span class="n">data_kwd</span> <span class="o">==</span> <span class="s1">&#39;wavenumbers&#39;</span><span class="p">:</span>
+    <span class="n">re_lim</span> <span class="o">=</span> <span class="n">re_k_lim</span>
+    <span class="n">im_lim</span> <span class="o">=</span> <span class="n">im_k_lim</span>
+<span class="n">basissets</span> <span class="o">=</span> <span class="p">[</span><span class="n">basis_ws1</span><span class="p">,</span> <span class="n">basis_ws2</span><span class="p">,</span> <span class="n">basis_ws3</span><span class="p">,</span> <span class="n">basis_sw</span><span class="p">]</span>
+<span class="n">scatter_plot</span><span class="p">(</span><span class="n">data_kwd</span><span class="p">,</span> <span class="n">basissets</span><span class="p">,</span> <span class="n">show_unknown</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">xlim</span><span class="o">=</span><span class="n">re_lim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">im_lim</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_38_0.png" src="../_images/notebooks_woods-saxon_potential_38_0.png" />
+</div>
+</div>
+<p><span class="math notranslate nohighlight">\(V_1\)</span> (resp. <span class="math notranslate nohighlight">\(V_2\)</span> and <span class="math notranslate nohighlight">\(V_3\)</span>) corresponds to the first
+(resp. second and third) Woods-Saxon potential, while <span class="math notranslate nohighlight">\(V_4\)</span>
+corresponds to the SW potential. The trend for the resonant states is
+clearly visible, along with the fact that the virial values of the SWP
+are smaller than for the sharper Woods-Saxon potential, while their
+energy almost coincides. Note that it is clear that the resonant states
+of the smoothest potential are more difficult to separate from the rest
+of the rotated continuum states.</p>
+<p>From there, it is clear that the smoother the Woods-Saxon potential, the
+higher the absolute value of the imaginary part of the resonant states
+energies: this means that it will be more difficult to identify the
+resonant states for smooth potentials, and that the resonant states of
+smooth potentials would also have very short lifetime (that is
+proportional to the absolute value of the imaginary part of the resonant
+state energy).</p>
+</div>
+<div class="section" id="Focus-on-the-bound-states">
+<h3>Focus on the bound states<a class="headerlink" href="#Focus-on-the-bound-states" title="Permalink to this headline">¶</a></h3>
+<p>Let us focus on the bound states energies found for all the potentials
+studied above. It will also be interesting to compare with the
+analytical results for the 1D Square-Well potential:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Find the analytical Siegert states of the SWP (here, read from a file)</span>
+<span class="n">exact_siegerts</span> <span class="o">=</span> <span class="n">BasisSet</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;siegerts.dat&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The energies of the bound states for each basis set (<em>i.e.</em>, for each
+potential) are represented in the following plot:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Plot the bound states</span>
+<span class="n">basissets</span> <span class="o">=</span> <span class="p">[</span><span class="n">basis_ws1</span><span class="p">,</span> <span class="n">basis_ws2</span><span class="p">,</span> <span class="n">basis_ws3</span><span class="p">,</span> <span class="n">basis_sw</span><span class="p">,</span> <span class="n">exact_siegerts</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">basis</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">basissets</span><span class="p">):</span>
+    <span class="n">bounds</span> <span class="o">=</span> <span class="n">BasisSet</span><span class="p">(</span><span class="n">states</span><span class="o">=</span><span class="n">basis</span><span class="o">.</span><span class="n">bounds</span><span class="p">[:</span><span class="mi">7</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">bounds</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">bounds</span><span class="o">.</span><span class="n">energies</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2500</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">basissets</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Potential $V_i$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Re[Energy]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_woods-saxon_potential_44_0.png" src="../_images/notebooks_woods-saxon_potential_44_0.png" />
+</div>
+</div>
+<p>In this plot, <span class="math notranslate nohighlight">\(V_5\)</span> corresponds to the analytical SWP case. It is
+worth noting that the smoother potential has a more compact spectrum of
+bound states: the low energy bound states tend to be higher than those
+of the sharper potentials (because the potential width is smaller in
+this energy range), while the very high energy bound states tend to be
+more bound (because the potential has a larger width for such an energy
+range). We also see that the results converge to the analytical SW
+potential ones.</p>
+<p>Another way to look at the energy of the bound states found for each
+potential is print them in a table. This is done below:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Maximal number of states</span>
+<span class="n">i_max</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="c1"># Print the header of the table</span>
+<span class="n">header</span> <span class="o">=</span> <span class="s2">&quot; phi  |&quot;</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">basissets</span><span class="p">)):</span>
+    <span class="n">header</span> <span class="o">+=</span> <span class="s2">&quot;|       V</span><span class="si">{}</span><span class="s2">      &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">header</span><span class="p">))</span>
+<span class="c1"># Print the table</span>
+<span class="n">energies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">en</span> <span class="k">for</span> <span class="n">en</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">((</span><span class="n">basis</span><span class="o">.</span><span class="n">siegerts</span><span class="p">)</span><span class="o">.</span><span class="n">energies</span><span class="p">[:</span><span class="n">i_max</span><span class="p">])]</span>
+                     <span class="k">for</span> <span class="n">basis</span> <span class="ow">in</span> <span class="n">basissets</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i_max</span><span class="p">):</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;phi_</span><span class="si">{}</span><span class="s2"> |&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">en</span> <span class="ow">in</span> <span class="n">energies</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+        <span class="n">line</span> <span class="o">+=</span> <span class="s2">&quot;| </span><span class="si">{: .3f}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">en</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ phi  ||       V1      |       V2      |       V3      |       V4      |       V5
+---------------------------------------------------------------------------------------
+phi_1 || -9.674-0.000j | -9.774+0.000j | -9.793-0.000j | -9.795-0.000j | -9.794+0.000j
+phi_2 || -8.795+0.000j | -9.103-0.000j | -9.173-0.000j | -9.181-0.000j | -9.177+0.000j
+phi_3 || -7.519-0.000j | -8.007-0.000j | -8.147-0.000j | -8.163-0.000j | -8.154+0.000j
+phi_4 || -5.960+0.000j | -6.523+0.000j | -6.725-0.000j | -6.753+0.000j | -6.737+0.000j
+phi_5 || -4.224+0.000j | -4.702-0.000j | -4.930-0.000j | -4.970-0.000j | -4.945+0.000j
+phi_6 || -2.435-0.000j | -2.635+0.000j | -2.811+0.000j | -2.859+0.000j | -2.826+0.000j
+phi_7 || -0.809+0.000j | -0.555-0.000j | -0.539-0.000j | -0.581-0.000j | -0.545+0.000j
+</pre></div></div>
+</div>
+</div>
+</div>
+<div class="section" id="Conclusions">
+<h2>Conclusions<a class="headerlink" href="#Conclusions" title="Permalink to this headline">¶</a></h2>
+<p>We presented the use of the Woods-Saxon potential in <code class="docutils literal notranslate"><span class="pre">SiegPy</span></code> and
+compared the Siegert states obtained when varying the sharpness of the
+potential, with the Square-Well potential case as a limit of an infinite
+sharpness parameter.</p>
+<p>Obtaining the numerical resonant states of the smoother potential proves
+to be more difficult because their energies have imaginary parts that
+get higher (in absolute value). This means that large complex scaling
+angles have to be used, while the virial values obtained are very small
+compared to sharper potentials. However, if the potential is too sharp,
+the virial values are higher. It was also possible to see how the
+numerical bound states obtained converge to the ones of the SW potential
+when the sharpness parameter is increased.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gaussian_potentials.html" class="btn btn-neutral float-right" title="Multiple Gaussian potentials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="influence_grid_siegerts.html" class="btn btn-neutral" title="Influence of the grid for Siegert states" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

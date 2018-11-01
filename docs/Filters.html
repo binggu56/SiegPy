@@ -1,0 +1,448 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Filters &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Abstract classes for further analytic cases" href="AbstractClasses.html" />
+    <link rel="prev" title="SmoothFunction" href="SmoothFunctions.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_objects.html">Code Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1DSWPCase.html">1D Square-Well Potential Case</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="General1DCase.html">General 1D Case</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="BasisSet.html">BasisSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Potential.html">Potential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SymbolicPotentials.html">Symbolic Potential</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CoordMap.html">CoordMap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Hamiltonian.html">Hamiltonian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Eigenstate.html">Eigenstate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SmoothFunctions.html">SmoothFunction</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Filters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="AbstractClasses.html">Abstract classes for further analytic cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Other.html">The Function class and its children</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api_objects.html">Code Documentation</a> &raquo;</li>
+        
+          <li><a href="General1DCase.html">General 1D Case</a> &raquo;</li>
+        
+      <li>Filters</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Filters.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="module-siegpy.filters">
+<span id="filters"></span><h1>Filters<a class="headerlink" href="#module-siegpy.filters" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="#siegpy.filters.Filters" title="siegpy.filters.Filters"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filters</span></code></a> class is defined below.</p>
+<p>The <a class="reference internal" href="#siegpy.filters.WaveletFilters" title="siegpy.filters.WaveletFilters"><code class="xref py py-class docutils literal notranslate"><span class="pre">WaveletFilters</span></code></a> class inherits from the previous class and
+is specific to Daubechies wavelets, where a so-called magic filter has
+to be defined, in addition to the gradient and laplacian filters.</p>
+<p>Both classes are used to define some families of filters:</p>
+<ul class="simple">
+<li>FD2_filters, for the Finite Difference filters of order 2,</li>
+<li>FD8_filters, for the Finite Difference filters of order 8,</li>
+<li>Sym8_filters, for a family of Daubechies wavelets filters.</li>
+</ul>
+<p>These three families of filters are easily available:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">siegpy</span> <span class="k">import</span> <span class="n">FD2_filters</span><span class="p">,</span> <span class="n">FD8_filters</span><span class="p">,</span> <span class="n">Sym8_filters</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="siegpy.filters.Filters">
+<em class="property">class </em><code class="descclassname">siegpy.filters.</code><code class="descname">Filters</code><span class="sig-paren">(</span><em>grad_filter</em>, <em>laplac_filter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/filters.html#Filters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.filters.Filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class specifies a family of filters that are useful to describe
+numerical Hamiltonians. It allows the definition of the gradient and
+Laplacian operators in matrix form by means of filters and a
+specified number of grid points.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>grad_filter</strong> (<em>numpy array</em><em> or </em><em>list</em>) – Gradient filter.</li>
+<li><strong>laplac_filter</strong> (<em>numpy array</em><em> or </em><em>list</em>) – Laplacian filter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="siegpy.filters.Filters.grad_filter">
+<code class="descname">grad_filter</code><a class="headerlink" href="#siegpy.filters.Filters.grad_filter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Gradient filter.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="siegpy.filters.Filters.laplac_filter">
+<code class="descname">laplac_filter</code><a class="headerlink" href="#siegpy.filters.Filters.laplac_filter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Laplacian filter.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.filters.Filters.fill_gradient_matrix">
+<code class="descname">fill_gradient_matrix</code><span class="sig-paren">(</span><em>npts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/filters.html#Filters.fill_gradient_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.filters.Filters.fill_gradient_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill a gradient matrix of dimension <code class="docutils literal notranslate"><span class="pre">npts</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>npts</strong> (<em>int</em>) – Number of grid points.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Gradient matrix.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">2D numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.filters.Filters.fill_laplacian_matrix">
+<code class="descname">fill_laplacian_matrix</code><span class="sig-paren">(</span><em>npts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/filters.html#Filters.fill_laplacian_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.filters.Filters.fill_laplacian_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill a Laplacian matrix of dimension <code class="docutils literal notranslate"><span class="pre">npts</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>npts</strong> (<em>int</em>) – Number of grid points.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Laplacian matrix.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">2D numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="siegpy.filters.Filters._fill_matrix">
+<em class="property">static </em><code class="descname">_fill_matrix</code><span class="sig-paren">(</span><em>_filter</em>, <em>npts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/filters.html#Filters._fill_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.filters.Filters._fill_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method creates a matrix operator, given a filter and a
+number of grid points.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>_filter</strong> (<em>numpy array</em>) – Filter of an operator.</li>
+<li><strong>npts</strong> (<em>int</em>) – Number of grid points.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Operator in matrix form, filled thanks to a filter.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">numpy array</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – If the filter is larger than the discretization grid.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="siegpy.filters.WaveletFilters">
+<em class="property">class </em><code class="descclassname">siegpy.filters.</code><code class="descname">WaveletFilters</code><span class="sig-paren">(</span><em>grad_filter</em>, <em>laplac_filter</em>, <em>magic_filter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/filters.html#WaveletFilters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.filters.WaveletFilters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#siegpy.filters.Filters" title="siegpy.filters.Filters"><code class="xref py py-class docutils literal notranslate"><span class="pre">siegpy.filters.Filters</span></code></a></p>
+<p>This class defines the methods specific to the Daubechies wavelets
+filers.</p>
+<p>The main difference with respect to the parent class is the
+requirement of a so-called magic filter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>grad_filter</strong> (<em>numpy array</em><em> or </em><em>list</em>) – Gradient filter.</li>
+<li><strong>laplac_filter</strong> (<em>numpy array</em><em> or </em><em>list</em>) – Laplacian filter.</li>
+<li><strong>magic_filter</strong> (<em>numpy array</em><em> or </em><em>list</em>) – Magic filter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="siegpy.filters.WaveletFilters.magic_filter">
+<code class="descname">magic_filter</code><a class="headerlink" href="#siegpy.filters.WaveletFilters.magic_filter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Magic filter.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="siegpy.filters.WaveletFilters.fill_magic_matrix">
+<code class="descname">fill_magic_matrix</code><span class="sig-paren">(</span><em>npts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/siegpy/filters.html#WaveletFilters.fill_magic_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#siegpy.filters.WaveletFilters.fill_magic_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill a magic filter matrix of dimension <code class="docutils literal notranslate"><span class="pre">npts</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>npts</strong> (<em>int</em>) – Number of grid points.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Magic filter matrix.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">2D numpy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="AbstractClasses.html" class="btn btn-neutral float-right" title="Abstract classes for further analytic cases" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="SmoothFunctions.html" class="btn btn-neutral" title="SmoothFunction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

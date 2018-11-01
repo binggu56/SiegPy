@@ -1,0 +1,1187 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>siegpy.basisset &mdash; SiegPy 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> SiegPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_objects.html">Code Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SiegPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>siegpy.basisset</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for siegpy.basisset</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*</span>
+<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The BasisSet class and its methods are defined hereafter.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># TODO: It might be less confusing to store the eigenstates in an</span>
+<span class="c1">#      actual set, while allowing to remove the append method.</span>
+<span class="c1"># TODO: Add a create_exact_basis_set method (for AnalyticBasisSet)?</span>
+
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cm</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">siegpy</span> <span class="k">import</span> <span class="n">Eigenstate</span>
+<span class="kn">from</span> <span class="nn">siegpy.utils</span> <span class="k">import</span> <span class="n">init_plot</span><span class="p">,</span> <span class="n">finalize_plot</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;BasisSet&quot;</span><span class="p">,</span> <span class="s2">&quot;BasisSetError&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="BasisSet"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet">[docs]</a><span class="k">class</span> <span class="nc">BasisSet</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is arguably the most important one in the whole module</span>
+<span class="sd">    since it defines all the main methods allowing to study the Siegert</span>
+<span class="sd">    states of a given Hamiltonian (and compare their relevance with the</span>
+<span class="sd">    traditional continuum states).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SIEGERT_STATES_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;ab&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;ar&#39;</span><span class="p">]</span>
+    <span class="n">STATES_TYPES</span> <span class="o">=</span> <span class="n">SIEGERT_STATES_TYPES</span> <span class="o">+</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;U&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">coord_map</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">max_virial</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        states: list of Eigenstate instances or Eigenstate or None</span>
+<span class="sd">            Eigenstates of a Hamiltonian. If ``None``, it means that the</span>
+<span class="sd">            BasisSet instance will be empty.</span>
+<span class="sd">        potential: Potential or None</span>
+<span class="sd">            Potential leading to the eigenstates.</span>
+<span class="sd">        coord_map: CoordMap or None</span>
+<span class="sd">            Coordinate mapping used to find the eigenstates.</span>
+<span class="sd">        max_virial: float or None</span>
+<span class="sd">            Maximal virial used to discriminate between Siegert states</span>
+<span class="sd">            and other eigenstates.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the value of states is invalid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="n">potential</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_coord_map</span> <span class="o">=</span> <span class="n">coord_map</span>
+        <span class="c1"># If no states are passed, initialize an empty basis set</span>
+        <span class="k">if</span> <span class="n">states</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_states</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Else, if a list of states is passed, use it</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span>
+              <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">Eigenstate</span><span class="p">)</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">])):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_states</span> <span class="o">=</span> <span class="n">states</span>
+        <span class="c1"># Else, if an only state is passed, use it</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">Eigenstate</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_states</span> <span class="o">=</span> <span class="p">[</span><span class="n">states</span><span class="p">]</span>
+        <span class="c1"># Otherwise, states has an incorrect value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The basis set cannot be initialized: wrong states.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_virial</span> <span class="o">=</span> <span class="n">max_virial</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Potential</span>
+<span class="sd">            Potential used to find the eigenstates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">coord_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        CoordMap</span>
+<span class="sd">            Coordinate mapping used to find the eigenstates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coord_map</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">max_virial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If updated, :attr:`max_virial` updates the :attr:`Siegert_type`</span>
+<span class="sd">        attribute of the Siegert states in the basis set.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Maximal virial for a state to be considered as a Siegert</span>
+<span class="sd">            state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_virial</span>
+
+    <span class="nd">@max_virial</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">max_virial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The setter updates of the value of the :attr:`Siegert_type`</span>
+<span class="sd">        attribute of the states in the basis set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        new_value: float</span>
+<span class="sd">            New maximal virial value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_virial</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">new_value</span><span class="p">)</span>
+        <span class="c1"># Update the Siegert type of all the eigenstates</span>
+        <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">:</span>
+            <span class="c1"># If there is no coordinate mapping, then there are only</span>
+            <span class="c1"># bound and continuum states</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span><span class="o">.</span><span class="n">theta</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">energy</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">new_type</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">new_type</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="c1"># If there is a coordinate mapping, then there are bound,</span>
+            <span class="c1"># resonant and unknown states</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">virial</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_virial</span><span class="p">:</span>
+                    <span class="n">en</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">energy</span>
+                    <span class="k">if</span> <span class="n">en</span><span class="o">.</span><span class="n">real</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">new_type</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span>
+                    <span class="k">elif</span> <span class="n">en</span><span class="o">.</span><span class="n">real</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">new_type</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">new_type</span> <span class="o">=</span> <span class="s1">&#39;U&#39;</span>
+            <span class="c1"># Update the type of the considered eigenstate</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">_Siegert_type</span> <span class="o">=</span> <span class="n">new_type</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            States of a BasisSet instance.</span>
+
+<span class="sd">        Example</span>
+
+<span class="sd">        &gt;&gt;&gt; BasisSet().states</span>
+<span class="sd">        []</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_states</span>
+
+<div class="viewcode-block" id="BasisSet.write"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write the basis set in a binary file (using pickle).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Name of the file to be written.</span>
+
+<span class="sd">        Example</span>
+
+<span class="sd">        &gt;&gt;&gt; BasisSet().write(&quot;tmp.dat&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Remove a previously existing file</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="c1"># Write the states in the basis set in different binary files</span>
+        <span class="c1"># using pickle</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasisSet.from_file"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.from_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a basis set from a binary file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Name of a file containing a basis set.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NameError</span>
+<span class="sd">            If a the file does not exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check the file exists</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span>
+                <span class="s2">&quot;The required file </span><span class="si">{}</span><span class="s2"> does not exist.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="c1"># Read the whole file and return it</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">basis</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">basis</span></div>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        index: int</span>
+<span class="sd">            Index of an eigenstate.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Eigenstate</span>
+<span class="sd">            The eigenstate of given ``index``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+<div class="viewcode-block" id="BasisSet.__add__"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.__add__">[docs]</a>    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a list of states or the states of another BasisSet instance</span>
+<span class="sd">        to a BasisSet instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        states: list of Eigenstate instances or BasisSet</span>
+<span class="sd">            Eigenstates of a Hamiltonian or another basis set.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BasisSet</span>
+<span class="sd">            A new basis set.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            If ``states`` is not a basis set or a list of eigenstates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># If states is a basis set, then convert it to a list of states</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">BasisSet</span><span class="p">):</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="n">states</span><span class="o">.</span><span class="n">states</span>
+        <span class="c1"># If states actually is a single state, make it iterable.</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="p">[</span><span class="n">states</span><span class="p">]</span>
+        <span class="c1"># Make sure that each state is a Function</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">Eigenstate</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">states</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Only wavefunctions can be added to a basis set&quot;</span><span class="p">)</span>
+        <span class="c1"># Return a new basis set</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">states</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="o">+</span><span class="n">states</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Representation of the list of states.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BasisSet.__len__"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.__len__">[docs]</a>    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            Length of the list of states</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasisSet.__eq__"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.__eq__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if both basis sets contain the same states.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">BasisSet</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">other</span><span class="p">])</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the basis set is empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_not_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the basis set is not empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_empty</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BasisSet</span>
+<span class="sd">            Basis set made of all the bound states of the current basis</span>
+<span class="sd">            set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
+            <span class="n">states</span><span class="o">=</span><span class="p">[</span><span class="n">state</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">Siegert_type</span> <span class="o">==</span> <span class="s1">&#39;b&#39;</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">antibounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BasisSet</span>
+<span class="sd">            Basis set made of all the anti-bound states of the current</span>
+<span class="sd">            basis set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
+            <span class="n">states</span><span class="o">=</span><span class="p">[</span><span class="n">state</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">Siegert_type</span> <span class="o">==</span> <span class="s1">&#39;ab&#39;</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">resonants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BasisSet</span>
+<span class="sd">            Basis set made of all the resonant states of the current</span>
+<span class="sd">            basis set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
+            <span class="n">states</span><span class="o">=</span><span class="p">[</span><span class="n">state</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">Siegert_type</span> <span class="o">==</span> <span class="s1">&#39;r&#39;</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">antiresonants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BasisSet</span>
+<span class="sd">            Basis set made of all the anti-resonant states of the</span>
+<span class="sd">            current basis set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
+            <span class="n">states</span><span class="o">=</span><span class="p">[</span><span class="n">state</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">Siegert_type</span> <span class="o">==</span> <span class="s1">&#39;ar&#39;</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">siegerts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BasisSet</span>
+<span class="sd">            Basis set made of all the Siegert states of the current</span>
+<span class="sd">            basis set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">antibounds</span> <span class="o">+</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">resonants</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">antiresonants</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">continuum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BasisSet</span>
+<span class="sd">            Basis set made of all the continuum states of the current</span>
+<span class="sd">            basis set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
+            <span class="n">states</span><span class="o">=</span><span class="p">[</span><span class="n">state</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">Siegert_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">unknown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BasisSet</span>
+<span class="sd">            Basis set made of all the states of unknown type of the</span>
+<span class="sd">            current basis set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">BasisSet</span><span class="p">(</span>
+            <span class="n">states</span><span class="o">=</span><span class="p">[</span><span class="n">state</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">Siegert_type</span> <span class="o">==</span> <span class="s1">&#39;U&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="BasisSet.plot_wavefunctions"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.plot_wavefunctions">[docs]</a>    <span class="k">def</span> <span class="nf">plot_wavefunctions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nstates</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">file_save</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the bound, resonant and anti-resonant wavefunctions of the</span>
+<span class="sd">        basis set along with the potential. The continuum states, if any</span>
+<span class="sd">        in the basis set, are not plotted.</span>
+
+<span class="sd">        The wavefunctions are translated along the y-axis by their</span>
+<span class="sd">        energy (for bound states) or absolute value of their</span>
+<span class="sd">        energy (for resonant and anti-resonant states).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nres: int</span>
+<span class="sd">            Number of resonant wavefunctions to plot (optional).</span>
+<span class="sd">        nstates: int</span>
+<span class="sd">            Number of wavefunctions to plot (optional).</span>
+<span class="sd">        xlim: tuple(float or int, float or int)</span>
+<span class="sd">            Range of the x axis of the plot (optional).</span>
+<span class="sd">        xlim: tuple(float or int, float or int)</span>
+<span class="sd">            Range of the y axis of the plot (optional).</span>
+<span class="sd">        title: str</span>
+<span class="sd">            Plot title (optional).</span>
+<span class="sd">        file_save: str</span>
+<span class="sd">            Filename of the plot to be saved (optional).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Object oriented plot</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">init_plot</span><span class="p">()</span>
+        <span class="c1"># Plot only part of the states, if asked by the user</span>
+        <span class="k">if</span> <span class="n">nres</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">resonants</span><span class="p">[:</span><span class="n">nres</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">nstates</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[:</span><span class="n">nstates</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;There may be too many wavefunctions to plot for readability&quot;</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="c1"># Loop over the Siegert states</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">wf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">states</span><span class="p">):</span>
+            <span class="c1"># Define the value of its energy given its type</span>
+            <span class="n">energy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+            <span class="c1"># Define the labels</span>
+            <span class="n">label_re</span><span class="p">,</span> <span class="n">label_im</span><span class="p">,</span> <span class="n">label_en</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">label_re</span><span class="p">,</span> <span class="n">label_im</span><span class="p">,</span> <span class="n">label_en</span> <span class="o">=</span> <span class="s1">&#39;Re[WF]&#39;</span><span class="p">,</span> <span class="s1">&#39;Im[WF]&#39;</span><span class="p">,</span> <span class="s1">&#39;Energy&#39;</span>
+            <span class="c1"># Add the wf (real and imaginary parts) in the plot</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">+</span><span class="n">energy</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_re</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">+</span><span class="n">energy</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_im</span><span class="p">)</span>
+            <span class="c1"># Also plot the value of its (&quot;translation&quot;) energy.</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">energy</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">grid</span><span class="p">)),</span> <span class="s1">&#39;k--&#39;</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="n">label_en</span><span class="p">)</span>
+        <span class="c1"># Plot the potential as well</span>
+        <span class="n">pot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span>
+        <span class="k">if</span> <span class="n">pot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pot</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">pot</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Re[Potential]&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pot</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">pot</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+                    <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;dotted&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Im[Potential]&#39;</span><span class="p">)</span>
+        <span class="n">finalize_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+                      <span class="n">file_save</span><span class="o">=</span><span class="n">file_save</span><span class="p">,</span> <span class="n">leg_loc</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                      <span class="n">leg_bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;$x$&quot;</span><span class="p">,</span>
+                      <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Energy&quot;</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">energies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            The energies of the states in the current basis set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">energy</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">wavenumbers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            The wavenumbers of the states in the curent basis set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">wavenumber</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">virials</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            Virial values of the states in the current basis set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">virial</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">no_coord_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            ``True`` if the coordinate mapping is such that</span>
+<span class="sd">            :math:`x \mapsto x`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coord_map</span><span class="o">.</span><span class="n">theta</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="BasisSet.plot_wavenumbers"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.plot_wavenumbers">[docs]</a>    <span class="k">def</span> <span class="nf">plot_wavenumbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">file_save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_unknown</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>  <span class="c1"># pragma: no cover # noqa</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the wavenumbers of the Siegert states in the basis set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xlim: tuple(float or int, float or int)</span>
+<span class="sd">            Range of the x axis of the plot (optional).</span>
+<span class="sd">        xlim: tuple(float or int, float or int)</span>
+<span class="sd">            Range of the y axis of the plot (optional).</span>
+<span class="sd">        title: str</span>
+<span class="sd">            Plot title (optional).</span>
+<span class="sd">        file_save: str</span>
+<span class="sd">            Filename of the plot to be saved (optional).</span>
+<span class="sd">        show_unknown: bool</span>
+<span class="sd">            If ``True``, plot the data of the states with an unknown</span>
+<span class="sd">            type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_complex_plane_plot</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;wavenumber&#39;</span><span class="p">,</span> <span class="n">xlim</span><span class="p">,</span> <span class="n">ylim</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">file_save</span><span class="p">,</span> <span class="n">show_unknown</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasisSet.plot_energies"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.plot_energies">[docs]</a>    <span class="k">def</span> <span class="nf">plot_energies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">file_save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_unknown</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the energies of the Siegert states in the basis set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xlim: tuple(float or int, float or int)</span>
+<span class="sd">            Range of the x axis of the plot (optional).</span>
+<span class="sd">        ylim: tuple(float or int, float or int)</span>
+<span class="sd">            Range of the y axis of the plot (optional).</span>
+<span class="sd">        title: str</span>
+<span class="sd">            Plot title (optional).</span>
+<span class="sd">        file_save: str</span>
+<span class="sd">            Filename of the plot to be saved (optional).</span>
+<span class="sd">        show_unknown: bool</span>
+<span class="sd">            If ``True``, plot the data of the states with an unknown</span>
+<span class="sd">            type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_complex_plane_plot</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;energy&#39;</span><span class="p">,</span> <span class="n">xlim</span><span class="p">,</span> <span class="n">ylim</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">file_save</span><span class="p">,</span> <span class="n">show_unknown</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasisSet.scal_prod"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.scal_prod">[docs]</a>    <span class="k">def</span> <span class="nf">scal_prod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method computing the scalar product</span>
+<span class="sd">        :math:`\left\langle \varphi | test \right\rangle`</span>
+<span class="sd">        for each state :math:`\varphi` in the basis set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: Function</span>
+<span class="sd">            Test function.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            Scalar product of all the states in the basis set with the</span>
+<span class="sd">            test function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">state</span><span class="o">.</span><span class="n">scal_prod</span><span class="p">(</span><span class="n">test</span><span class="p">)</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="BasisSet.completeness_convergence"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.completeness_convergence">[docs]</a>    <span class="k">def</span> <span class="nf">completeness_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">klim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate the convergence of the completeness relation for the</span>
+<span class="sd">        current basis set using a given test function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: Function</span>
+<span class="sd">            Test function.</span>
+<span class="sd">        klim: tuple(float or int, float or int)</span>
+<span class="sd">            Wavenumber range where the completeness convergence must be</span>
+<span class="sd">            computed (optional).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple(numpy array, numpy array)</span>
+<span class="sd">            A tuple made of the array of the states wavenumbers and the</span>
+<span class="sd">            array of the convergence of the completeness relation using</span>
+<span class="sd">            all the states (both have the same length).</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the wavenumber ``klim`` range covers negative values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">unknown</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">no_coord_map</span><span class="p">:</span>
+            <span class="c1"># Usual scalar product</span>
+            <span class="n">sp_init</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">scal_prod</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+            <span class="n">init_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sp_init</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">test</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+            <span class="n">basis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">continuum</span>
+            <span class="n">basis</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+            <span class="n">scal_prods</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">scal_prod</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+            <span class="n">CR_conv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">scal_prods</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">test</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># c-product because some states have complex energies</span>
+            <span class="n">sp_init_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">scal_prod</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()))</span>
+            <span class="n">sp_init_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">init</span><span class="o">.</span><span class="n">scal_prod</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
+            <span class="n">init_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sp_init_1</span><span class="o">*</span><span class="n">sp_init_2</span><span class="p">)</span> <span class="o">/</span> <span class="n">test</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+            <span class="n">basis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resonants</span>
+            <span class="n">basis</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+            <span class="n">scal_prods_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">scal_prod</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()))</span>
+            <span class="n">scal_prods_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">scal_prod</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
+            <span class="n">CR_conv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">scal_prods_1</span><span class="o">*</span><span class="n">scal_prods_2</span><span class="p">)</span> <span class="o">/</span> <span class="n">test</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+        <span class="n">CR_conv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">CR_conv</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">init_val</span>
+        <span class="c1"># Keep only the results in the desired wavenumber range</span>
+        <span class="n">real_en</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">energies</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">klim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># The range is defined by xlim</span>
+            <span class="k">if</span> <span class="n">klim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">klim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The limits should be positive.&quot;</span><span class="p">)</span>
+            <span class="n">where</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">real_en</span> <span class="o">&gt;=</span> <span class="n">klim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                                   <span class="n">real_en</span> <span class="o">&lt;=</span> <span class="n">klim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">CR_conv</span> <span class="o">=</span> <span class="n">CR_conv</span><span class="p">[</span><span class="n">where</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># The x-axis range starts from the 0 energy/wavenumber</span>
+            <span class="n">where</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">real_en</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">CR_conv</span> <span class="o">=</span> <span class="n">CR_conv</span><span class="p">[</span><span class="n">where</span><span class="p">]</span>
+        <span class="n">kgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">wavenumbers</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">kgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">kgrid</span><span class="p">[</span><span class="n">where</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">kgrid</span><span class="p">,</span> <span class="n">CR_conv</span></div>
+
+<div class="viewcode-block" id="BasisSet.Berggren_completeness_convergence"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.Berggren_completeness_convergence">[docs]</a>    <span class="k">def</span> <span class="nf">Berggren_completeness_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">klim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method evaluating the convergence of the CR using the Berggren</span>
+<span class="sd">        expansion.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: Function</span>
+<span class="sd">            Test function.</span>
+<span class="sd">        xlim: tuple(float or int, float or int)</span>
+<span class="sd">            Wavenumber range where the completeness convergence must be</span>
+<span class="sd">            computed (optional).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple(numpy array, numpy array)</span>
+<span class="sd">            A tuple made of the array of the states wavenumbers</span>
+<span class="sd">            and the array of the convergence of the Berggren</span>
+<span class="sd">            completeness relation (both have the same length).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">basis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">resonants</span>
+        <span class="n">kgrid</span><span class="p">,</span> <span class="n">CR_conv</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">completeness_convergence</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">klim</span><span class="o">=</span><span class="n">klim</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">kgrid</span><span class="p">,</span> <span class="n">CR_conv</span></div>
+
+<div class="viewcode-block" id="BasisSet.plot_completeness_convergence"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.plot_completeness_convergence">[docs]</a>    <span class="k">def</span> <span class="nf">plot_completeness_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">klim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                      <span class="n">file_save</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the convergence of the completeness relation using all or</span>
+<span class="sd">        the fiest ``nstates`` in the basis set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: Function</span>
+<span class="sd">            Test function.</span>
+<span class="sd">        klim: tuple(float or int, float or int)</span>
+<span class="sd">            Wavenumber range where the completeness convergence must be</span>
+<span class="sd">            computed and range of the x axis of the plot (optional).</span>
+<span class="sd">        title: str</span>
+<span class="sd">            Plot title (optional).</span>
+<span class="sd">        file_save: str</span>
+<span class="sd">            Filename of the plot to be saved (optional).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Object-oriented plots</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">init_plot</span><span class="p">()</span>
+        <span class="c1"># Plot the expected value of 1</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+        <span class="n">kgrid</span><span class="p">,</span> <span class="n">CR_conv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">completeness_convergence</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">klim</span><span class="o">=</span><span class="n">klim</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">kgrid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">CR_conv</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#d73027&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="c1"># Finalize the plot</span>
+        <span class="k">if</span> <span class="n">klim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">klim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">finalize_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="n">klim</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">file_save</span><span class="o">=</span><span class="n">file_save</span><span class="p">,</span>
+                      <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;$k$&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;CR&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasisSet.MLE_strength_function"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.MLE_strength_function">[docs]</a>    <span class="k">def</span> <span class="nf">MLE_strength_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            Only the peaks due to the resonant couples can be produced</span>
+<span class="sd">            at the moment. Numerical anti-bound states are required for</span>
+<span class="sd">            the true MLE of the strength function to be computed from a</span>
+<span class="sd">            numerical basis set.</span>
+
+<span class="sd">        Evaluate the Mittag-Leffler expansion strength function of the</span>
+<span class="sd">        basis set for a given test function, discretized on a grid of</span>
+<span class="sd">        wavenumbers kgrid.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: Function</span>
+<span class="sd">            Test function.</span>
+<span class="sd">        kgrid: numpy array</span>
+<span class="sd">            Wavenumbers for which the strength function is evaluated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy array</span>
+<span class="sd">            MLE of the strength function evaluated on the kgrid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize strength_func</span>
+        <span class="n">strength_func</span> <span class="o">=</span> <span class="mf">1.</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">kgrid</span><span class="p">)</span>
+        <span class="c1"># Loop over the siegert states to update the MLE of the RF</span>
+        <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resonants</span><span class="p">:</span>
+            <span class="c1"># Values for the resonant state contribution</span>
+            <span class="n">k_r</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">wavenumber</span>
+            <span class="n">sp_r</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">scal_prod</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+            <span class="c1"># Values for the corresponding anti-resonant state contribution</span>
+            <span class="n">ares</span> <span class="o">=</span> <span class="n">Eigenstate</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+                              <span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">energy</span><span class="p">),</span> <span class="n">Siegert_type</span><span class="o">=</span><span class="s2">&quot;ar&quot;</span><span class="p">)</span>
+            <span class="n">ares</span><span class="o">.</span><span class="n">_wavenumber</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">k_r</span><span class="p">)</span>
+            <span class="n">k_ar</span> <span class="o">=</span> <span class="n">ares</span><span class="o">.</span><span class="n">wavenumber</span>
+            <span class="n">sp_ar</span> <span class="o">=</span> <span class="n">ares</span><span class="o">.</span><span class="n">scal_prod</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+            <span class="c1"># Add the contributions of the resonant couple</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">sp</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">k_r</span><span class="p">,</span> <span class="n">sp_r</span><span class="p">),</span> <span class="p">(</span><span class="n">k_ar</span><span class="p">,</span> <span class="n">sp_ar</span><span class="p">)]:</span>
+                <span class="n">strength_func</span> <span class="o">+=</span> <span class="o">-</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">sp</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">kgrid</span> <span class="o">-</span> <span class="n">k</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">strength_func</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasisSet.plot_strength_function"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.plot_strength_function">[docs]</a>    <span class="k">def</span> <span class="nf">plot_strength_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">,</span> <span class="n">nres</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                               <span class="n">file_save</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the Mittag-Leffler Expansion of the strength function for a</span>
+<span class="sd">        given test function.</span>
+
+<span class="sd">        The MLE of the strength function evaluated using 1, ...,</span>
+<span class="sd">        ``nres`` resonant couples can also be plotted.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: Function</span>
+<span class="sd">            Test function.</span>
+<span class="sd">        kgrid: numpy array</span>
+<span class="sd">            Wavenumbers for which the strength function is evaluated.</span>
+<span class="sd">        nres: int</span>
+<span class="sd">            Number of resonant couples contributions to be plotted</span>
+<span class="sd">            (default to None, meaning that none are plotted; if</span>
+<span class="sd">            ``nres=0``, then only the sum of the bound and anti-bound</span>
+<span class="sd">            states contributions is plotted).</span>
+<span class="sd">        title: str</span>
+<span class="sd">            Plot title (optional).</span>
+<span class="sd">        file_save: str</span>
+<span class="sd">            Filename of the plot to be saved (optional).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Object-oriented plots</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">init_plot</span><span class="p">()</span>
+        <span class="c1"># Evaluate and plot the MLE of the RF</span>
+        <span class="n">MLE_rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MLE_strength_function</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">MLE_rf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MLE&#39;</span><span class="p">)</span>
+        <span class="c1"># Plot the contribution of the nres first resonance couples</span>
+        <span class="c1"># to the strength function</span>
+        <span class="k">if</span> <span class="n">nres</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resonants</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[:</span><span class="n">nres</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">res</span><span class="p">):</span>
+                <span class="n">rf</span> <span class="o">=</span> <span class="n">BasisSet</span><span class="p">(</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">MLE_strength_function</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">kgrid</span><span class="p">)</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;$N_</span><span class="si">{res}</span><span class="s2"> = $&quot;</span><span class="o">+</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kgrid</span><span class="p">,</span> <span class="n">rf</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+        <span class="c1"># Finalize the plot</span>
+        <span class="k">if</span> <span class="n">nres</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">leg_loc</span> <span class="o">=</span> <span class="mi">6</span>
+            <span class="n">leg_bbox_to_anchor</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">leg_loc</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">leg_bbox_to_anchor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">finalize_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">file_save</span><span class="o">=</span><span class="n">file_save</span><span class="p">,</span>
+                      <span class="n">leg_loc</span><span class="o">=</span><span class="n">leg_loc</span><span class="p">,</span> <span class="n">leg_bbox_to_anchor</span><span class="o">=</span><span class="n">leg_bbox_to_anchor</span><span class="p">,</span>
+                      <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;$k$&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;$S(k)$&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasisSet.Berggren_propagation"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet.Berggren_propagation">[docs]</a>    <span class="k">def</span> <span class="nf">Berggren_propagation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">time_grid</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate the Berggren Expansion of the time-propagation of a</span>
+<span class="sd">        test wavepacket over a given time grid. Only bound and resonant</span>
+<span class="sd">        states are used, with a weight 1.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: Function</span>
+<span class="sd">            Test function.</span>
+<span class="sd">        time_grid: numpy array or list of positive numbers</span>
+<span class="sd">            Times for which the propagation is evaluated. It must</span>
+<span class="sd">            contain positive numbers only.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        2D numpy array</span>
+<span class="sd">            Berggren expansion of the propagated wavepacket for the</span>
+<span class="sd">            different times of ``time_grid``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Given that the bound and resonant states are the only Siegert</span>
+        <span class="c1"># states that can be found numerically, it is sufficient to use</span>
+        <span class="c1"># all the Siegert states to compute the time propagation</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">siegerts</span><span class="o">.</span><span class="n">_propagate</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">time_grid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasisSet._propagate"><a class="viewcode-back" href="../../BasisSet.html#siegpy.basisset.BasisSet._propagate">[docs]</a>    <span class="k">def</span> <span class="nf">_propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">time_grid</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate the contribution of all the states to the time</span>
+<span class="sd">        propagation of the initial wavepacket ``test`` for all the times</span>
+<span class="sd">        in ``time_grid``.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            The same default weight is used for all the states.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: Function</span>
+<span class="sd">            Test function.</span>
+<span class="sd">        time_grid: numpy array or list of positive numbers</span>
+<span class="sd">            Times for which the propagation is evaluated. It must</span>
+<span class="sd">            contain positive numbers only.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        2D numpy array</span>
+<span class="sd">            Propagated wavepacket for the different times of ``time_grid``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mat_time</span> <span class="o">=</span> <span class="n">_set_mat_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_grid</span><span class="p">)</span>
+        <span class="n">mat_space</span> <span class="o">=</span> <span class="n">_set_mat_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mat_time</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mat_space</span><span class="p">)</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_complex_plane_plot</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">xlim</span><span class="p">,</span> <span class="n">ylim</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">file_save</span><span class="p">,</span>
+                        <span class="n">show_unknown</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot either the wavenumber or the energy of each bound, resonant</span>
+<span class="sd">    continuum and unknown states in the basis set (the latter if</span>
+<span class="sd">    ``show_unknown`` is set to ``True``).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    basis: BasisSet</span>
+<span class="sd">        Basis set made of the states to be plotted.</span>
+<span class="sd">    attr: str</span>
+<span class="sd">        Name of the eigenstate attribute to look for, defining the type</span>
+<span class="sd">        of plot to be done.</span>
+<span class="sd">    xlim: tuple(float or int, float or int)</span>
+<span class="sd">        Range of the x axis of the plot (optional).</span>
+<span class="sd">    ylim: tuple(float or int, float or int)</span>
+<span class="sd">        Range of the y axis of the plot (optional).</span>
+<span class="sd">    title: str</span>
+<span class="sd">        Plot title (optional).</span>
+<span class="sd">    file_save: str</span>
+<span class="sd">        Filename of the plot to be saved (optional).</span>
+<span class="sd">    show_unknown: bool</span>
+<span class="sd">        If ``True``, plot the data of the states with an unknown</span>
+<span class="sd">        type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Object-oriented plots</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">init_plot</span><span class="p">()</span>
+    <span class="c1"># Add the real and imaginary axes</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># black line y=0</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># black line x=0</span>
+    <span class="c1"># Select which states have to be plotted</span>
+    <span class="n">to_plot</span> <span class="o">=</span> <span class="n">basis</span><span class="o">.</span><span class="n">bounds</span> <span class="o">+</span> <span class="n">basis</span><span class="o">.</span><span class="n">resonants</span> <span class="o">+</span> <span class="n">basis</span><span class="o">.</span><span class="n">continuum</span>
+    <span class="k">if</span> <span class="n">show_unknown</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">unknown</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">basis</span><span class="p">):</span>
+        <span class="n">to_plot</span> <span class="o">+=</span> <span class="n">basis</span><span class="o">.</span><span class="n">unknown</span>
+    <span class="c1"># Store the data to plot (energy or wavenumber) and their virial</span>
+    <span class="n">plot_data</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">to_plot</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">virials</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">to_plot</span><span class="o">.</span><span class="n">virials</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># Set the min and max values of the virial colors</span>
+    <span class="n">vmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">virials</span><span class="p">))</span>
+    <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">virials</span><span class="p">))</span>
+    <span class="c1"># Normalize the colors used accordingly</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+    <span class="c1"># Set the colorbar and its title</span>
+    <span class="n">colorbar</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">CMRmap</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>  <span class="c1"># pylint: disable=E1101</span>
+    <span class="n">colorbar</span><span class="o">.</span><span class="n">set_array</span><span class="p">([])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">colorbar</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$log_</span><span class="si">{10}</span><span class="s2">$(|virial|)&quot;</span><span class="p">)</span>
+    <span class="c1"># Plot all the data</span>
+    <span class="k">if</span> <span class="n">plot_data</span> <span class="o">!=</span> <span class="p">[]:</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">CMRmap</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">virials</span><span class="p">))</span>  <span class="c1"># pylint: disable=E1101</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">plot_data</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">plot_data</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                   <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;CMRmap&quot;</span><span class="p">)</span>
+    <span class="c1"># Set the base name of the x and y axis of the plot</span>
+    <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;wavenumber&#39;</span><span class="p">:</span>
+        <span class="n">data_label</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span>
+    <span class="k">elif</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;energy&#39;</span><span class="p">:</span>
+        <span class="n">data_label</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span>
+    <span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;Re[$</span><span class="si">{}</span><span class="s2">$]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_label</span><span class="p">)</span>
+    <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;Im[$</span><span class="si">{}</span><span class="s2">$]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_label</span><span class="p">)</span>
+    <span class="c1"># Finalize the plot</span>
+    <span class="n">finalize_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+                  <span class="n">file_save</span><span class="o">=</span><span class="n">file_save</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="n">ylabel</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_set_mat_time</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">time_grid</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluate a matrix mat_time of size :math:`n_t * n_k` where</span>
+<span class="sd">    :math:`n_k` is the number of states in the basis set ``basis`` and</span>
+<span class="sd">    :math:`n_t` is the length of the array ``time_grid``.</span>
+
+<span class="sd">    Each element of the matrix is defined by:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       \text{mat_time}[i_t][i_k] = e^{-i \text{energy}[i_k]</span>
+<span class="sd">       \text{time_grid}[i_t]}</span>
+
+<span class="sd">    where :math:`i_k` is a counter for the states of the basis set</span>
+<span class="sd">    and :math:`i_t` is a counter for the points of the time grid.</span>
+
+<span class="sd">    This matrix can be used to compute the time-propagation of an</span>
+<span class="sd">    initial wavepacket.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    basis: BasisSet</span>
+<span class="sd">        Basis set.</span>
+<span class="sd">    time_grid: numpy array or list of positive numbers</span>
+<span class="sd">        Times for which the propagation is evaluated. It must</span>
+<span class="sd">        contain positive numbers only.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    2D numpy array</span>
+<span class="sd">        Matrix mat_time based on the states of the basis set.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Build the matrix mat_time</span>
+    <span class="n">E</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">energies</span><span class="p">,</span> <span class="n">time_grid</span><span class="p">)</span>
+    <span class="n">mat_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="n">j</span> <span class="o">*</span> <span class="n">E</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mat_time</span>
+    <span class="c1"># return np.array(mat_time)</span>
+
+
+<span class="k">def</span> <span class="nf">_set_mat_space</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluate a matrix mat_space of size :math:`n_k * n_x` where</span>
+<span class="sd">    :math:`n_k` is the number of states in the basis set ``basis`` and</span>
+<span class="sd">    :math:`n_x` is the length of the space grid on which the states of</span>
+<span class="sd">    the basis set are discretized.</span>
+
+<span class="sd">    Each element of the matrix is defined by:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">       \text{mat_space}[i_k][i_x] = w \left\langle phi_{i_k} |</span>
+<span class="sd">       \text{test} \right\rangle phi_{i_k}[i_x]</span>
+
+<span class="sd">    where :math:`w` is the weight, :math:`i_k` is a counter for the</span>
+<span class="sd">    states of the basis set and :math:`i_x` is a counter for the</span>
+<span class="sd">    space grid-points.</span>
+
+<span class="sd">    This matrix can then be used to compute the time-propagation of an</span>
+<span class="sd">    initial wavepacket.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    basis: BasisSet</span>
+<span class="sd">        Basis set.</span>
+<span class="sd">    test: Function</span>
+<span class="sd">        Test function.</span>
+<span class="sd">    weigth: float or int or complex</span>
+<span class="sd">        Mutliplying factor used for all the states (default to 1.0).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    2D numpy array</span>
+<span class="sd">        Matrix mat_space based on the states of the basis set.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    BasisSetError</span>
+<span class="sd">        If the basis set is empty.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check that the basis set is not empty</span>
+    <span class="k">if</span> <span class="n">basis</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">BasisSetError</span><span class="p">(</span><span class="s2">&quot;The basis set must not be empty&quot;</span><span class="p">)</span>
+    <span class="c1"># Build the matrix mat_space</span>
+    <span class="k">if</span> <span class="n">weight</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># If the weigth is zero, the result is obviously a matrix</span>
+        <span class="c1"># made of zeros</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">basis</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">basis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mat_space</span> <span class="o">=</span> <span class="p">[</span><span class="n">weight</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">scal_prod</span><span class="p">(</span><span class="n">test</span><span class="p">)</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">values</span>
+                     <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">basis</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mat_space</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">BasisSetError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error thrown in the case of an ill-defined BasisSet instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Maxime Morinière.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

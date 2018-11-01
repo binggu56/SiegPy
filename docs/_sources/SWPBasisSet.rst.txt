@@ -1,0 +1,4 @@
+SWPBasisSet
+-----------
+
+.. automodule:: siegpy.swpbasisset
