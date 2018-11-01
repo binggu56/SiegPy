@@ -1,0 +1,4 @@
+SmoothFunction
+--------------
+
+.. automodule:: siegpy.smoothfunctions

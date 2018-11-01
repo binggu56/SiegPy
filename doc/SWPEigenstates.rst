@@ -1,0 +1,4 @@
+SWPEigenstates
+--------------
+
+.. automodule:: siegpy.swpeigenstates

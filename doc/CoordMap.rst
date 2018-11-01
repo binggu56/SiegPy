@@ -1,0 +1,4 @@
+CoordMap
+--------
+
+.. automodule:: siegpy.coordinatemappings

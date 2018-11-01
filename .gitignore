@@ -1,0 +1,45 @@
+# pyc files
+*pyc
+
+# pdf files created by notebooks
+doc/notebooks/*pdf
+
+# pdf or png files created by pyreverse
+*classes_*png
+*packages_*png
+*classes_*pdf
+*packages_*pdf
+
+# .swp files
+*.swp
+*.swo
+
+# some notebooks
+doc/notebooks/Untitled*.ipynb
+doc/notebooks/plots*article.ipynb
+doc/notebooks/*test.ipynb
+doc/notebooks/tests.ipynb
+
+# some documentation
+doc/*build/
+doc/*static/
+doc/*templates/
+
+#pytest Coverage files
+.coverage
+htmlcov/
+pytest_report.html
+.pytest_cache
+assets
+
+# other crap
+tmp.dat
+.tox/
+.DS_Store
+.cache/
+.ipynb_checkpoints/
+.png
+SiegPy.mplstyle
+doc/notebooks/.DS_Store
+doc/notebooks/.ipynb_checkpoints/
+*egg*
