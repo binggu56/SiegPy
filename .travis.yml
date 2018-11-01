@@ -4,15 +4,28 @@ python:
   - "3.5"
   - "3.6"
   - "3.7-dev"
-# command to install dependencies
+
+# Command to install dependencies
 install:
   - pip install -U setuptools
   - pip install -U numpy
   - pip install -U pytest
   - pip install .[test,doc]
   - pip install codecov
-# command to run tests
+
+# Command to run tests
 script:
   - pytest
+
+# Command to push coverage to codecov
 after_success:
   - codecov -t 55a7aa09-3763-45cf-ad06-df0f26f5168c
+
+# Command to deploy documentation
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep-history: true
+  on:
+    branch: master
