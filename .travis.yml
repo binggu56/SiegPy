@@ -10,9 +10,9 @@ install:
   - pip install -U numpy
   - pip install -U pytest
   - pip install .[test,doc]
+  - pip install codecov
 # command to run tests
 script:
   - pytest
 after_success:
-  - pip install --user codecov
   - codecov -t 55a7aa09-3763-45cf-ad06-df0f26f5168c
