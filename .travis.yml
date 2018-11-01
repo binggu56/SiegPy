@@ -6,9 +6,10 @@ python:
   - "3.7-dev"
 # command to install dependencies
 install:
-  - pip install .[test,doc]
-  - pip install -U pytest
+  - pip install -U setuptools
   - pip install -U numpy
+  - pip install -U pytest
+  - pip install .[test,doc]
 # command to run tests
 script:
   - pytest
