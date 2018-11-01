@@ -1,4 +1,4 @@
-https://travis-ci.com/mmoriniere/SiegPy.svg?branch=master
+[![Build Status](https://travis-ci.com/mmoriniere/SiegPy.svg?branch=master)](https://travis-ci.com/mmoriniere/SiegPy)
 
 # SiegPy: "Siegert states with Python"
 
