@@ -18,8 +18,8 @@ install:
 script:
   - pytest
   # Install pandoc (to convert notebooks to html)
-  - apt-get update -y
-  - apt-get install -y pandoc
+  - sudo apt-get update -y
+  - sudo apt-get install -y pandoc
   - cd doc
   - make html
 
