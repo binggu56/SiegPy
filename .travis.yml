@@ -34,7 +34,7 @@ deploy:
   provider: pages
   skip_cleanup: true
   local_dir: doc/build/html
-  github_token: $GITHUB_PAGES_TOKEN
+  github_token: '$GITHUB_PAGES_TOKEN'
   keep-history: true
   on:
     branch: master
