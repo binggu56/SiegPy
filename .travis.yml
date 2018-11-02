@@ -16,6 +16,11 @@ install:
 # Command to run tests
 script:
   - pytest
+  # Install pandoc (to convert notebooks to html)
+  - apt-get update -y
+  - apt-get install -y pandoc
+  - cd doc
+  - make html
 
 # Command to push coverage to codecov
 after_success:
