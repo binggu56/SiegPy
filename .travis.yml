@@ -25,6 +25,10 @@ script:
   - make html
   - cd ..
 
+# Command to push coverage to codecov
+after_success:
+  - codecov -t 55a7aa09-3763-45cf-ad06-df0f26f5168c
+
 # deploy to github page
 deploy:
   provider: pages
@@ -34,7 +38,3 @@ deploy:
   keep-history: true
   on:
     branch: master
-
-# Command to push coverage to codecov
-after_success:
-  - codecov -t 55a7aa09-3763-45cf-ad06-df0f26f5168c
