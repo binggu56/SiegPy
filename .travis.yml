@@ -12,21 +12,18 @@ install:
   - pip install -U numpy
   - pip install -U pytest
   - pip install .[test,doc]
+  # Install pandoc (to convert notebooks to html)
+  - sudo apt-get update -y
+  - sudo apt-get install -y pandoc
+  # Install codecov (to follow code coverage)
   - pip install codecov
 
 # Command to run tests
 script:
   - pytest
-  # Install pandoc (to convert notebooks to html)
-  - sudo apt-get update -y
-  - sudo apt-get install -y pandoc
   - cd doc
   - make html
   - cd ..
-
-# Command to push coverage to codecov
-after_success:
-  - codecov -t 55a7aa09-3763-45cf-ad06-df0f26f5168c
 
 # deploy to github page
 deploy:
@@ -37,3 +34,7 @@ deploy:
   keep-history: true
   on:
     branch: master
+
+# Command to push coverage to codecov
+after_success:
+  - codecov -t 55a7aa09-3763-45cf-ad06-df0f26f5168c
