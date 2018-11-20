@@ -6,7 +6,7 @@ Installation
 
 To install SiegPy, run the following commands:
 
-* ``git clone https://gitlab.maisondelasimulation.fr/lgenoves/SiegPy.git``;
+* ``git clone https://github.com/mmoriniere/SiegPy.git``
 * ``cd SiegPy``;
 * ``pip install .``
 
