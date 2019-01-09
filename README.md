@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.com/mmoriniere/SiegPy.svg?branch=master)](https://travis-ci.com/mmoriniere/SiegPy)
 [![codecov](https://codecov.io/gh/mmoriniere/SiegPy/branch/master/graph/badge.svg)](https://codecov.io/gh/mmoriniere/SiegPy)
+[![docs](https://readthedocs.org/projects/docs/badge/?version=latest)](https://docs.readthedocs.io/en/latest/?badge=latest)
 
 # SiegPy: "Siegert states with Python"
 

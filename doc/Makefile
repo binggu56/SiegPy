@@ -14,6 +14,12 @@ help:
 
 .PHONY: help Makefile
 
+# Delete what's unnecessary from the README before adding it
+clean_readme:
+	@awk '/# Installation/,0' ../README.md > README.md
+
+html: clean_readme
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
