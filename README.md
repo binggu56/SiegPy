@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/mmoriniere/SiegPy.svg?branch=master)](https://travis-ci.com/mmoriniere/SiegPy)
 [![codecov](https://codecov.io/gh/mmoriniere/SiegPy/branch/master/graph/badge.svg)](https://codecov.io/gh/mmoriniere/SiegPy)
-[![docs](https://readthedocs.org/projects/docs/badge/?version=latest)](https://docs.readthedocs.io/en/latest/?badge=latest)
+[![docs](https://readthedocs.org/projects/docs/badge/?version=latest)](https://siegpy.readthedocs.io/en/latest/?badge=latest)
 
 # SiegPy: "Siegert states with Python"
 
@@ -38,7 +38,7 @@ approximation of the Green's function with discrete states),
 ```
 
 
-## Installation
+# Installation
 
 Currently, `git clone` this repository and run `pip install .` in the `SiegPy` 
 folder.
@@ -51,7 +51,7 @@ installed while running the previous command if necessary:
 * mpmath
 
 
-## Documentation
+# Documentation
 
 The documentation can be found [here](https://siegpy.readthedocs.io/en/latest/).
 
@@ -68,7 +68,7 @@ alternatively `python3 -m sphinx . build -jN`, where N is the number of
 precessors used for the compilation). This command creates the code
 documentation and runs all the notebooks in order to create a tutorial.
 
-## For developpers
+# For developpers
 
 For developpers:
 * Run `pip3 install -e .[test]` to get all the packages required for testing. 
