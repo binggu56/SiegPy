@@ -16,7 +16,7 @@ help:
 
 # Delete what's unnecessary from the README before adding it
 clean_readme:
-	@awk '/# Installation/,0' ../README.md > README.md
+	@echo "Clean README.md" && awk '/# Installation/,0' ../README.md > README.md
 
 html: clean_readme
 
