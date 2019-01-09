@@ -29,7 +29,7 @@ script:
 after_success:
   - codecov -t 55a7aa09-3763-45cf-ad06-df0f26f5168c
 
-# deploy to github page
+# deploy to github pages
 deploy:
   provider: pages
   skip_cleanup: true
