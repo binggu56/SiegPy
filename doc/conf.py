@@ -40,6 +40,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
     'nbsphinx',
+    'm2r',
 ]
 
 # Napoleon settings (for numpy docstring style)
