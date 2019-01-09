@@ -52,6 +52,10 @@ installed while running the previous command if necessary:
 
 ## Documentation
 
+The documentation can be found [here](https://mmoriniere.github.io/SiegPy/).
+If it does not render propoerly, see
+[there](https://mmoriniere.gitlab.io/siegpy-canada/index.html).
+
 Ipython notebooks are stored in the 'doc/notebooks' folder and are part of the 
 documentation as tutorials for the SiegPy module. They can also be considered as
 an introduction to the Siegert states. They are supposed to be read in a
