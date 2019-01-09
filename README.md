@@ -53,7 +53,7 @@ installed while running the previous command if necessary:
 ## Documentation
 
 The documentation can be found [here](https://mmoriniere.github.io/SiegPy/).
-If it does not render propoerly, see
+If it does not render properly, see
 [there](https://mmoriniere.gitlab.io/siegpy-canada/index.html).
 
 Ipython notebooks are stored in the 'doc/notebooks' folder and are part of the 
