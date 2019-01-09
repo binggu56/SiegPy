@@ -34,9 +34,13 @@ class AnalyticEigenstate(AnalyticFunction, Eigenstate, metaclass=ABCMeta):
     """
 
     # You should be able to define the type of an analytical eigenstate
-    SIEGERT_TYPES = {'b': "bound", 'ab': "anti-bound",
-                     'r': "resonant", 'ar': "anti-resonant",
-                     None: "continuum"}
+    SIEGERT_TYPES = {
+        "b": "bound",
+        "ab": "anti-bound",
+        "r": "resonant",
+        "ar": "anti-resonant",
+        None: "continuum",
+    }
 
     def __init__(self, k, potential, grid, analytic):
         r"""
@@ -64,7 +68,7 @@ class AnalyticEigenstate(AnalyticFunction, Eigenstate, metaclass=ABCMeta):
             # Error only if bad implementation, hence no coverage
             raise WavenumberError()  # pragma: no cover
         self._wavenumber = k
-        self._energy = k**2 / 2
+        self._energy = k ** 2 / 2
         self._potential = potential
         self.analytic = analytic
         super().__init__(grid)
@@ -148,7 +152,8 @@ class AnalyticEigenstate(AnalyticFunction, Eigenstate, metaclass=ABCMeta):
             self._analytic = new_value
         else:
             raise ValueError(
-                "analytic must be a Boolean (cannot be {})".format(new_value))
+                "analytic must be a Boolean (cannot be {})".format(new_value)
+            )
 
     def __eq__(self, other):
         r"""
@@ -166,9 +171,11 @@ class AnalyticEigenstate(AnalyticFunction, Eigenstate, metaclass=ABCMeta):
             ``True`` if both eigenstates are the same.
         """
         if isinstance(other, AnalyticEigenstate):
-            return (np.isclose(self.wavenumber, other.wavenumber) and
-                    (self.potential == other.potential) and
-                    (self.Siegert_type == other.Siegert_type))
+            return (
+                np.isclose(self.wavenumber, other.wavenumber)
+                and (self.potential == other.potential)
+                and (self.Siegert_type == other.Siegert_type)
+            )
         # Not any else or elif covered, since there is only one
         # analytical case actually implemented (SWP case)
         else:
@@ -182,8 +189,7 @@ class AnalyticEigenstate(AnalyticFunction, Eigenstate, metaclass=ABCMeta):
             Representation of an analytic eigenstate.
         """
         Siegert_type = self.SIEGERT_TYPES[self.Siegert_type].capitalize()
-        return "{} eigenstate of energy {:.3f}"\
-               .format(Siegert_type, self.energy)
+        return "{} eigenstate of energy {:.3f}".format(Siegert_type, self.energy)
 
     @abstractmethod
     def scal_prod(self, other, xlim=None):
@@ -242,27 +248,28 @@ class AnalyticSiegert(AnalyticEigenstate, metaclass=ABCMeta):
         """
         # If its real part is zero, then it's either a bound
         # or an antibound state
-        if k.real == 0.:
-            if k.imag > 0.:
-                S_type = 'b'
-            elif k.imag < 0.:
-                S_type = 'ab'
+        if k.real == 0.0:
+            if k.imag > 0.0:
+                S_type = "b"
+            elif k.imag < 0.0:
+                S_type = "ab"
             else:
                 # This is a very rare case, hence no coverage
-                raise WavenumberError("The wavenumber is zero: impossible to "
-                                      "define the parity.")  # pragma: no cover
+                raise WavenumberError(
+                    "The wavenumber is zero: impossible to " "define the parity."
+                )  # pragma: no cover
         # Else, if its real part is positive...
-        elif k.real > 0.:
+        elif k.real > 0.0:
             # ... if it has a negative imaginary part,
             # then it's a resonant state
-            if k.imag < 0.:
-                S_type = 'r'
+            if k.imag < 0.0:
+                S_type = "r"
         # Finally, if the real part is negative...
-        elif k.real < 0.:
+        elif k.real < 0.0:
             # ... if it has a negative imaginary part,
             # then it's an anti-resonant state
-            if k.imag < 0.:
-                S_type = 'ar'
+            if k.imag < 0.0:
+                S_type = "ar"
         return S_type
 
 
@@ -292,7 +299,8 @@ class AnalyticContinuum(AnalyticEigenstate, metaclass=ABCMeta):
         """
         if not np.isclose(k.imag, 0.0):
             raise WavenumberError(
-                "A continuum state cannot have an imaginary wavenumber")
+                "A continuum state cannot have an imaginary wavenumber"
+            )
         else:
             return None
 

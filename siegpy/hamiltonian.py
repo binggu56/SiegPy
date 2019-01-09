@@ -11,7 +11,7 @@ import scipy.linalg as LA
 from siegpy import BasisSet, Eigenstate, UniformCoordMap, Sym8_filters
 
 
-class Hamiltonian():
+class Hamiltonian:
     r"""
     A Hamiltonian has to be defined when one is interested in finding
     numerically the Siegert states of a potential when the eigenstates
@@ -47,7 +47,7 @@ class Hamiltonian():
         npts = len(grid)
         self._gradient_matrix = filters.fill_gradient_matrix(npts)
         self._laplacian_matrix = filters.fill_laplacian_matrix(npts)
-        if hasattr(filters, 'magic_filter'):
+        if hasattr(filters, "magic_filter"):
             self._magic_matrix = filters.fill_magic_matrix(npts)
         else:
             self._magic_matrix = None
@@ -155,8 +155,8 @@ class Hamiltonian():
         if isinstance(cm, UniformCoordMap):
             VF = self.potential.complex_scaled_values(cm)
             ham = self._pot_to_mat(VF)
-            tmp = - np.exp(-2j*cm.theta) * np.eye(len(VF)) / 2
-            ham += np.dot(tmp, laplac/h**2)
+            tmp = -np.exp(-2j * cm.theta) * np.eye(len(VF)) / 2
+            ham += np.dot(tmp, laplac / h ** 2)
         else:
             # Use of a smooth exterior complex scaling
             VF = self.potential.complex_scaled_values(cm)
@@ -165,13 +165,13 @@ class Hamiltonian():
             V2 = cm.V2_values
             # Create the Hamiltonian by converting the potential to matrices
             # and multiplying them by the appropriate operator
-            tmp = self._pot_to_mat(V2 - 1/2)  # add the kinetic term to V2
-            ham = np.dot(tmp, laplac/h**2)
+            tmp = self._pot_to_mat(V2 - 1 / 2)  # add the kinetic term to V2
+            ham = np.dot(tmp, laplac / h ** 2)
             tmp = self._pot_to_mat(V1)
-            ham += np.dot(tmp, grad/h)
+            ham += np.dot(tmp, grad / h)
             # The operator applied to VF and V0 should be the identity,
             # hence the matrices are already correct
-            ham += self._pot_to_mat(V0+VF)
+            ham += self._pot_to_mat(V0 + VF)
         return ham
 
     def _find_virial_matrix(self):
@@ -194,8 +194,10 @@ class Hamiltonian():
             vir = self._build_virial_matrix(U0, U1, U2, U11)
         else:
             # In this case, there is one virial operator per parameter
-            vir = {xi: self._build_virial_matrix(U0[xi], U1[xi],
-                                                 U2[xi], U11[xi]) for xi in U0}
+            vir = {
+                xi: self._build_virial_matrix(U0[xi], U1[xi], U2[xi], U11[xi])
+                for xi in U0
+            }
             # Add the potential term to U0 (i.e.: V'(F)*dF/dxi)
             pot = self.potential
             for xi in vir:
@@ -232,14 +234,14 @@ class Hamiltonian():
         # matrices and then multiplying them by the appropriate operator
         vir = self._pot_to_mat(U0)
         tmp = self._pot_to_mat(U1)
-        vir += np.dot(tmp, grad/h)
+        vir += np.dot(tmp, grad / h)
         if self.coord_map.GCVT:
-            vir += np.dot(grad.T/h, tmp)
+            vir += np.dot(grad.T / h, tmp)
         else:
             tmp = self._pot_to_mat(U11)
-            vir += np.dot(grad.T/h, np.dot(tmp, grad/h))
+            vir += np.dot(grad.T / h, np.dot(tmp, grad / h))
             tmp = self._pot_to_mat(U2)
-            vir = np.dot(tmp, laplac/h**2)
+            vir = np.dot(tmp, laplac / h ** 2)
         return vir
 
     def solve(self, max_virial=None):
@@ -285,20 +287,25 @@ class Hamiltonian():
                 virial = np.abs(np.dot(vr_i, np.dot(self.virial_matrix, vr_i)))
             else:
                 matrices = self.virial_matrix
-                virials = {xi: np.dot(vr_i, np.dot(matrices[xi], vr_i))
-                           for xi in matrices}
+                virials = {
+                    xi: np.dot(vr_i, np.dot(matrices[xi], vr_i)) for xi in matrices
+                }
                 virial_values = np.array([virials[xi] for xi in virials])
-                virial = np.sqrt(np.sum(np.abs(virial_values**2)))
+                virial = np.sqrt(np.sum(np.abs(virial_values ** 2)))
                 # print(energy, virial)
                 # virial = np.dot(vl_i, np.dot(self.virial_matrix, vr_i))
             # Add the eigenstate to the list of states
             states.append(
-                Eigenstate(
-                    grid, vr_i/np.sqrt(h), energy, 'U', virial=virial))
+                Eigenstate(grid, vr_i / np.sqrt(h), energy, "U", virial=virial)
+            )
         # Sort the list of states by increasing virial values
         states.sort(key=lambda x: np.log10(x.virial))
-        return BasisSet(states=states, potential=self.potential,
-                        coord_map=self.coord_map, max_virial=max_virial)
+        return BasisSet(
+            states=states,
+            potential=self.potential,
+            coord_map=self.coord_map,
+            max_virial=max_virial,
+        )
 
     def _pot_to_mat(self, potential_values):
         r"""

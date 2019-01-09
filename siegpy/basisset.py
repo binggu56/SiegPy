@@ -21,7 +21,7 @@ from siegpy.utils import init_plot, finalize_plot
 __all__ = ["BasisSet", "BasisSetError"]
 
 
-class BasisSet():
+class BasisSet:
     r"""
     This class is arguably the most important one in the whole module
     since it defines all the main methods allowing to study the Siegert
@@ -29,11 +29,10 @@ class BasisSet():
     traditional continuum states).
     """
 
-    SIEGERT_STATES_TYPES = ['b', 'ab', 'r', 'ar']
-    STATES_TYPES = SIEGERT_STATES_TYPES + [None, 'U']
+    SIEGERT_STATES_TYPES = ["b", "ab", "r", "ar"]
+    STATES_TYPES = SIEGERT_STATES_TYPES + [None, "U"]
 
-    def __init__(self, states=None, potential=None, coord_map=None,
-                 max_virial=0):
+    def __init__(self, states=None, potential=None, coord_map=None, max_virial=0):
         r"""
         Parameters
         ----------
@@ -59,16 +58,16 @@ class BasisSet():
         if states is None:
             self._states = []
         # Else, if a list of states is passed, use it
-        elif (isinstance(states, list) and
-              all([isinstance(state, Eigenstate) for state in states])):
+        elif isinstance(states, list) and all(
+            [isinstance(state, Eigenstate) for state in states]
+        ):
             self._states = states
         # Else, if an only state is passed, use it
         elif isinstance(states, Eigenstate):
             self._states = [states]
         # Otherwise, states has an incorrect value
         else:
-            raise ValueError(
-                "The basis set cannot be initialized: wrong states.")
+            raise ValueError("The basis set cannot be initialized: wrong states.")
         if self.coord_map is not None:
             self.max_virial = max_virial
 
@@ -124,7 +123,7 @@ class BasisSet():
             # bound and continuum states
             if self.coord_map.theta == 0:
                 if state.energy < 0:
-                    new_type = 'b'
+                    new_type = "b"
                 else:
                     new_type = None
             # If there is a coordinate mapping, then there are bound,
@@ -133,11 +132,11 @@ class BasisSet():
                 if abs(state.virial) <= self.max_virial:
                     en = state.energy
                     if en.real < 0:
-                        new_type = 'b'
+                        new_type = "b"
                     elif en.real > 0:
-                        new_type = 'r'
+                        new_type = "r"
                 else:
-                    new_type = 'U'
+                    new_type = "U"
             # Update the type of the considered eigenstate
             state._Siegert_type = new_type
 
@@ -196,8 +195,7 @@ class BasisSet():
         """
         # Check the file exists
         if not os.path.exists(filename):
-            raise NameError(
-                "The required file {} does not exist.".format(filename))
+            raise NameError("The required file {} does not exist.".format(filename))
         # Read the whole file and return it
         with open(filename, "rb") as f:
             basis = pickle.load(f)
@@ -247,7 +245,7 @@ class BasisSet():
         if not all([isinstance(s, Eigenstate) for s in states]):
             raise TypeError("Only wavefunctions can be added to a basis set")
         # Return a new basis set
-        return self.__class__(states=self.states+states)
+        return self.__class__(states=self.states + states)
 
     def __repr__(self):
         r"""
@@ -274,8 +272,11 @@ class BasisSet():
         bool
             ``True`` if both basis sets contain the same states.
         """
-        return isinstance(other, BasisSet) and len(self) == len(other) and all(
-            [state in self for state in other])
+        return (
+            isinstance(other, BasisSet)
+            and len(self) == len(other)
+            and all([state in self for state in other])
+        )
 
     @property
     def is_empty(self):
@@ -307,7 +308,8 @@ class BasisSet():
             set.
         """
         return self.__class__(
-            states=[state for state in self if state.Siegert_type == 'b'])
+            states=[state for state in self if state.Siegert_type == "b"]
+        )
 
     @property
     def antibounds(self):
@@ -319,7 +321,8 @@ class BasisSet():
             basis set.
         """
         return self.__class__(
-            states=[state for state in self if state.Siegert_type == 'ab'])
+            states=[state for state in self if state.Siegert_type == "ab"]
+        )
 
     @property
     def resonants(self):
@@ -331,7 +334,8 @@ class BasisSet():
             basis set.
         """
         return self.__class__(
-            states=[state for state in self if state.Siegert_type == 'r'])
+            states=[state for state in self if state.Siegert_type == "r"]
+        )
 
     @property
     def antiresonants(self):
@@ -343,7 +347,8 @@ class BasisSet():
             current basis set.
         """
         return self.__class__(
-            states=[state for state in self if state.Siegert_type == 'ar'])
+            states=[state for state in self if state.Siegert_type == "ar"]
+        )
 
     @property
     def siegerts(self):
@@ -354,8 +359,7 @@ class BasisSet():
             Basis set made of all the Siegert states of the current
             basis set.
         """
-        return (self.bounds + self.antibounds +
-                self.resonants + self.antiresonants)
+        return self.bounds + self.antibounds + self.resonants + self.antiresonants
 
     @property
     def continuum(self):
@@ -367,7 +371,8 @@ class BasisSet():
             basis set.
         """
         return self.__class__(
-            states=[state for state in self if state.Siegert_type is None])
+            states=[state for state in self if state.Siegert_type is None]
+        )
 
     @property
     def unknown(self):
@@ -378,11 +383,11 @@ class BasisSet():
             Basis set made of all the states of unknown type of the
             current basis set.
         """
-        return BasisSet(
-            states=[state for state in self if state.Siegert_type == 'U'])
+        return BasisSet(states=[state for state in self if state.Siegert_type == "U"])
 
-    def plot_wavefunctions(self, nres=None, nstates=None, xlim=None, ylim=None,
-                           title=None, file_save=None):  # pragma: no cover
+    def plot_wavefunctions(
+        self, nres=None, nstates=None, xlim=None, ylim=None, title=None, file_save=None
+    ):  # pragma: no cover
         r"""
         Plot the bound, resonant and anti-resonant wavefunctions of the
         basis set along with the potential. The continuum states, if any
@@ -425,24 +430,36 @@ class BasisSet():
             # Define the labels
             label_re, label_im, label_en = None, None, None
             if i == 0:
-                label_re, label_im, label_en = 'Re[WF]', 'Im[WF]', 'Energy'
+                label_re, label_im, label_en = "Re[WF]", "Im[WF]", "Energy"
             # Add the wf (real and imaginary parts) in the plot
-            ax.plot(wf.grid, np.real(wf.values)+energy, 'b', label=label_re)
-            ax.plot(wf.grid, np.imag(wf.values)+energy, 'r', label=label_im)
+            ax.plot(wf.grid, np.real(wf.values) + energy, "b", label=label_re)
+            ax.plot(wf.grid, np.imag(wf.values) + energy, "r", label=label_im)
             # Also plot the value of its ("translation") energy.
-            ax.plot(wf.grid, np.array([energy]*len(wf.grid)), 'k--',
-                    label=label_en)
+            ax.plot(wf.grid, np.array([energy] * len(wf.grid)), "k--", label=label_en)
         # Plot the potential as well
         pot = self.potential
         if pot is not None:
-            ax.plot(pot.grid, np.real(pot.values), 'k-',
-                    label='Re[Potential]')
-            ax.plot(pot.grid, np.imag(pot.values), c='k',
-                    ls='dotted', ms=1, label='Im[Potential]')
-        finalize_plot(fig, ax, xlim=xlim, ylim=ylim, title=title,
-                      file_save=file_save, leg_loc=6,
-                      leg_bbox_to_anchor=(1, 0.5), xlabel="$x$",
-                      ylabel="Energy")
+            ax.plot(pot.grid, np.real(pot.values), "k-", label="Re[Potential]")
+            ax.plot(
+                pot.grid,
+                np.imag(pot.values),
+                c="k",
+                ls="dotted",
+                ms=1,
+                label="Im[Potential]",
+            )
+        finalize_plot(
+            fig,
+            ax,
+            xlim=xlim,
+            ylim=ylim,
+            title=title,
+            file_save=file_save,
+            leg_loc=6,
+            leg_bbox_to_anchor=(1, 0.5),
+            xlabel="$x$",
+            ylabel="Energy",
+        )
 
     @property
     def energies(self):
@@ -488,8 +505,9 @@ class BasisSet():
         else:
             return False
 
-    def plot_wavenumbers(self, xlim=None, ylim=None, title=None,
-                         file_save=None, show_unknown=True):  # pragma: no cover # noqa
+    def plot_wavenumbers(
+        self, xlim=None, ylim=None, title=None, file_save=None, show_unknown=True
+    ):  # pragma: no cover # noqa
         r"""
         Plot the wavenumbers of the Siegert states in the basis set.
 
@@ -508,10 +526,12 @@ class BasisSet():
             type.
         """
         _complex_plane_plot(
-            self, 'wavenumber', xlim, ylim, title, file_save, show_unknown)
+            self, "wavenumber", xlim, ylim, title, file_save, show_unknown
+        )
 
-    def plot_energies(self, xlim=None, ylim=None, title=None,
-                      file_save=None, show_unknown=True):  # pragma: no cover
+    def plot_energies(
+        self, xlim=None, ylim=None, title=None, file_save=None, show_unknown=True
+    ):  # pragma: no cover
         r"""
         Plot the energies of the Siegert states in the basis set.
 
@@ -529,8 +549,7 @@ class BasisSet():
             If ``True``, plot the data of the states with an unknown
             type.
         """
-        _complex_plane_plot(
-            self, 'energy', xlim, ylim, title, file_save, show_unknown)
+        _complex_plane_plot(self, "energy", xlim, ylim, title, file_save, show_unknown)
 
     def scal_prod(self, test):
         r"""
@@ -580,21 +599,21 @@ class BasisSet():
         if self.no_coord_map:
             # Usual scalar product
             sp_init = init.scal_prod(test)
-            init_val = np.sum(np.abs(sp_init)**2) / test.norm()
+            init_val = np.sum(np.abs(sp_init) ** 2) / test.norm()
             basis = self.continuum
             basis.states.sort(key=lambda x: x.energy.real)
             scal_prods = basis.scal_prod(test)
-            CR_conv = np.cumsum(np.abs(scal_prods)**2)/test.norm()
+            CR_conv = np.cumsum(np.abs(scal_prods) ** 2) / test.norm()
         else:
             # c-product because some states have complex energies
             sp_init_1 = np.conjugate(init.scal_prod(test.conjugate()))
             sp_init_2 = np.conjugate(init.scal_prod(test))
-            init_val = np.sum(sp_init_1*sp_init_2) / test.norm()
+            init_val = np.sum(sp_init_1 * sp_init_2) / test.norm()
             basis = self.resonants
             basis.states.sort(key=lambda x: x.energy.real)
             scal_prods_1 = np.conjugate(basis.scal_prod(test.conjugate()))
             scal_prods_2 = np.conjugate(basis.scal_prod(test))
-            CR_conv = np.cumsum(scal_prods_1*scal_prods_2) / test.norm()
+            CR_conv = np.cumsum(scal_prods_1 * scal_prods_2) / test.norm()
         CR_conv = np.insert(CR_conv, 0, 0) + init_val
         # Keep only the results in the desired wavenumber range
         real_en = np.insert(np.real(basis.energies), 0, 0)
@@ -602,8 +621,9 @@ class BasisSet():
             # The range is defined by xlim
             if klim[0] < 0 or klim[1] < 0:
                 raise ValueError("The limits should be positive.")
-            where = np.logical_and(real_en >= klim[0]**2/2,
-                                   real_en <= klim[1]**2/2)
+            where = np.logical_and(
+                real_en >= klim[0] ** 2 / 2, real_en <= klim[1] ** 2 / 2
+            )
             CR_conv = CR_conv[where]
         else:
             # The x-axis range starts from the 0 energy/wavenumber
@@ -637,8 +657,9 @@ class BasisSet():
         kgrid, CR_conv = basis.completeness_convergence(test, klim=klim)
         return kgrid, CR_conv
 
-    def plot_completeness_convergence(self, test, klim=None, title=None,
-                                      file_save=None):  # pragma: no cover
+    def plot_completeness_convergence(
+        self, test, klim=None, title=None, file_save=None
+    ):  # pragma: no cover
         r"""
         Plot the convergence of the completeness relation using all or
         the fiest ``nstates`` in the basis set.
@@ -658,15 +679,21 @@ class BasisSet():
         # Object-oriented plots
         fig, ax = init_plot()
         # Plot the expected value of 1
-        ax.axhline(1, color='black', lw=1.5)
+        ax.axhline(1, color="black", lw=1.5)
         kgrid, CR_conv = self.completeness_convergence(test, klim=klim)
-        ax.plot(
-            kgrid, np.real(CR_conv), color='#d73027', ls='', marker='.', ms=10)
+        ax.plot(kgrid, np.real(CR_conv), color="#d73027", ls="", marker=".", ms=10)
         # Finalize the plot
         if klim is None:
             klim = (0, kgrid[-1])
-        finalize_plot(fig, ax, xlim=klim, title=title, file_save=file_save,
-                      xlabel="$k$", ylabel="CR")
+        finalize_plot(
+            fig,
+            ax,
+            xlim=klim,
+            title=title,
+            file_save=file_save,
+            xlabel="$k$",
+            ylabel="CR",
+        )
 
     def MLE_strength_function(self, test, kgrid):
         r"""
@@ -694,25 +721,30 @@ class BasisSet():
             MLE of the strength function evaluated on the kgrid.
         """
         # Initialize strength_func
-        strength_func = 1.j*np.zeros_like(kgrid)
+        strength_func = 1.0j * np.zeros_like(kgrid)
         # Loop over the siegert states to update the MLE of the RF
         for state in self.resonants:
             # Values for the resonant state contribution
             k_r = state.wavenumber
             sp_r = state.scal_prod(test)
             # Values for the corresponding anti-resonant state contribution
-            ares = Eigenstate(state.grid, np.conjugate(state.values),
-                              np.conjugate(state.energy), Siegert_type="ar")
+            ares = Eigenstate(
+                state.grid,
+                np.conjugate(state.values),
+                np.conjugate(state.energy),
+                Siegert_type="ar",
+            )
             ares._wavenumber = -np.conjugate(k_r)
             k_ar = ares.wavenumber
             sp_ar = ares.scal_prod(test)
             # Add the contributions of the resonant couple
             for k, sp in [(k_r, sp_r), (k_ar, sp_ar)]:
-                strength_func += - 1. / np.pi * sp**2 / (k * (kgrid - k))
+                strength_func += -1.0 / np.pi * sp ** 2 / (k * (kgrid - k))
         return np.imag(strength_func)
 
-    def plot_strength_function(self, test, kgrid, nres=None, title=None,
-                               file_save=None):  # pragma: no cover
+    def plot_strength_function(
+        self, test, kgrid, nres=None, title=None, file_save=None
+    ):  # pragma: no cover
         r"""
         Plot the Mittag-Leffler Expansion of the strength function for a
         given test function.
@@ -740,7 +772,7 @@ class BasisSet():
         fig, ax = init_plot()
         # Evaluate and plot the MLE of the RF
         MLE_rf = self.MLE_strength_function(test, kgrid)
-        ax.plot(kgrid, MLE_rf, color='#000000', ls='--', label='MLE')
+        ax.plot(kgrid, MLE_rf, color="#000000", ls="--", label="MLE")
         # Plot the contribution of the nres first resonance couples
         # to the strength function
         if nres is not None:
@@ -749,7 +781,7 @@ class BasisSet():
             res = res[:nres]
             for i, state in enumerate(res):
                 rf = BasisSet(state).MLE_strength_function(test, kgrid)
-                label = "$N_{res} = $"+"{}".format(i+1)
+                label = "$N_{res} = $" + "{}".format(i + 1)
                 ax.plot(kgrid, rf, lw=1.5, label=label)
         # Finalize the plot
         if nres is not None:
@@ -758,9 +790,16 @@ class BasisSet():
         else:
             leg_loc = None
             leg_bbox_to_anchor = None
-        finalize_plot(fig, ax, title=title, file_save=file_save,
-                      leg_loc=leg_loc, leg_bbox_to_anchor=leg_bbox_to_anchor,
-                      xlabel="$k$", ylabel="$S(k)$")
+        finalize_plot(
+            fig,
+            ax,
+            title=title,
+            file_save=file_save,
+            leg_loc=leg_loc,
+            leg_bbox_to_anchor=leg_bbox_to_anchor,
+            xlabel="$k$",
+            ylabel="$S(k)$",
+        )
 
     def Berggren_propagation(self, test, time_grid):
         r"""
@@ -815,8 +854,9 @@ class BasisSet():
         return mat_time.dot(mat_space)
 
 
-def _complex_plane_plot(basis, attr, xlim, ylim, title, file_save,
-                        show_unknown):  # pragma: no cover
+def _complex_plane_plot(
+    basis, attr, xlim, ylim, title, file_save, show_unknown
+):  # pragma: no cover
     r"""
     Plot either the wavenumber or the energy of each bound, resonant
     continuum and unknown states in the basis set (the latter if
@@ -844,8 +884,8 @@ def _complex_plane_plot(basis, attr, xlim, ylim, title, file_save,
     # Object-oriented plots
     fig, ax = init_plot()
     # Add the real and imaginary axes
-    ax.axhline(0, color='black', lw=1)  # black line y=0
-    ax.axvline(0, color='black', lw=1)  # black line x=0
+    ax.axhline(0, color="black", lw=1)  # black line y=0
+    ax.axvline(0, color="black", lw=1)  # black line x=0
     # Select which states have to be plotted
     to_plot = basis.bounds + basis.resonants + basis.continuum
     if show_unknown is True or len(basis.unknown) == len(basis):
@@ -859,25 +899,31 @@ def _complex_plane_plot(basis, attr, xlim, ylim, title, file_save,
     # Normalize the colors used accordingly
     norm = matplotlib.colors.Normalize(vmin=vmin, vmax=vmax)
     # Set the colorbar and its title
-    colorbar = cm.ScalarMappable(
-        cmap=plt.cm.CMRmap, norm=norm)  # pylint: disable=E1101
+    colorbar = cm.ScalarMappable(cmap=plt.cm.CMRmap, norm=norm)  # pylint: disable=E1101
     colorbar.set_array([])
     plt.colorbar(colorbar, label="$log_{10}$(|virial|)")
     # Plot all the data
     if plot_data != []:
         color = plt.cm.CMRmap(norm(virials))  # pylint: disable=E1101
-        ax.scatter(np.real(plot_data), np.imag(plot_data), c=color,
-                   cmap="CMRmap")
+        ax.scatter(np.real(plot_data), np.imag(plot_data), c=color, cmap="CMRmap")
     # Set the base name of the x and y axis of the plot
-    if attr == 'wavenumber':
-        data_label = 'k'
-    elif attr == 'energy':
-        data_label = 'E'
+    if attr == "wavenumber":
+        data_label = "k"
+    elif attr == "energy":
+        data_label = "E"
     xlabel = "Re[${}$]".format(data_label)
     ylabel = "Im[${}$]".format(data_label)
     # Finalize the plot
-    finalize_plot(fig, ax, xlim=xlim, ylim=ylim, title=title,
-                  file_save=file_save, xlabel=xlabel, ylabel=ylabel)
+    finalize_plot(
+        fig,
+        ax,
+        xlim=xlim,
+        ylim=ylim,
+        title=title,
+        file_save=file_save,
+        xlabel=xlabel,
+        ylabel=ylabel,
+    )
 
 
 def _set_mat_time(basis, time_grid):
@@ -914,7 +960,7 @@ def _set_mat_time(basis, time_grid):
     """
     # Build the matrix mat_time
     E, T = np.meshgrid(basis.energies, time_grid)
-    mat_time = np.exp(-1.j * E * T)
+    mat_time = np.exp(-1.0j * E * T)
     return mat_time
     # return np.array(mat_time)
 
@@ -969,8 +1015,7 @@ def _set_mat_space(basis, test, weight=1.0):
         shape = (len(basis), len(basis[0].values))
         return np.zeros(shape)
     else:
-        mat_space = [weight * state.scal_prod(test) * state.values
-                     for state in basis]
+        mat_space = [weight * state.scal_prod(test) * state.values for state in basis]
         return np.array(mat_space)
 
 

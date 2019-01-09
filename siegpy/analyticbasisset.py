@@ -61,7 +61,8 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             pot = states[0].potential
             if any([s.potential != pot for s in states]):
                 raise ValueError(
-                    "All the eigenstates must come from the same potential")
+                    "All the eigenstates must come from the same potential"
+                )
             # Loop over each type of states
             for S_type in self.STATES_TYPES:
                 # Sort each type of state by increasing real energy
@@ -72,8 +73,9 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         super().__init__(states=new_states)
 
     @classmethod
-    def from_file(cls, filename, grid=None, analytic=True, nres=None,
-                  kmax=None, bounds_only=False):
+    def from_file(
+        cls, filename, grid=None, analytic=True, nres=None, kmax=None, bounds_only=False
+    ):
         r"""
         Read a basis set from a binary file.
 
@@ -164,8 +166,12 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         if bounds_only:
             basis = basis.bounds
         elif nres is not None:
-            basis = (basis.bounds + basis.antibounds +
-                     basis.resonants[:nres] + basis.antiresonants[:nres])
+            basis = (
+                basis.bounds
+                + basis.antibounds
+                + basis.resonants[:nres]
+                + basis.antiresonants[:nres]
+            )
         elif kmax is not None:
             cont = [c for c in basis.continuum if c.wavenumber <= kmax]
             basis = basis.bounds + cont
@@ -249,16 +255,14 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             xgrid = self[0].grid
             if xgrid is None:
                 if any([state.grid is not None for state in self]):
-                    raise ValueError(
-                        "Some states have a different value for 'grid'")
+                    raise ValueError("Some states have a different value for 'grid'")
                 else:
                     return None
             else:
-                if any([state.grid is None for state in self]) or \
-                        any([not np.allclose(state.grid, xgrid)
-                             for state in self]):
-                    raise ValueError(
-                        "Some states have a different value for 'grid'")
+                if any([state.grid is None for state in self]) or any(
+                    [not np.allclose(state.grid, xgrid) for state in self]
+                ):
+                    raise ValueError("Some states have a different value for 'grid'")
                 else:
                     return xgrid
         else:
@@ -317,8 +321,7 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             if all([state.analytic == analytic for state in self]):
                 return analytic
             else:
-                raise ValueError(
-                    "Some states have a different value for 'analytic'")
+                raise ValueError("Some states have a different value for 'analytic'")
         else:
             raise ValueError("Empy basis set, it has no 'analytic' attribute")
 
@@ -366,8 +369,9 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         else:
             raise ValueError("Empy basis set, it has no 'potential' attribute")
 
-    def plot_wavefunctions(self, nres=None, xlim=None, ylim=None, title=None,
-                           file_save=None):  # pragma: no cover
+    def plot_wavefunctions(
+        self, nres=None, xlim=None, ylim=None, title=None, file_save=None
+    ):  # pragma: no cover
         r"""
         Plot the bound, resonant and anti-resonant wavefunctions of the
         basis set along with the potential. The continuum and anti-bound
@@ -410,30 +414,34 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         # Loop over the Siegert states
         for i, wf in enumerate(siegerts_to_plot):
             # Define the value of its energy given its type
-            if wf.Siegert_type in ('r', 'ar'):
+            if wf.Siegert_type in ("r", "ar"):
                 energy = abs(wf.energy)
-            elif wf.Siegert_type in ('b', 'ab'):
-                energy = - abs(wf.energy)
+            elif wf.Siegert_type in ("b", "ab"):
+                energy = -abs(wf.energy)
             # Define the labels
             label_re, label_im, label_en = None, None, None
             if i == 0:
-                label_re, label_im, label_en = 'Re[WF]', 'Im[WF]', 'Energy'
+                label_re, label_im, label_en = "Re[WF]", "Im[WF]", "Energy"
             # Add the wf (real and imaginary parts) in the plot
-            ax.plot(wf.grid, np.real(wf.values)+energy, 'b', label=label_re)
-            ax.plot(wf.grid, np.imag(wf.values)+energy, 'r', label=label_im)
+            ax.plot(wf.grid, np.real(wf.values) + energy, "b", label=label_re)
+            ax.plot(wf.grid, np.imag(wf.values) + energy, "r", label=label_im)
             # Also plot the value of its ("translation") energy.
-            ax.plot(wf.grid, np.array([energy]*len(wf.grid)), 'k--',
-                    label=label_en)
+            ax.plot(wf.grid, np.array([energy] * len(wf.grid)), "k--", label=label_en)
         # Plot the potential as well
-        ax.plot(potential.grid, np.real(potential.values), 'k-',
-                label='Re[Potential]')
-        ax.plot(potential.grid, np.imag(potential.values), c='k', ls='dotted',
-                ms=1, label='Im[Potential]')
+        ax.plot(potential.grid, np.real(potential.values), "k-", label="Re[Potential]")
+        ax.plot(
+            potential.grid,
+            np.imag(potential.values),
+            c="k",
+            ls="dotted",
+            ms=1,
+            label="Im[Potential]",
+        )
         # Finalize the plot
         # Set the range of the plot on the y-axis (ylim)
         if ylim is None:
             # Define the minimum of the y-axis:
-            if hasattr(potential, 'values'):
+            if hasattr(potential, "values"):
                 ymin = 1.1 * np.min(potential.values).real
             else:
                 raise ValueError("Cannot find the minimum of the potential")
@@ -441,14 +449,24 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             if nres == 0:
                 ymax = abs(ymin) / 10
             else:
-                ymax = abs(res[-1].energy)+2
+                ymax = abs(res[-1].energy) + 2
             ylim = (ymin, ymax)
-        finalize_plot(fig, ax, xlim=xlim, ylim=ylim, title=title,
-                      file_save=file_save, xlabel="$x$", ylabel="Energy",
-                      leg_loc=6, leg_bbox_to_anchor=(1, 0.5))
+        finalize_plot(
+            fig,
+            ax,
+            xlim=xlim,
+            ylim=ylim,
+            title=title,
+            file_save=file_save,
+            xlabel="$x$",
+            ylabel="Energy",
+            leg_loc=6,
+            leg_bbox_to_anchor=(1, 0.5),
+        )
 
-    def plot_wavenumbers(self, xlim=None, ylim=None, title=None,
-                         file_save=None):  # pragma: no cover
+    def plot_wavenumbers(
+        self, xlim=None, ylim=None, title=None, file_save=None
+    ):  # pragma: no cover
         r"""
         Plot the wavenumbers of the Siegert states in the basis set.
 
@@ -463,11 +481,11 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         file_save: str
             Filename of the plot to be saved (optional).
         """
-        _complex_plane_plot(
-            self.states, 'wavenumber', xlim, ylim, title, file_save)
+        _complex_plane_plot(self.states, "wavenumber", xlim, ylim, title, file_save)
 
-    def plot_energies(self, xlim=None, ylim=None, title=None,
-                      file_save=None):  # pragma: no cover
+    def plot_energies(
+        self, xlim=None, ylim=None, title=None, file_save=None
+    ):  # pragma: no cover
         r"""
         Plot the energies of the Siegert states in the basis set.
 
@@ -482,8 +500,7 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         file_save: str
             Filename of the plot to be saved (optional).
         """
-        _complex_plane_plot(
-            self.states, 'energy', xlim, ylim, title, file_save)
+        _complex_plane_plot(self.states, "energy", xlim, ylim, title, file_save)
 
     def MLE_contributions_to_CR(self, test):
         r"""
@@ -527,7 +544,7 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             scal_prods_l = siegerts.scal_prod(test.conjugate())
             MLE_contribs = scal_prods * scal_prods_l
         else:
-            MLE_contribs = scal_prods**2
+            MLE_contribs = scal_prods ** 2
         return np.array(MLE_contribs / (2 * test.norm()))
 
     def MLE_contributions_to_zero_operator(self, test):
@@ -592,7 +609,7 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             Evaluation of the completeness of the basis set using the
             Mittag-Leffler Expansion.
         """
-        return _MLE(self.siegerts, 'CR', test, nres=nres)
+        return _MLE(self.siegerts, "CR", test, nres=nres)
 
     def MLE_zero_operator(self, test, nres=None):
         r"""
@@ -624,7 +641,7 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             Evaluation of the zero operator of the basis set using the
             Mittag-Leffler Expansion.
         """
-        return _MLE(self.siegerts, 'Zero', test, nres=nres)
+        return _MLE(self.siegerts, "Zero", test, nres=nres)
 
     def exact_completeness(self, test, hk=None, kmax=None):
         r"""
@@ -657,15 +674,16 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         # Continuum states contribution to the CR: this is computed
         # through an integration of the sum of even and odd continuum
         # states contributions for each wavenumber of the grid.
-        kgrid, integrand = self.continuum_contributions_to_CR(test, hk=hk,
-                                                              kmax=kmax)
+        kgrid, integrand = self.continuum_contributions_to_CR(test, hk=hk, kmax=kmax)
         if hk is None:
             hk = kgrid[1] - kgrid[0]
         cont_contribs = np.trapz(integrand, dx=hk)
         return bnds_contrib + cont_contribs
 
     @abstractmethod
-    def continuum_contributions_to_CR(self, test, hk=None, kmax=None):  # pragma: no cover  # noqa
+    def continuum_contributions_to_CR(
+        self, test, hk=None, kmax=None
+    ):  # pragma: no cover  # noqa
         r"""
         .. note:: This is an asbtract class method.
 
@@ -713,7 +731,7 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             one is made of the values of the convergence of the MLE of
             the completeness relation.
         """
-        return _MLE_convergence(self.siegerts, 'CR', test, nres=nres)
+        return _MLE_convergence(self.siegerts, "CR", test, nres=nres)
 
     def Berggren_completeness_convergence(self, test, nres=None):
         r"""
@@ -743,7 +761,7 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         res_contrib = 2 * res.MLE_contributions_to_CR(test)
         # Create the output values as usual
         kgrid = np.insert(np.abs(res.wavenumbers), 0, 0)
-        CR_conv = np.sum(bnds_contrib)+np.insert(np.cumsum(res_contrib), 0, 0)
+        CR_conv = np.sum(bnds_contrib) + np.insert(np.cumsum(res_contrib), 0, 0)
         return kgrid, CR_conv
 
     def MLE_zero_operator_convergence(self, test, nres=None):
@@ -767,7 +785,7 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             one is made of the values of the convergence of the MLE of
             the zero operator.
         """
-        return _MLE_convergence(self.siegerts, 'Zero', test, nres=nres)
+        return _MLE_convergence(self.siegerts, "Zero", test, nres=nres)
 
     def exact_completeness_convergence(self, test, hk=None, kmax=None):
         r"""
@@ -802,19 +820,28 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         bnds = self.bounds
         bnds_contrib = 2 * bnds.MLE_completeness(test)
         # Convergence of the continuum contribution to the CR
-        kgrid, cont_contribs = (
-            self.continuum_contributions_to_CR(test, hk=hk, kmax=kmax))
+        kgrid, cont_contribs = self.continuum_contributions_to_CR(
+            test, hk=hk, kmax=kmax
+        )
         if hk is None:
             hk = kgrid[1] - kgrid[0]
-        conv_cont_contribs = hk * (np.cumsum(cont_contribs) - cont_contribs/2.)
+        conv_cont_contribs = hk * (np.cumsum(cont_contribs) - cont_contribs / 2.0)
         # Sum both bound and continuum states contributions to the exact CR
         conv_CR = np.real(conv_cont_contribs + bnds_contrib)
         # Return the convergence of the completeness relation
         return kgrid, conv_CR
 
-    def plot_completeness_convergence(self, test, hk=None, kmax=None,
-                                      nres=None, exact=True, MLE=True,
-                                      title=None, file_save=None):  # pragma: no cover  # noqa
+    def plot_completeness_convergence(
+        self,
+        test,
+        hk=None,
+        kmax=None,
+        nres=None,
+        exact=True,
+        MLE=True,
+        title=None,
+        file_save=None,
+    ):  # pragma: no cover  # noqa
         r"""
         Plot the convergence of both the Mittag-Leffler Expansion and
         the exact completeness relation for a given test function.
@@ -857,42 +884,52 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         # Object-oriented plots
         fig, ax = init_plot()
         # Plot the expected value of 1
-        ax.axhline(1, color='black', lw=1.5)
+        ax.axhline(1, color="black", lw=1.5)
         # Set some initial values
         if MLE:
             # Evaluate the convergence of the MLE of the CR
-            abs_kres, MLE_CR = self.MLE_completeness_convergence(test,
-                                                                 nres=nres)
+            abs_kres, MLE_CR = self.MLE_completeness_convergence(test, nres=nres)
             # Define if the parameters for the on-the-fly creation of
             # the continuum states have to be initialized
             if exact:
                 # OTF is a Boolean stating if the continuum has to be
                 # defined on-the-fly, given the input parameters
                 OTF = (hk is not None) and (kmax is not None)
-                if not OTF and (self.continuum.is_empty or
-                                self.continuum[-1].wavenumber < abs_kres[-1]):
+                if not OTF and (
+                    self.continuum.is_empty
+                    or self.continuum[-1].wavenumber < abs_kres[-1]
+                ):
                     if kmax is None:
                         kmax = abs_kres[-1]
                     if hk is None:
                         hk = 0.1
         if exact:
             # Evaluate and plot the convergence of the exact CR
-            kgrid, exact_CR = \
-                self.exact_completeness_convergence(test, hk=hk, kmax=kmax)
-            ax.plot(kgrid, exact_CR, color='#d73027', label='Exact')
+            kgrid, exact_CR = self.exact_completeness_convergence(
+                test, hk=hk, kmax=kmax
+            )
+            ax.plot(kgrid, exact_CR, color="#d73027", label="Exact")
         # Plot the convergence of the MLE of the CR above the
         # convergence of the exact CR
         if MLE:
-            ax.plot(abs_kres, np.real(MLE_CR), color='#4575b4', label='MLE',
-                    ls='', marker='.', ms=10)
+            ax.plot(
+                abs_kres,
+                np.real(MLE_CR),
+                color="#4575b4",
+                label="MLE",
+                ls="",
+                marker=".",
+                ms=10,
+            )
         # Finalize the plot
         ax.legend()
         if MLE and not exact:
             ylabel = "$CR_{MLE}$"
         else:
             ylabel = "$CR$"
-        finalize_plot(fig, ax, title=title, file_save=file_save,
-                      xlabel="$k$", ylabel=ylabel)
+        finalize_plot(
+            fig, ax, title=title, file_save=file_save, xlabel="$k$", ylabel=ylabel
+        )
 
     def MLE_strength_function(self, test, kgrid):
         r"""
@@ -961,15 +998,18 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         # Integrand for each k in kgrid (the imaginary part is already
         # taken into account, and eta is a parameter used to avoid
         # poles during the integration over the real wavenumber axis).
-        integrands = [eta * cont_values / ((qgrid**2/2.-k**2/2.)**2 + eta**2)
-                      for k in kgrid]
+        integrands = [
+            eta * cont_values / ((qgrid ** 2 / 2.0 - k ** 2 / 2.0) ** 2 + eta ** 2)
+            for k in kgrid
+        ]
         # strength function (after integration of each integrand)
         stren_func = np.array([np.trapz(rf, dx=h_q) for rf in integrands])
         stren_func /= np.pi
         return stren_func
 
-    def exact_strength_function_OTF(self, test, kgrid, hk=10**(-4), eta=None,
-                                    tol=10**(-4)):
+    def exact_strength_function_OTF(
+        self, test, kgrid, hk=10 ** (-4), eta=None, tol=10 ** (-4)
+    ):
         r"""
         Evaluate the exact strength function "on-the-fly" over a given
         wavenumber grid ``kgrid`` for a given a test function.
@@ -1029,7 +1069,7 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             new_int_m = first
             new_int_p = first
             # - find new terms while necessary
-            while new_int_m / first > tol and q_m > 0.:
+            while new_int_m / first > tol and q_m > 0.0:
                 q_m = q_m - hk
                 new_int_m = self._evaluate_integrand(q_m, k, test, eta, pot)
                 integrand_m.insert(0, new_int_m)
@@ -1071,9 +1111,17 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         """
         pass
 
-    def plot_strength_function(self, test, kgrid, nres=None, exact=True,
-                               MLE=True, bnds_abnds=False, title=None,
-                               file_save=None):  # pragma: no cover
+    def plot_strength_function(
+        self,
+        test,
+        kgrid,
+        nres=None,
+        exact=True,
+        MLE=True,
+        bnds_abnds=False,
+        title=None,
+        file_save=None,
+    ):  # pragma: no cover
         r"""
         Plot the convergence of both the Mittag-Leffler Expansion and
         the exact strength function for a given test function.
@@ -1112,26 +1160,27 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             # Evaluate and plot the convergence of the exact strength
             # function, continuum states being computed on-the-fly.
             exact_SF = self.exact_strength_function_OTF(test, kgrid)
-            ax.plot(kgrid, exact_SF, color='#d73027', lw=4, label='Exact')
+            ax.plot(kgrid, exact_SF, color="#d73027", lw=4, label="Exact")
         if MLE:
             # Evaluate and plot the MLE of the SF
             MLE_SF = self.MLE_strength_function(test, kgrid)
-            ax.plot(kgrid, MLE_SF, color='#000000', ls='--', label='MLE')
+            ax.plot(kgrid, MLE_SF, color="#000000", ls="--", label="MLE")
         if nres is not None:
             # Plot the contribution of the bound and anti-bound states
             # to the strength function
             basis = self.bounds + self.antibounds
             if basis.is_not_empty:
                 sf = basis.MLE_strength_function(test, kgrid)
-                ax.plot(kgrid, sf, color='#b2182b', lw=1.5, label="b+ab")
+                ax.plot(kgrid, sf, color="#b2182b", lw=1.5, label="b+ab")
             # Plot the contribution of the nres first resonance couples
             # to the strength function
             res = self.resonants[:nres]
             ares = self.antiresonants[:nres]
             for i in range(nres):
-                sf = (res[i].MLE_strength_function(test, kgrid) +
-                      ares[i].MLE_strength_function(test, kgrid))
-                label = "$N_{res} = $"+"{}".format(i+1)
+                sf = res[i].MLE_strength_function(test, kgrid) + ares[
+                    i
+                ].MLE_strength_function(test, kgrid)
+                label = "$N_{res} = $" + "{}".format(i + 1)
                 ax.plot(kgrid, sf, lw=1.5, label=label)
         # Plot the contribution of each bound and antibound
         # states to the MLE of the strength function.
@@ -1139,11 +1188,11 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             bnds = self.bounds
             for state in bnds:
                 sf = state.MLE_strength_function(test, kgrid)
-                ax.plot(kgrid, sf, color='#FF0000')
+                ax.plot(kgrid, sf, color="#FF0000")
             abnds = self.antibounds
             for state in abnds:
                 sf = state.MLE_strength_function(test, kgrid)
-                ax.plot(kgrid, sf, color='#660000')
+                ax.plot(kgrid, sf, color="#660000")
         # Finalize the plot
         if MLE or exact:
             # If resonant contributions, place the legends on the right
@@ -1153,9 +1202,16 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             else:
                 ax.legend()
                 leg_loc, leg_bbox_to_anchor = None, None
-        finalize_plot(fig, ax, title=title, file_save=file_save,
-                      leg_loc=leg_loc, leg_bbox_to_anchor=leg_bbox_to_anchor,
-                      xlabel="$k$", ylabel="$S(k)$")
+        finalize_plot(
+            fig,
+            ax,
+            title=title,
+            file_save=file_save,
+            leg_loc=leg_loc,
+            leg_bbox_to_anchor=leg_bbox_to_anchor,
+            xlabel="$k$",
+            ylabel="$S(k)$",
+        )
 
     def exact_propagation(self, test, time_grid):
         r"""
@@ -1180,8 +1236,9 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         # and of the bound states to the time propagation of the
         # wavepacket and finally sum them.
         cont_contrib = self.continuum._propagate(test, time_grid)
-        bnds_contrib = self.bounds.Siegert_propagation(test, time_grid,
-                                                       weights={'b': 1.0})
+        bnds_contrib = self.bounds.Siegert_propagation(
+            test, time_grid, weights={"b": 1.0}
+        )
         return cont_contrib + bnds_contrib
 
     def exact_propagation_OTF(self, test, time_grid, kmax, hk):
@@ -1237,9 +1294,9 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         """
         # The Mittag-Leffler expansions consists in using all Siegert
         # states with a 0.5 weight
-        return self.Siegert_propagation(test, time_grid,
-                                        weights={'b': 0.5, 'ab': 0.5,
-                                                 'r': 0.5, 'ar': 0.5})
+        return self.Siegert_propagation(
+            test, time_grid, weights={"b": 0.5, "ab": 0.5, "r": 0.5, "ar": 0.5}
+        )
 
     def Berggren_propagation(self, test, time_grid):
         r"""
@@ -1262,8 +1319,7 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         """
         # The Berggren expansion consists in using the bound and
         # resonant states only (with a weight 1).
-        return self.Siegert_propagation(test, time_grid,
-                                        weights={'b': 1.0, 'r': 1.0})
+        return self.Siegert_propagation(test, time_grid, weights={"b": 1.0, "r": 1.0})
 
     def Siegert_propagation(self, test, time_grid, weights=None):
         r"""
@@ -1305,9 +1361,11 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             # Check that weights has valid keys
             for S_type in weights.keys():
                 if S_type not in self.SIEGERT_STATES_TYPES:
-                    raise KeyError("Invalid key {} in the dictionary of "
-                                   "weights. The keys must be a subset of "
-                                   "('ab', 'b', 'r', 'ar').".format(S_type))
+                    raise KeyError(
+                        "Invalid key {} in the dictionary of "
+                        "weights. The keys must be a subset of "
+                        "('ab', 'b', 'r', 'ar').".format(S_type)
+                    )
             # Create 0 values for the missing Siegert types
             for S_type in self.SIEGERT_STATES_TYPES:
                 if S_type not in weights:
@@ -1363,8 +1421,8 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         # - states without exponential terms
         basis_2 = self.antibounds + self.antiresonants
         # Prepare the weights accordingly
-        weights_1 = {'b': 1, 'r': 1}
-        weights_2 = {'ab': 1, 'ar': 1}
+        weights_1 = {"b": 1, "r": 1}
+        weights_2 = {"ab": 1, "ar": 1}
         # Evaluate the contribution of the states with the exponential
         # terms in the time_propagation
         if basis_1.is_not_empty:
@@ -1425,14 +1483,13 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             states.
         """
         # Check that there are states to be used
-        if (self.siegerts+self.continuum).is_empty:
+        if (self.siegerts + self.continuum).is_empty:
             raise BasisSetError("The basis set must not be empty")
         # Make sure that time_grid is made of positive numbers
         # and that t=0 is part of the time_grid
         time_grid = np.array(time_grid) - min(time_grid)
         # Find the Siegert states contribution to the time propagation
-        mat_prop_S = _propagate_over_Siegerts(self.siegerts, test, time_grid,
-                                              weights)
+        mat_prop_S = _propagate_over_Siegerts(self.siegerts, test, time_grid, weights)
         # Find the continuum states contribution to the time propagation
         mat_prop_c = _propagate_over_continuum(self.continuum, test, time_grid)
         # Add both contributions
@@ -1454,9 +1511,19 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
         """
         pass
 
-    def plot_propagation(self, test, time_grid, exact=True, exact_Siegert=True,
-                         MLE=False, Berggren=False, xlim=None, ylim=None,
-                         title=None, file_save=None):  # pragma: no cover
+    def plot_propagation(
+        self,
+        test,
+        time_grid,
+        exact=True,
+        exact_Siegert=True,
+        MLE=False,
+        Berggren=False,
+        xlim=None,
+        ylim=None,
+        title=None,
+        file_save=None,
+    ):  # pragma: no cover
         r"""
         Plot the time propagation of a wavepacket using either the exact
         expansion (using bound and continuum states), the exact Siegert
@@ -1504,8 +1571,7 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             if self.continuum.is_empty:
                 # Create continuum states on-the-fly
                 kmax = abs(self.resonants.wavenumbers[-1])
-                exact_tp = self.exact_propagation_OTF(test, time_grid,
-                                                      kmax, hk=0.05)
+                exact_tp = self.exact_propagation_OTF(test, time_grid, kmax, hk=0.05)
             else:
                 exact_tp = self.exact_propagation(test, time_grid)
         else:
@@ -1526,11 +1592,23 @@ class AnalyticBasisSet(BasisSet, metaclass=ABCMeta):
             Ber_tp = self.Berggren_propagation(test, time_grid)
         else:
             Ber_tp = None
-        _generate_time_plots(self.grid, time_grid, exact_tp, exact_S_tp,
-                             MLE_tp, Ber_tp, xlim, ylim, title, file_save)
+        _generate_time_plots(
+            self.grid,
+            time_grid,
+            exact_tp,
+            exact_S_tp,
+            MLE_tp,
+            Ber_tp,
+            xlim,
+            ylim,
+            title,
+            file_save,
+        )
 
 
-def _complex_plane_plot(states, attr, xlim, ylim, title, file_save):  # pragma: no cover  # noqa
+def _complex_plane_plot(
+    states, attr, xlim, ylim, title, file_save
+):  # pragma: no cover  # noqa
     r"""
     Plot either the wavenumber or the energy of each Siegert state in
     the basis set.
@@ -1554,35 +1632,61 @@ def _complex_plane_plot(states, attr, xlim, ylim, title, file_save):  # pragma: 
     # Object-oriented plots
     fig, ax = init_plot()
     # Add the real and imaginary axes
-    ax.axhline(0, color='black', lw=1)  # black line y=0
-    ax.axvline(0, color='black', lw=1)  # black line x=0
+    ax.axhline(0, color="black", lw=1)  # black line y=0
+    ax.axvline(0, color="black", lw=1)  # black line x=0
     # Get the data to be plotted thanks to the name of the attribute
     plot_data = {}
     for S_type in BasisSet.STATES_TYPES:
-        plot_data[S_type] = [getattr(state, attr) for state in states
-                             if state.Siegert_type == S_type]
+        plot_data[S_type] = [
+            getattr(state, attr) for state in states if state.Siegert_type == S_type
+        ]
     # Plot the data for each type of states
-    labels = {'ab': 'Anti-bounds', 'b': 'Bounds', 'r': 'Resonants',
-              'ar': 'Anti-resonants', None: 'Continuum', 'U': 'Unknown'}
-    markers = {'ab': 's', 'b': 'o', 'r': 'd', 'ar': '^', None: 'o',
-               'U': 'x'}
-    colors = {'ab': '#660000', 'b': '#FF0000', 'r': '#0000FF',
-              'ar': '#000066', None: 'k', 'U': 'k'}
+    labels = {
+        "ab": "Anti-bounds",
+        "b": "Bounds",
+        "r": "Resonants",
+        "ar": "Anti-resonants",
+        None: "Continuum",
+        "U": "Unknown",
+    }
+    markers = {"ab": "s", "b": "o", "r": "d", "ar": "^", None: "o", "U": "x"}
+    colors = {
+        "ab": "#660000",
+        "b": "#FF0000",
+        "r": "#0000FF",
+        "ar": "#000066",
+        None: "k",
+        "U": "k",
+    }
     for S_type in BasisSet.STATES_TYPES:
         if plot_data[S_type] != []:
-            ax.plot(np.real(plot_data[S_type]), np.imag(plot_data[S_type]),
-                    color=colors[S_type], marker=markers[S_type],
-                    linestyle='None', label=labels[S_type])
+            ax.plot(
+                np.real(plot_data[S_type]),
+                np.imag(plot_data[S_type]),
+                color=colors[S_type],
+                marker=markers[S_type],
+                linestyle="None",
+                label=labels[S_type],
+            )
     # Set the base name of the x and y axis of the plot
-    if attr == 'wavenumber':
-        data_label = 'k'
-    elif attr == 'energy':
-        data_label = 'E'
+    if attr == "wavenumber":
+        data_label = "k"
+    elif attr == "energy":
+        data_label = "E"
     xlabel = "Re[${}$]".format(data_label)
     ylabel = "Im[${}$]".format(data_label)
     # Finalize the plot
-    finalize_plot(fig, ax, xlim=xlim, ylim=ylim, title=title, leg_loc=2,
-                  file_save=file_save, xlabel=xlabel, ylabel=ylabel)
+    finalize_plot(
+        fig,
+        ax,
+        xlim=xlim,
+        ylim=ylim,
+        title=title,
+        leg_loc=2,
+        file_save=file_save,
+        xlabel=xlabel,
+        ylabel=ylabel,
+    )
 
 
 def _MLE(siegerts, operator, test, nres=None):
@@ -1615,15 +1719,19 @@ def _MLE(siegerts, operator, test, nres=None):
     """
     # Keep the required siegert states
     if nres is not None:
-        siegerts = siegerts.bounds + siegerts.antibounds \
-            + siegerts.resonants[:nres] + siegerts.antiresonants[:nres]
+        siegerts = (
+            siegerts.bounds
+            + siegerts.antibounds
+            + siegerts.resonants[:nres]
+            + siegerts.antiresonants[:nres]
+        )
     # Define which MLE to obtain
-    if operator == 'CR':  # Completeness relation
+    if operator == "CR":  # Completeness relation
         contribs = siegerts.MLE_contributions_to_CR(test)
-    elif operator == 'Zero':  # Zero operator
+    elif operator == "Zero":  # Zero operator
         contribs = siegerts.MLE_contributions_to_zero_operator(test)
     else:
-        raise ValueError('Unknown operator {}'.format(operator))
+        raise ValueError("Unknown operator {}".format(operator))
     # Return the cumulative sum of the values
     return np.sum(contribs)
 
@@ -1680,17 +1788,17 @@ def _MLE_convergence(siegerts, operator, test, nres=None):
     if nres is not None:
         res._states = res._states[:nres]
         ares._states = ares._states[:nres]
-    if operator == 'CR':
+    if operator == "CR":
         res_contribs = res.MLE_contributions_to_CR(test)
         ares_contribs = ares.MLE_contributions_to_CR(test)
-    elif operator == 'Zero':
+    elif operator == "Zero":
         res_contribs = res.MLE_contributions_to_zero_operator(test)
         ares_contribs = ares.MLE_contributions_to_zero_operator(test)
     cum_sum = np.cumsum(res_contribs + ares_contribs)
     # Add a zero at the beginning in order to get the bound and
     # anti-bound states contributions as the first element of the
     # completeness relation array.
-    cum_sum = np.insert(cum_sum, 0, 0.)
+    cum_sum = np.insert(cum_sum, 0, 0.0)
     # Create the completeness relation evolution list by adding the
     # initial value to all elements of cum_sum.
     conv = cum_sum + init
@@ -1737,13 +1845,12 @@ def _continuum_contributions_to_CR(continuum, test):
     """
     # 1- Check that there are enough continuum states available
     if len(continuum) <= 1:
-        raise BasisSetError(
-            "There are not enough continuum states in the basis set.")
+        raise BasisSetError("There are not enough continuum states in the basis set.")
     # 2- Contribution of each continuum states
-    cont_contribs = np.abs(continuum.scal_prod(test))**2
-    cont_contribs = np.insert(cont_contribs, 0, 0.) / test.norm()
+    cont_contribs = np.abs(continuum.scal_prod(test)) ** 2
+    cont_contribs = np.insert(cont_contribs, 0, 0.0) / test.norm()
     # 3- Get the grid of corresponding wavenumbers
-    kgrid = [0.] + continuum.wavenumbers
+    kgrid = [0.0] + continuum.wavenumbers
     return np.array(kgrid), cont_contribs
 
 
@@ -1857,14 +1964,13 @@ def _set_mat_time_S(siegerts, time_grid, with_exp=True):
     # in front of the Faddeeva function
     if with_exp:
         mat_time = _set_mat_time(siegerts, time_grid)
-        sign = -1.
+        sign = -1.0
     else:
-        mat_time = 0.
-        sign = 1.
+        mat_time = 0.0
+        sign = 1.0
     # Make the matrix with the appropriate Feddeeva functions
     K, T = np.meshgrid(siegerts.wavenumbers, time_grid)
-    mat_time += sign * wofz(
-        - sign * np.exp(1.j*np.pi/4) * np.sqrt(T/2.) * K) / 2
+    mat_time += sign * wofz(-sign * np.exp(1.0j * np.pi / 4) * np.sqrt(T / 2.0) * K) / 2
     return mat_time
 
 
@@ -1900,13 +2006,16 @@ def _set_mat_space_S(siegerts, test, weights):
     """
     # Check that the basis contain at least one Siegert state
     if siegerts.is_empty:
-        raise BasisSetError(
-            "The basis set must contain at least one Siegert state.")
+        raise BasisSetError("The basis set must contain at least one Siegert state.")
     # Build the matrix mat_space_S by looping over the desired
     # types of Siegert states, using the desired weight.
     mat_space_S = []
-    for states in (siegerts.bounds, siegerts.antibounds, siegerts.resonants,
-                   siegerts.antiresonants):
+    for states in (
+        siegerts.bounds,
+        siegerts.antibounds,
+        siegerts.resonants,
+        siegerts.antiresonants,
+    ):
         if states.is_not_empty:
             S_type = states[0].Siegert_type
             contribs = _set_mat_space(states, test, weights[S_type])
@@ -1947,20 +2056,22 @@ def _set_mat_space_c(continuum, test):
         raise BasisSetError("Too few continuum states in the basis set.")
     # Prepare the integration over the continuum states with
     # the composite Simpson's rule (CSR):
-    alpha = np.array([4. if (ik % 2 == 1) else 2.
-                      for ik in range(1, len(continuum)-1)])
+    alpha = np.array(
+        [4.0 if (ik % 2 == 1) else 2.0 for ik in range(1, len(continuum) - 1)]
+    )
     alpha = np.insert(alpha, 0, 1)
     alpha = np.append(alpha, 1)
     hk = continuum[1].wavenumber - continuum[0].wavenumber
-    alpha *= hk / 3.
+    alpha *= hk / 3.0
     # Initialize mat_space
     mat_space_c = _set_mat_space(continuum, test)
     # Mutliply by the integration vector before before returning
     return (alpha * mat_space_c.T).T
 
 
-def _generate_time_plots(xgrid, time_grid, exact_tp, exact_S_tp, MLE_tp,
-                         Ber_tp, xlim, ylim, title, file_save):  # pragma: no cover  # noqa
+def _generate_time_plots(
+    xgrid, time_grid, exact_tp, exact_S_tp, MLE_tp, Ber_tp, xlim, ylim, title, file_save
+):  # pragma: no cover  # noqa
     r"""
     Parameters
     ----------
@@ -1995,25 +2106,43 @@ def _generate_time_plots(xgrid, time_grid, exact_tp, exact_S_tp, MLE_tp,
         # Object-oriented plots
         fig, ax = init_plot()
         if exact_tp is not None:
-            ax.plot(xgrid, np.real(exact_tp[i]), color='k', lw=5,
-                    label='Re[$f_{exact}(t)$]')
-            ax.plot(xgrid, np.imag(exact_tp[i]), color='grey', lw=5,
-                    label='Im[$f_{exact}(t)$]')
+            ax.plot(
+                xgrid, np.real(exact_tp[i]), color="k", lw=5, label="Re[$f_{exact}(t)$]"
+            )
+            ax.plot(
+                xgrid,
+                np.imag(exact_tp[i]),
+                color="grey",
+                lw=5,
+                label="Im[$f_{exact}(t)$]",
+            )
         if exact_S_tp is not None:
-            ax.plot(xgrid, np.real(exact_S_tp[i]), color='#276419',
-                    label='Re[$f_{S, exact}(t)$]')
-            ax.plot(xgrid, np.imag(exact_S_tp[i]), color='#b8e186',
-                    label='Im[$f_{S, exact}(t)$]')
+            ax.plot(
+                xgrid,
+                np.real(exact_S_tp[i]),
+                color="#276419",
+                label="Re[$f_{S, exact}(t)$]",
+            )
+            ax.plot(
+                xgrid,
+                np.imag(exact_S_tp[i]),
+                color="#b8e186",
+                label="Im[$f_{S, exact}(t)$]",
+            )
         if MLE_tp is not None:
-            ax.plot(xgrid, np.real(MLE_tp[i]), color='#2166ac',
-                    label='Re[$f_{MLE}(t)$]')
-            ax.plot(xgrid, np.imag(MLE_tp[i]), color='#d1e5f0',
-                    label='Im[$f_{MLE}(t)$]')
+            ax.plot(
+                xgrid, np.real(MLE_tp[i]), color="#2166ac", label="Re[$f_{MLE}(t)$]"
+            )
+            ax.plot(
+                xgrid, np.imag(MLE_tp[i]), color="#d1e5f0", label="Im[$f_{MLE}(t)$]"
+            )
         if Ber_tp is not None:
-            ax.plot(xgrid, np.real(Ber_tp[i]), color='#d73027',
-                    label='Re[$f_{Ber}(t)$]')
-            ax.plot(xgrid, np.imag(Ber_tp[i]), color='#fc8d59',
-                    label='Im[$f_{Ber}(t)$]')
+            ax.plot(
+                xgrid, np.real(Ber_tp[i]), color="#d73027", label="Re[$f_{Ber}(t)$]"
+            )
+            ax.plot(
+                xgrid, np.imag(Ber_tp[i]), color="#fc8d59", label="Im[$f_{Ber}(t)$]"
+            )
         # Set the title
         time_str = "t = {:.3f}".format(time)
         if title is not None:
@@ -2024,6 +2153,15 @@ def _generate_time_plots(xgrid, time_grid, exact_tp, exact_S_tp, MLE_tp,
         if file_save is not None:
             file_save += "_t_{:.3f}".format(time)
         # Finalize the plot
-        finalize_plot(fig, ax, xlim=xlim, ylim=ylim, title=new_title,
-                      file_save=file_save, xlabel="$x$", ylabel="$f(x, t)$",
-                      leg_loc=6, leg_bbox_to_anchor=(1, 0.5))
+        finalize_plot(
+            fig,
+            ax,
+            xlim=xlim,
+            ylim=ylim,
+            title=new_title,
+            file_save=file_save,
+            xlabel="$x$",
+            ylabel="$f(x, t)$",
+            leg_loc=6,
+            leg_bbox_to_anchor=(1, 0.5),
+        )

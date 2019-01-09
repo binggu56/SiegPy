@@ -26,7 +26,7 @@ import numpy as np
 from siegpy.utils import init_plot, finalize_plot
 
 
-class Function():
+class Function:
     r"""
     Class defining a 1-dimendional (1D) function from its grid and
     the corresponding values.
@@ -66,8 +66,9 @@ class Function():
         """
         # Check that the grid and values have consistent lengths
         if len(grid) != len(values):
-            msg = "Both grid and values must have the same length ({} != {})"\
-                  .format(len(grid), len(values))
+            msg = "Both grid and values must have the same length ({} != {})".format(
+                len(grid), len(values)
+            )
             raise ValueError(msg)
         # Check that the grid is not made of complex numbers
         if np.any(np.iscomplex(grid)):
@@ -141,8 +142,9 @@ class Function():
         False
         """
         return isinstance(other, Function) and (
-            np.array_equal(self.grid, other.grid) and
-            np.array_equal(self.values, other.values))
+            np.array_equal(self.grid, other.grid)
+            and np.array_equal(self.values, other.values)
+        )
 
     def __add__(self, other):
         r"""
@@ -189,8 +191,7 @@ class Function():
         if np.array_equal(self.grid, other.grid):
             return Function(self.grid, self.values + other.values)
         else:
-            raise ValueError(
-                "Both Functions must be discretized on the same grid.")
+            raise ValueError("Both Functions must be discretized on the same grid.")
 
     @property
     def is_even(self):
@@ -208,10 +209,10 @@ class Function():
         True
         """
         npts = len(self._values)
-        half = int(npts/2)
-        return (np.array_equal(self.grid[:half], -self.grid[npts-half:][::-1])
-                and np.array_equal(self._values[:half],
-                                   self._values[npts-half:][::-1]))
+        half = int(npts / 2)
+        return np.array_equal(
+            self.grid[:half], -self.grid[npts - half :][::-1]
+        ) and np.array_equal(self._values[:half], self._values[npts - half :][::-1])
 
     @property
     def is_odd(self):
@@ -229,12 +230,14 @@ class Function():
         False
         """
         npts = len(self._values)
-        half = int(npts/2)
-        return (np.array_equal(self.grid[:half], -self.grid[npts-half:][::-1])
-                and np.array_equal(self.values[:half],
-                                   -self.values[npts-half:][::-1]))
+        half = int(npts / 2)
+        return np.array_equal(
+            self.grid[:half], -self.grid[npts - half :][::-1]
+        ) and np.array_equal(self.values[:half], -self.values[npts - half :][::-1])
 
-    def plot(self, xlim=None, ylim=None, title=None, file_save=None):  # pragma: no cover  # noqa
+    def plot(
+        self, xlim=None, ylim=None, title=None, file_save=None
+    ):  # pragma: no cover  # noqa
         r"""
         Plot the real and imaginary parts of the function.
 
@@ -252,12 +255,19 @@ class Function():
         # Object-oriented plots
         fig, ax = init_plot()
         # Define the plot
-        ax.plot(self.grid, np.real(self.values), color='blue', label='Re')
-        ax.plot(self.grid, np.imag(self.values), color='red', label='Im')
+        ax.plot(self.grid, np.real(self.values), color="blue", label="Re")
+        ax.plot(self.grid, np.imag(self.values), color="red", label="Im")
         # Finalize the plot
         ax.legend()
-        finalize_plot(fig, ax, xlim=xlim, ylim=ylim, title=title,
-                      file_save=file_save, xlabel="$x$")
+        finalize_plot(
+            fig,
+            ax,
+            xlim=xlim,
+            ylim=ylim,
+            title=title,
+            file_save=file_save,
+            xlabel="$x$",
+        )
 
     def abs(self):
         r"""
@@ -350,7 +360,8 @@ class Function():
             xl, xr = xlim
             if xl < min(self.grid) or xr > max(self.grid):
                 raise ValueError(
-                    "The interval defined by xlim must be inside the grid.")
+                    "The interval defined by xlim must be inside the grid."
+                )
             # Define the contracted grid and functions
             where = np.logical_and(xl <= self.grid, xr >= self.grid)
             grid = self.grid[where]
@@ -361,7 +372,7 @@ class Function():
             f1 = self.values
             f2 = other.values
         # Use the trapezoidal integration rule for the integration.
-        return np.trapz(np.conjugate(f1)*f2, x=grid)
+        return np.trapz(np.conjugate(f1) * f2, x=grid)
 
     def norm(self):
         r"""
@@ -508,7 +519,8 @@ class AnalyticFunction(Function, metaclass=ABCMeta):
         if self.grid is None:
             if other.grid is None:
                 raise ValueError(
-                    "Two analytic functions not discretized cannot be added.")
+                    "Two analytic functions not discretized cannot be added."
+                )
             else:
                 # Perform the addition by adding a grid to a copy of
                 # self (in order not to modify it).
@@ -546,7 +558,7 @@ class Gaussian(AnalyticFunction):
       defined.
     """
 
-    def __init__(self, sigma, xc, k0=0., h=1., grid=None):
+    def __init__(self, sigma, xc, k0=0.0, h=1.0, grid=None):
         r"""
         Parameters
         ----------
@@ -621,8 +633,7 @@ class Gaussian(AnalyticFunction):
         """
         # Check the initial values
         if sigma <= 0.0:
-            raise ValueError(
-                "The Gaussian must have a strictly positive sigma.")
+            raise ValueError("The Gaussian must have a strictly positive sigma.")
         # Set the attirbutes
         self._sigma = sigma
         self._center = xc
@@ -712,10 +723,12 @@ class Gaussian(AnalyticFunction):
         True
         """
         if isinstance(other, Gaussian):
-            return ((self.sigma == other.sigma) and
-                    (self.center == other.center) and
-                    (self.momentum == other.momentum) and
-                    (self.amplitude == other.amplitude))
+            return (
+                (self.sigma == other.sigma)
+                and (self.center == other.center)
+                and (self.momentum == other.momentum)
+                and (self.amplitude == other.amplitude)
+            )
         else:
             return False  # as it is definietly not a Gaussian
 
@@ -768,12 +781,16 @@ class Gaussian(AnalyticFunction):
         # with the correct amplitude
         if isinstance(other, Gaussian):
             k0 = self.momentum
-            if self.center == other.center and self.sigma == other.sigma \
-                    and k0 == other.momentum:
+            if (
+                self.center == other.center
+                and self.sigma == other.sigma
+                and k0 == other.momentum
+            ):
                 h1 = self.amplitude
                 h2 = other.amplitude
-                return Gaussian(self.sigma, self.center, k0=k0, h=h1+h2,
-                                grid=self.grid)
+                return Gaussian(
+                    self.sigma, self.center, k0=k0, h=h1 + h2, grid=self.grid
+                )
         # Otherwise, proceed as expected from an AnalyticFunction
         return super().__add__(other)
 
@@ -784,8 +801,9 @@ class Gaussian(AnalyticFunction):
         str
             Representation of a Gaussian instance.
         """
-        return ("Gaussian function of width {:.2f} and centered in {:.2f}"
-                .format(self.sigma, self.center))
+        return "Gaussian function of width {:.2f} and centered in {:.2f}".format(
+            self.sigma, self.center
+        )
 
     @property
     def is_even(self):
@@ -814,7 +832,7 @@ class Gaussian(AnalyticFunction):
         >>> Gaussian(2, 0, k0=1).is_even
         False
         """
-        return self.momentum == 0. and self.center == 0.
+        return self.momentum == 0.0 and self.center == 0.0
 
     @property
     def is_odd(self):
@@ -826,7 +844,7 @@ class Gaussian(AnalyticFunction):
         """
         return False
 
-    def is_inside(self, sw_pot, tol=10**(-5)):
+    def is_inside(self, sw_pot, tol=10 ** (-5)):
         r"""
         Check if the Gaussian function can be considered as inside the
         1D Square-Well potential, given a tolerance value that must be
@@ -852,11 +870,13 @@ class Gaussian(AnalyticFunction):
             :class:`~siegpy.swpotential.SWPotential` instance.
         """
         from siegpy import SWPotential
+
         if not isinstance(sw_pot, SWPotential):
             raise TypeError("potential is not a SWPotential instance")
         l = sw_pot.width
-        return (abs(self.evaluate(-l/2)) <= tol) and \
-               (abs(self.evaluate(+l/2)) <= tol)
+        return (abs(self.evaluate(-l / 2)) <= tol) and (
+            abs(self.evaluate(+l / 2)) <= tol
+        )
 
     def abs(self):
         r"""
@@ -911,7 +931,7 @@ class Gaussian(AnalyticFunction):
         >>> g2 = Gaussian(2, 0, grid=[-1, 0, 1])
         >>> assert g1.norm() == g2.norm()
         """
-        return np.sqrt(np.pi) * self.sigma * self.amplitude**2
+        return np.sqrt(np.pi) * self.sigma * self.amplitude ** 2
 
     def _compute_values(self, grid):
         r"""
@@ -934,9 +954,10 @@ class Gaussian(AnalyticFunction):
         >>> g.evaluate(-1) == -3.5
         True
         """
-        return (self.amplitude *
-                np.exp(- (grid-self.center)**2 / (2*self.sigma**2)
-                       + 1.j * self.momentum * grid))
+        return self.amplitude * np.exp(
+            -(grid - self.center) ** 2 / (2 * self.sigma ** 2)
+            + 1.0j * self.momentum * grid
+        )
 
 
 class Rectangular(AnalyticFunction):
@@ -960,7 +981,7 @@ class Rectangular(AnalyticFunction):
       defined.
     """
 
-    def __init__(self, xl, xr, k0=0.0, h=1., grid=None):
+    def __init__(self, xl, xr, k0=0.0, h=1.0, grid=None):
         r"""
         Parameters
         ----------
@@ -1043,14 +1064,13 @@ class Rectangular(AnalyticFunction):
         if xl >= xr:
             raise ValueError("The width must be strictly positive.")
         if h == 0:
-            raise ValueError(
-                "The amplitude of the rectangular function must not be 0")
+            raise ValueError("The amplitude of the rectangular function must not be 0")
         # Initialize the attributes
         self._xl = xl
         self._xr = xr
         self._amplitude = h
         self._width = xr - xl
-        self._center = (xl + xr) / 2.
+        self._center = (xl + xr) / 2.0
         self._momentum = k0
         super().__init__(grid)
 
@@ -1088,7 +1108,7 @@ class Rectangular(AnalyticFunction):
         >>> r.xr
         5.0
         """
-        return cls(xc-width/2, xc+width/2, k0=k0, h=h, grid=grid)
+        return cls(xc - width / 2, xc + width / 2, k0=k0, h=h, grid=grid)
 
     @classmethod
     def from_width_and_center(cls, width, xc, k0=0.0, h=1.0, grid=None):
@@ -1202,10 +1222,12 @@ class Rectangular(AnalyticFunction):
         True
         """
         if isinstance(other, Rectangular):
-            return ((self.width == other.width) and
-                    (self.center == other.center) and
-                    (self.momentum == other.momentum) and
-                    (self.amplitude == other.amplitude))
+            return (
+                (self.width == other.width)
+                and (self.center == other.center)
+                and (self.momentum == other.momentum)
+                and (self.amplitude == other.amplitude)
+            )
         else:
             return False
 
@@ -1258,12 +1280,16 @@ class Rectangular(AnalyticFunction):
         # with the correct amplitude
         if isinstance(other, Rectangular):
             k0 = self.momentum
-            if self.center == other.center and self.width == other.width \
-               and k0 == other.momentum:
+            if (
+                self.center == other.center
+                and self.width == other.width
+                and k0 == other.momentum
+            ):
                 h1 = self.amplitude
                 h2 = other.amplitude
                 return Rectangular.from_width_and_center(
-                    self.width, self.center, k0=k0, h=h1+h2, grid=self.grid)
+                    self.width, self.center, k0=k0, h=h1 + h2, grid=self.grid
+                )
         # Otherwise, proceed as expected from an AnalyticFunction
         return super().__add__(other)
 
@@ -1274,8 +1300,10 @@ class Rectangular(AnalyticFunction):
         str
             Representation of a Rectangular instance.
         """
-        return ("Rectangular function of width {s.width:.2f} and centered "
-                "in {s.center:.2f}".format(s=self))
+        return (
+            "Rectangular function of width {s.width:.2f} and centered "
+            "in {s.center:.2f}".format(s=self)
+        )
 
     @property
     def is_even(self):
@@ -1304,7 +1332,7 @@ class Rectangular(AnalyticFunction):
         >>> Rectangular(-2, 2, k0=1).is_even
         False
         """
-        return self.momentum == 0. and self.center == 0.
+        return self.momentum == 0.0 and self.center == 0.0
 
     @property
     def is_odd(self):
@@ -1347,7 +1375,7 @@ class Rectangular(AnalyticFunction):
         grid_3 = grid[where_3]
         # Evaluate the recytangular function and return it
         values_1 = np.zeros_like(grid_1)
-        values_2 = self.amplitude * np.exp(1.j * self.momentum * grid_2)
+        values_2 = self.amplitude * np.exp(1.0j * self.momentum * grid_2)
         values_3 = np.zeros_like(grid_3)
         return np.concatenate((values_1, values_2, values_3))
 
@@ -1366,8 +1394,7 @@ class Rectangular(AnalyticFunction):
         >>> r = Rectangular(-5, 1, h=4, k0=-6)
         >>> assert r.abs() == Rectangular(-5, 1, h=4)
         """
-        return Rectangular(
-            self.xl, self.xr, h=self.amplitude, grid=self.grid)
+        return Rectangular(self.xl, self.xr, h=self.amplitude, grid=self.grid)
 
     def conjugate(self):
         r"""
@@ -1407,7 +1434,7 @@ class Rectangular(AnalyticFunction):
         >>> r.norm() == Rectangular(-1, 1, h=3, grid=[-1, 0, 1]).norm()
         True
         """
-        return self.width * self.amplitude**2
+        return self.width * self.amplitude ** 2
 
     def split(self, sw_pot):
         r"""
@@ -1435,6 +1462,7 @@ class Rectangular(AnalyticFunction):
         """
         # Check that the argument sw_pot is a SWPotential instance
         from siegpy import SWPotential
+
         if not isinstance(sw_pot, SWPotential):
             raise TypeError("The argument must be a SWPotential.")
         # Initial parameters of the rectangular function
@@ -1445,25 +1473,25 @@ class Rectangular(AnalyticFunction):
         k0 = self.momentum
         grid = self.grid
         # Rectangular function in region I
-        if xl < -l/2:
-            r_1 = Rectangular(xl, min(xr, -l/2), h=h, k0=k0, grid=grid)
+        if xl < -l / 2:
+            r_1 = Rectangular(xl, min(xr, -l / 2), h=h, k0=k0, grid=grid)
         else:
             r_1 = None
         # Rectangular function in region III
-        if xr > l/2:
-            r_3 = Rectangular(max(xl, l/2), xr, h=h, k0=k0, grid=grid)
+        if xr > l / 2:
+            r_3 = Rectangular(max(xl, l / 2), xr, h=h, k0=k0, grid=grid)
         else:
             r_3 = None
         # Rectangular function in region II
-        if xl >= l/2 or xr <= -l/2:
+        if xl >= l / 2 or xr <= -l / 2:
             r_2 = None
         else:
-            if xl <= -l/2:
-                xl_2 = -l/2
+            if xl <= -l / 2:
+                xl_2 = -l / 2
             else:
                 xl_2 = xl
-            if xr >= l/2:
-                xr_2 = l/2
+            if xr >= l / 2:
+                xr_2 = l / 2
             else:
                 xr_2 = xr
             r_2 = Rectangular(xl_2, xr_2, h=h, k0=k0, grid=grid)

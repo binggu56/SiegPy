@@ -24,7 +24,7 @@ class SmoothFunction(metaclass=ABCMeta):
     are defined.
     """
 
-    PARAMETERS = ['x0', 'lbda']
+    PARAMETERS = ["x0", "lbda"]
 
     def __init__(self, x0, lbda, c0=1, cp=1, cm=-1, grid=None):
         r"""
@@ -136,8 +136,7 @@ class SmoothFunction(metaclass=ABCMeta):
         bool
             ``True`` if the grid has to be updated.
         """
-        return not (hasattr(self, "grid") and
-                    np.array_equal(self.grid, new_grid))
+        return not (hasattr(self, "grid") and np.array_equal(self.grid, new_grid))
 
     def _update_all_values(self):
         r"""
@@ -159,19 +158,20 @@ class SmoothFunction(metaclass=ABCMeta):
             r_dx2_m = self._get_r_dx2_values(grid_m)
             r_dx3_p = self._get_r_dx3_values(grid_p)
             r_dx3_m = self._get_r_dx3_values(grid_m)
-            self._values = self._c0 + (cp*r_p + cm*r_m) / 2
-            self._dx_values = lbda * (cp*r_dx_p + cm*r_dx_m) / 2
-            self._dx2_values = lbda**2 * (cp*r_dx2_p + cm*r_dx2_m) / 2
-            self._dx3_values = lbda**3 * (cp*r_dx3_p + cm*r_dx3_m) / 2
+            self._values = self._c0 + (cp * r_p + cm * r_m) / 2
+            self._dx_values = lbda * (cp * r_dx_p + cm * r_dx_m) / 2
+            self._dx2_values = lbda ** 2 * (cp * r_dx2_p + cm * r_dx2_m) / 2
+            self._dx3_values = lbda ** 3 * (cp * r_dx3_p + cm * r_dx3_m) / 2
             self._dxi_values = {}
             self._dx_dxi_values = {}
-            self._dxi_values['x0'] = -lbda * (cp*r_dx_p - cm*r_dx_m) / 2
-            self._dx_dxi_values['x0'] = -lbda**2 * (cp*r_dx2_p
-                                                    - cm*r_dx2_m) / 2
-            self._dxi_values['lbda'] = (cp*grid_p*r_dx_p
-                                        + cm*grid_m*r_dx_m) / (2*lbda)
-            self._dx_dxi_values['lbda'] = (cp*(grid_p*r_dx2_p + r_dx_p)
-                                           + cm*(grid_m*r_dx2_m + r_dx_m)) / 2
+            self._dxi_values["x0"] = -lbda * (cp * r_dx_p - cm * r_dx_m) / 2
+            self._dx_dxi_values["x0"] = -lbda ** 2 * (cp * r_dx2_p - cm * r_dx2_m) / 2
+            self._dxi_values["lbda"] = (cp * grid_p * r_dx_p + cm * grid_m * r_dx_m) / (
+                2 * lbda
+            )
+            self._dx_dxi_values["lbda"] = (
+                cp * (grid_p * r_dx2_p + r_dx_p) + cm * (grid_m * r_dx2_m + r_dx_m)
+            ) / 2
         else:
             self._values = None
             self._dx_values = None
@@ -347,7 +347,7 @@ class ErfSmoothFunction(SmoothFunction):
             Values of first derivative of the function
             :math:`\text{erf}`, evaluated on a given set of grid points.
         """
-        return 2/np.sqrt(np.pi) * np.exp(-grid**2)
+        return 2 / np.sqrt(np.pi) * np.exp(-grid ** 2)
 
     def _get_r_dx2_values(self, grid):
         r"""
@@ -375,8 +375,7 @@ class ErfSmoothFunction(SmoothFunction):
             Values of third derivative of the function
             :math:`\text{erf}`, evaluated on a given set of grid points.
         """
-        return -2 * (self._get_r_dx_values(grid)
-                     + grid*self._get_r_dx2_values(grid))
+        return -2 * (self._get_r_dx_values(grid) + grid * self._get_r_dx2_values(grid))
 
 
 class TanhSmoothFunction(SmoothFunction):
@@ -411,7 +410,7 @@ class TanhSmoothFunction(SmoothFunction):
             Values of first derivative of the function :math:`\tanh`,
             evaluated on a given set of grid points.
         """
-        return 1 / np.cosh(grid)**2
+        return 1 / np.cosh(grid) ** 2
 
     def _get_r_dx2_values(self, grid):
         r"""
@@ -425,7 +424,7 @@ class TanhSmoothFunction(SmoothFunction):
             Values of second derivative of the function :math:`\tanh`,
             evaluated on a given set of grid points.
         """
-        return -2*np.tanh(grid)/np.cosh(grid)**2
+        return -2 * np.tanh(grid) / np.cosh(grid) ** 2
 
     def _get_r_dx3_values(self, grid):
         r"""
@@ -442,4 +441,4 @@ class TanhSmoothFunction(SmoothFunction):
         r = self._get_r_values(grid)
         r_dx = self._get_r_dx_values(grid)
         r_dx2 = self._get_r_dx2_values(grid)
-        return -2 * (r_dx**2 + r*r_dx2)
+        return -2 * (r_dx ** 2 + r * r_dx2)

@@ -76,8 +76,7 @@ class SymbolicPotential(Potential):
         sym_func = sympy.sympify(sym_func)
         # Check that x is the only variable
         if any([s != x for s in sym_func.atoms(sympy.Symbol)]):
-            raise ValueError(
-                "The only variable of the analytic function should be x.")
+            raise ValueError("The only variable of the analytic function should be x.")
         # Set the symbolic function
         self._symbolic = sym_func
         # Set the grid and the values according to the grid (both are
@@ -137,7 +136,7 @@ class SymbolicPotential(Potential):
             Values of the potential according to its grid.
         """
         grid = np.array(grid)
-        mods = ['numpy', {'erf': scipy.special.erf}]
+        mods = ["numpy", {"erf": scipy.special.erf}]
         return sympy.lambdify(x, self.symbolic, modules=mods)(grid)
 
     def complex_scaled_values(self, coord_map):
@@ -178,13 +177,14 @@ class SymbolicPotential(Potential):
             have no grid.
         """
         if isinstance(other, SymbolicPotential):
-            sym_func = sympy.simplify(self.symbolic+other.symbolic)
+            sym_func = sympy.simplify(self.symbolic + other.symbolic)
             return SymbolicPotential(sym_func, grid=self.grid)
         elif self.grid is not None and other.grid is not None:
             return super().__add__(other)
         else:
             raise ValueError(
-                "Cannot add potentials that are not discretized over a grid.")
+                "Cannot add potentials that are not discretized over a grid."
+            )
 
 
 class WoodsSaxonPotential(SymbolicPotential):
@@ -226,8 +226,7 @@ class WoodsSaxonPotential(SymbolicPotential):
         if l <= 0:
             raise ValueError("The width of the potential must be positive.")
         if lbda <= 0:
-            raise ValueError(
-                "The sharpness of the potential must be positive.")
+            raise ValueError("The sharpness of the potential must be positive.")
         # Initialize the attributes
         self._width = l
         self._sharpness = lbda
@@ -432,8 +431,22 @@ class FourGaussianPotential(MultipleGaussianPotential):
     functions.
     """
 
-    def __init__(self, sigma1, xc1, h1, sigma2, xc2, h2,
-                 sigma3, xc3, h3, sigma4, xc4, h4, grid=None):
+    def __init__(
+        self,
+        sigma1,
+        xc1,
+        h1,
+        sigma2,
+        xc2,
+        h2,
+        sigma3,
+        xc3,
+        h3,
+        sigma4,
+        xc4,
+        h4,
+        grid=None,
+    ):
         r"""
         Parameters
         ----------
@@ -504,8 +517,21 @@ class FourGaussianPotential(MultipleGaussianPotential):
         sigma2, xc2, h2 = gauss2._params
         sigma3, xc3, h3 = gauss3._params
         sigma4, xc4, h4 = gauss4._params
-        return cls(sigma1, xc1, h1, sigma2, xc2, h2,
-                   sigma3, xc3, h3, sigma4, xc4, h4, grid=grid)
+        return cls(
+            sigma1,
+            xc1,
+            h1,
+            sigma2,
+            xc2,
+            h2,
+            sigma3,
+            xc3,
+            h3,
+            sigma4,
+            xc4,
+            h4,
+            grid=grid,
+        )
 
     @property
     def gaussian1(self):

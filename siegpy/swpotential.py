@@ -59,10 +59,9 @@ class SWPotential(Rectangular, Potential):
         """
         # Check that V0 is positive
         if V0 <= 0.0:
-            raise ValueError(
-                "The depth the potential must be strictly positive.")
+            raise ValueError("The depth the potential must be strictly positive.")
         # Initialization of the 1DSWP, that has a 'depth' attribute
-        super().__init__(-l/2, l/2, h=-V0, grid=grid)
+        super().__init__(-l / 2, l / 2, h=-V0, grid=grid)
         self._depth = V0
 
     @classmethod
@@ -161,7 +160,8 @@ class SWPotential(Rectangular, Potential):
         False
         """
         return isinstance(other, SWPotential) and (
-            self.width == other.width and self.depth == other.depth)
+            self.width == other.width and self.depth == other.depth
+        )
 
     def __repr__(self):
         """
@@ -170,8 +170,10 @@ class SWPotential(Rectangular, Potential):
         str
             Representation of the square-well potential.
         """
-        return "1D Square-Well Potential of width {0.width:.2f} " \
-               "and depth {0.depth:.2f}".format(self)
+        return (
+            "1D Square-Well Potential of width {0.width:.2f} "
+            "and depth {0.depth:.2f}".format(self)
+        )
 
     def __add__(self, other):
         """
@@ -216,8 +218,7 @@ class SWPotential(Rectangular, Potential):
         array([  5.+0.j, -10.+0.j, -10.+0.j, -10.+0.j,   5.+0.j])
         """
         if isinstance(other, SWPotential) and self.width == other.width:
-            return SWPotential(self.width, self.depth+other.depth,
-                               grid=self.grid)
+            return SWPotential(self.width, self.depth + other.depth, grid=self.grid)
         return super().__add__(other)
 
     def complex_scaled_values(self, coord_map):

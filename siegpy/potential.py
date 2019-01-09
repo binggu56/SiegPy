@@ -69,8 +69,7 @@ class Potential(Function):
         array([ 0, -1,  0])
         """
         if not isinstance(other, Potential):
-            raise TypeError(
-                "Cannot add a {} to a Potential".format(type(other)))
+            raise TypeError("Cannot add a {} to a Potential".format(type(other)))
         f = super().__add__(other)
         return Potential(f.grid, f.values)
 

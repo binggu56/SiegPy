@@ -21,9 +21,18 @@ def init_plot():  # pragma: no cover
     return fig, ax
 
 
-def finalize_plot(fig, ax, xlim=None, ylim=None, title=None, file_save=None,
-                  leg_loc=None, leg_bbox_to_anchor=None, xlabel=None,
-                  ylabel=None):  # pragma: no cover
+def finalize_plot(
+    fig,
+    ax,
+    xlim=None,
+    ylim=None,
+    title=None,
+    file_save=None,
+    leg_loc=None,
+    leg_bbox_to_anchor=None,
+    xlabel=None,
+    ylabel=None,
+):  # pragma: no cover
     r"""
     Finalize the plot using matplotlib.
 

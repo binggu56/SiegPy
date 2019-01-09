@@ -17,10 +17,9 @@ class Eigenstate(Function):
     """
 
     # You should be able to define the type of an analytical eigenstate
-    SIEGERT_TYPES = {'b': "bound", 'r': "resonant", None: "continuum",
-                     'U': "unknown"}
+    SIEGERT_TYPES = {"b": "bound", "r": "resonant", None: "continuum", "U": "unknown"}
 
-    def __init__(self, grid, values, energy, Siegert_type='U', virial=None):
+    def __init__(self, grid, values, energy, Siegert_type="U", virial=None):
         r"""
         Parameters
         ----------
@@ -49,7 +48,7 @@ class Eigenstate(Function):
         1.0
         """
         self._energy = energy
-        self._wavenumber = np.sqrt(2*energy)
+        self._wavenumber = np.sqrt(2 * energy)
         self._Siegert_type = Siegert_type
         self._virial = virial
         super().__init__(grid, values)
@@ -102,8 +101,7 @@ class Eigenstate(Function):
             Representation of the Eigenstate instance.
         """
         Siegert_type = self.SIEGERT_TYPES[self.Siegert_type].capitalize()
-        return "{} eigenstate of energy {:.3f}"\
-               .format(Siegert_type, self.energy)
+        return "{} eigenstate of energy {:.3f}".format(Siegert_type, self.energy)
 
     def scal_prod(self, other, xlim=None):
         r"""

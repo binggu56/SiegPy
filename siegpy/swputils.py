@@ -8,8 +8,7 @@ import numpy as np
 from .analyticeigenstates import WavenumberError
 
 
-__all__ = ["q", "dep", "dem", "dop", "dom", "fep", "fem", "fop", "fom",
-           "find_parity"]
+__all__ = ["q", "dep", "dem", "dop", "dom", "fep", "fem", "fop", "fom", "find_parity"]
 
 
 def q(k, V0):
@@ -31,7 +30,7 @@ def q(k, V0):
     complex or float
         Wavenumber in region *II* of the state considered.
     """
-    return np.sqrt(k**2 + 2. * V0)
+    return np.sqrt(k ** 2 + 2.0 * V0)
 
 
 def dem(k, l, k2=None, V0=None):
@@ -67,7 +66,7 @@ def dem(k, l, k2=None, V0=None):
         qq = k2
     else:
         raise ValueError("qq cannot be computed.")
-    return - k * np.cos(qq * l / 2.) - 1.j * qq * np.sin(qq * l / 2.)
+    return -k * np.cos(qq * l / 2.0) - 1.0j * qq * np.sin(qq * l / 2.0)
 
 
 def dep(k, l, k2=None, V0=None):
@@ -110,7 +109,7 @@ def dom(k, l, k2=None, V0=None):
         qq = k2
     else:
         raise ValueError("qq cannot be computed.")
-    return - k * np.sin(qq * l / 2.) + 1.j * qq * np.cos(qq * l / 2.)
+    return -k * np.sin(qq * l / 2.0) + 1.0j * qq * np.cos(qq * l / 2.0)
 
 
 def dop(k, l, k2=None, V0=None):
@@ -142,7 +141,7 @@ def fep(k, l, k2=None, V0=None):
     complex
         Value of :math:`f_e^+`.
     """
-    return dep(k, l, k2, V0) * np.exp(1.j * k * l / 2.) / (2. * k)
+    return dep(k, l, k2, V0) * np.exp(1.0j * k * l / 2.0) / (2.0 * k)
 
 
 def fop(k, l, k2=None, V0=None):
@@ -158,7 +157,7 @@ def fop(k, l, k2=None, V0=None):
     complex
         Value of :math:`f_o^+`.
     """
-    return dop(k, l, k2, V0) * np.exp(1.j * k * l / 2.) / (2. * k)
+    return dop(k, l, k2, V0) * np.exp(1.0j * k * l / 2.0) / (2.0 * k)
 
 
 def fem(k, l, k2=None, V0=None):
@@ -226,11 +225,10 @@ def find_parity(ks, sw_pot):
     # Check if it is an even Siegert state
     abs_dep = abs(dep(ks, l, V0=V0))
     if np.isclose(abs_dep, 0.0):
-        return 'e'
+        return "e"
     # Check if it is an odd Siegert state
     abs_dop = abs(dop(ks, l, V0=V0))
     if np.isclose(abs_dop, 0.0):
-        return 'o'
+        return "o"
     # If none of the above return are reached, raise an error
-    raise WavenumberError(
-        "The wavenumber does not correspond to a Siegert state.")
+    raise WavenumberError("The wavenumber does not correspond to a Siegert state.")

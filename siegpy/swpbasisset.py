@@ -58,13 +58,23 @@ class SWPBasisSet(AnalyticBasisSet):
             # Check that all states are SWPEigenstates
             if not all([isinstance(s, SWPEigenstate) for s in states]):
                 raise ValueError(
-                    "All the states states must be SWPEigenstate instances")
+                    "All the states states must be SWPEigenstate instances"
+                )
         # Use the parent class to initialize the basis set
         super().__init__(states=states)
 
     @classmethod
-    def find_Siegert_states(cls, pot, re_kmax, re_hk, im_kmax, im_hk=None,
-                            analytic=True, grid=None, bounds_only=False):
+    def find_Siegert_states(
+        cls,
+        pot,
+        re_kmax,
+        re_hk,
+        im_kmax,
+        im_hk=None,
+        analytic=True,
+        grid=None,
+        bounds_only=False,
+    ):
         r"""
         The Siegert states wavenumbers are found using the Muller
         scheme of the `mpmath findroot method`_. This allows one to find
@@ -153,21 +163,26 @@ class SWPBasisSet(AnalyticBasisSet):
         # anti-bound states along the imaginary axis of wavenumbers.
         kgrid = _bnd_abnd_input_guess(pot, im_hk, bounds_only)
         wavenumbers, parities = _find_bnd_abnd_states(
-            kgrid, dep_k, dop_k, pot.depth, bounds_only)
+            kgrid, dep_k, dop_k, pot.depth, bounds_only
+        )
         # If required, we search for the wavenumbers of the resonant and
         # anti-resonant states.
         if not bounds_only:
             kgrid = _res_ares_input_guess(re_kmax, re_hk, im_kmax, im_hk)
             wavenumbers, parities = _find_res_ares_states(
-                kgrid, dep_k, dop_k, wavenumbers, parities)
+                kgrid, dep_k, dop_k, wavenumbers, parities
+            )
         # The basis set made of the Siegert states just found is created
-        siegerts = [SWPSiegert(k_s, parity, pot, grid=grid, analytic=analytic)
-                    for k_s, parity in zip(wavenumbers, parities)]
+        siegerts = [
+            SWPSiegert(k_s, parity, pot, grid=grid, analytic=analytic)
+            for k_s, parity in zip(wavenumbers, parities)
+        ]
         return cls(states=siegerts)
 
     @classmethod
-    def find_continuum_states(cls, pot, kmax, hk, kmin=None, even_only=False,
-                              analytic=True, grid=None):
+    def find_continuum_states(
+        cls, pot, kmax, hk, kmin=None, even_only=False, analytic=True, grid=None
+    ):
         r"""
         Initialize a BasisSet instance made of SWPContinuum instances.
         The basis set has :math:`2*n_k` elements if ``even_only=False``,
@@ -242,25 +257,22 @@ class SWPBasisSet(AnalyticBasisSet):
         """
         # Check the given values
         if kmax <= 0.0:
-            raise WavenumberError(
-                "The maximal wavenumber must be strictly positive.")
+            raise WavenumberError("The maximal wavenumber must be strictly positive.")
         if hk <= 0.0:
-            raise WavenumberError(
-                "The wavenumber grid step must be striclty positive")
+            raise WavenumberError("The wavenumber grid step must be striclty positive")
         if kmin is None:
             kmin = hk
         elif kmin <= 0.0:
-            raise WavenumberError(
-                "The minimal wavenumber must be strictly positive.")
+            raise WavenumberError("The minimal wavenumber must be strictly positive.")
         # Initialize the grid of wavenumbers
-        kgrid = np.arange(kmin, kmax+hk/2, hk)
+        kgrid = np.arange(kmin, kmax + hk / 2, hk)
         # Initialize the basis set with the even states
-        cont = [SWPContinuum(k, 'e', pot, grid=grid, analytic=analytic)
-                for k in kgrid]
+        cont = [SWPContinuum(k, "e", pot, grid=grid, analytic=analytic) for k in kgrid]
         # Add the odd continuum states to the basis set, if required
         if not even_only:
-            cont += [SWPContinuum(k, 'o', pot, grid=grid, analytic=analytic)
-                     for k in kgrid]
+            cont += [
+                SWPContinuum(k, "o", pot, grid=grid, analytic=analytic) for k in kgrid
+            ]
         # Return a basis set made of the continuum states
         return cls(states=cont)
 
@@ -273,8 +285,9 @@ class SWPBasisSet(AnalyticBasisSet):
             ``None`` if both parities are present, ``'e'`` or ``'o'`` if
             all the states are even or odd, respectively.
         """
-        if all([state.is_even for state in self]) or \
-           all([state.is_odd for state in self]):
+        if all([state.is_even for state in self]) or all(
+            [state.is_odd for state in self]
+        ):
             return self[0].parity
         else:
             return None
@@ -319,10 +332,11 @@ class SWPBasisSet(AnalyticBasisSet):
             states = [states]
         # Make sure that each state is a Function
         if not all([isinstance(s, SWPEigenstate) for s in states]):
-            raise TypeError("Only wavefunctions of the SWP case can be added "
-                            "to a SWPBasisSet")
+            raise TypeError(
+                "Only wavefunctions of the SWP case can be added " "to a SWPBasisSet"
+            )
         # Return a new basis set
-        return SWPBasisSet(states=self.states+states)
+        return SWPBasisSet(states=self.states + states)
 
     @property
     def even(self):
@@ -344,8 +358,9 @@ class SWPBasisSet(AnalyticBasisSet):
         """
         return SWPBasisSet(states=[state for state in self if state.is_odd])
 
-    def plot_wavefunctions(self, nres=None, xlim=None, ylim=None, title=None,
-                           file_save=None):  # pragma: no cover
+    def plot_wavefunctions(
+        self, nres=None, xlim=None, ylim=None, title=None, file_save=None
+    ):  # pragma: no cover
         r"""
         Plot the bound, resonant and anti-resonant wavefunctions of the
         basis set along with the potential. The continuum and anti-bound
@@ -373,15 +388,16 @@ class SWPBasisSet(AnalyticBasisSet):
             xlim = (-self.potential.width, self.potential.width)
         # Set the range of the plot on the y-axis (ylim)
         if ylim is None:
-            ymin = - 1.1 * self.potential.depth
+            ymin = -1.1 * self.potential.depth
             # Define the maximum of the y-axis
             if nres == 0:
                 ymax = abs(ymin) / 10
             else:
-                ymax = abs(self.resonants[:nres][-1].energy)+2
+                ymax = abs(self.resonants[:nres][-1].energy) + 2
             ylim = (ymin, ymax)
-        super().plot_wavefunctions(nres=nres, xlim=xlim, ylim=ylim,
-                                   title=title, file_save=file_save)
+        super().plot_wavefunctions(
+            nres=nres, xlim=xlim, ylim=ylim, title=title, file_save=file_save
+        )
 
     def continuum_contributions_to_CR(self, test, hk=None, kmax=None):
         r"""
@@ -427,21 +443,21 @@ class SWPBasisSet(AnalyticBasisSet):
             if (len(odd_cont) != len(even_cont)) and not test.is_even:
                 raise BasisSetError(
                     "Not enough odd continuum states in the basis set, since"
-                    "the test function is not even.")
+                    "the test function is not even."
+                )
         else:
             # Define the continuum states on-the-fly
             pot = self.potential
-            cont = SWPBasisSet.find_continuum_states(pot, kmax, hk,
-                                                     even_only=test.is_even)
+            cont = SWPBasisSet.find_continuum_states(
+                pot, kmax, hk, even_only=test.is_even
+            )
             even_cont = cont.even
             odd_cont = cont.odd
         # 2- Sum the contribution of even and odd continuum states
         #    having the same wavenumbers
-        k_grid, cont_contribs = \
-            _continuum_contributions_to_CR(even_cont, test)
+        k_grid, cont_contribs = _continuum_contributions_to_CR(even_cont, test)
         if not test.is_even:
-            k_grid, odd_contribs = \
-                _continuum_contributions_to_CR(odd_cont, test)
+            k_grid, odd_contribs = _continuum_contributions_to_CR(odd_cont, test)
             cont_contribs += odd_contribs
         return k_grid, cont_contribs
 
@@ -472,18 +488,18 @@ class SWPBasisSet(AnalyticBasisSet):
             Value of the integrand.
         """
         # Even states contribution
-        c_p = SWPContinuum(q, 'e', potential)
+        c_p = SWPContinuum(q, "e", potential)
         sp_p = c_p.scal_prod(test)
         # Odd states contribution
         if not test.is_even:
-            c_m = SWPContinuum(q, 'o', potential)
+            c_m = SWPContinuum(q, "o", potential)
             sp_m = c_m.scal_prod(test)
         else:
-            sp_m = 0.
+            sp_m = 0.0
         # Add both contributions
-        cont_contrib = abs(sp_p)**2 + abs(sp_m)**2
+        cont_contrib = abs(sp_p) ** 2 + abs(sp_m) ** 2
         # Return the evaluation of the integrand
-        return eta * cont_contrib / ((q**2/2. - k**2/2.)**2 + eta**2)
+        return eta * cont_contrib / ((q ** 2 / 2.0 - k ** 2 / 2.0) ** 2 + eta ** 2)
 
     def _propagate(self, test, time_grid, weights=None):
         r"""
@@ -526,18 +542,20 @@ class SWPBasisSet(AnalyticBasisSet):
         # states in the basis set if the test function is not even.
         # If not, some (a priori non-negligible) contributions to the
         # propagation would be missing.
-        if (not test.is_even) and (len(self.continuum.even) >
-                                   len(self.continuum.odd)):
+        if (not test.is_even) and (len(self.continuum.even) > len(self.continuum.odd)):
             raise BasisSetError(
                 "Not enough odd continuum states in the basis set, "
-                "since the test function is not even.")
+                "since the test function is not even."
+            )
         # Compute the even states contributions and then add the odd
         # states contribution if needed
         time_prop = super(SWPBasisSet, self.even)._propagate(
-            test, time_grid, weights=weights)
+            test, time_grid, weights=weights
+        )
         if not test.is_even:
             time_prop += super(SWPBasisSet, self.odd)._propagate(
-                test, time_grid, weights=weights)
+                test, time_grid, weights=weights
+            )
         return time_prop
 
     def _add_one_continuum_state(self):
@@ -560,8 +578,13 @@ class SWPBasisSet(AnalyticBasisSet):
         kmax = cont[-1].wavenumber
         hk = cont[1].wavenumber - cont[0].wavenumber
         # Add a continuum state to the basis set
-        self += SWPContinuum(kmax+hk, cont.parity, self.potential,
-                             grid=self.grid, analytic=self.analytic)
+        self += SWPContinuum(
+            kmax + hk,
+            cont.parity,
+            self.potential,
+            grid=self.grid,
+            analytic=self.analytic,
+        )
         return self
 
 
@@ -640,19 +663,19 @@ def _bnd_abnd_input_guess(pot, im_hk, bounds_only):
     """
     # - grid extension (from points 1-3):
     V0 = pot.depth
-    im_max = np.sqrt(2*V0)
+    im_max = np.sqrt(2 * V0)
     if bounds_only:
         im_min = 0.0
     else:
         im_min = -im_max
     # - grid step (from points 4 and 5):
     l = pot.width
-    n_bounds = int(l/np.pi*np.sqrt(2.*V0) + 1)
-    step = float(im_max / (n_bounds*3))
+    n_bounds = int(l / np.pi * np.sqrt(2.0 * V0) + 1)
+    step = float(im_max / (n_bounds * 3))
     if im_hk is not None:
         step = min(step, im_hk)
     # Return the whole grid of input guesses
-    return 1.j * np.arange(im_min, im_max, step)
+    return 1.0j * np.arange(im_min, im_max, step)
 
 
 def _find_bnd_abnd_states(kgrid, dep_k, dop_k, V0, bounds_only):
@@ -688,14 +711,14 @@ def _find_bnd_abnd_states(kgrid, dep_k, dop_k, V0, bounds_only):
     # enough to the imaginary axis to be bound or antibound states.
     # It also defines how close two Siegert states wavenumbers can
     # be along the imaginary axis.
-    tol = 10**(-14)
-    for func, parity in ((dep_k, 'e'), (dop_k, 'o')):
+    tol = 10 ** (-14)
+    for func, parity in ((dep_k, "e"), (dop_k, "o")):
         bnds_abnds = _bnd_abnd_wavenumbers(kgrid, func, tol, V0, bounds_only)
         for k_s in bnds_abnds:
             # Check that the solution was not already known
             if not np.any(np.isclose(k_s, wavenumbers, rtol=tol)):
                 # Make it purely imaginary
-                k_s = np.imag(k_s)*1.j
+                k_s = np.imag(k_s) * 1.0j
                 # Add it to the list of wavenumbers
                 wavenumbers.append(k_s)
                 parities.append(parity)
@@ -737,19 +760,20 @@ def _bnd_abnd_wavenumbers(kgrid, func, tol, V0, bounds_only):
         step = kgrid[1] - kgrid[0]
         # A solution is searched around each initial
         # wavenumber k0 in an initial interval [k_dn, k_up]
-        k_dn = k_0 - step/2.
-        k_up = k_0 + step/2.
+        k_dn = k_0 - step / 2.0
+        k_up = k_0 + step / 2.0
         # Try to find a solution k_s from this starting point
         try:
             input_guess = [k_0, k_dn, k_up]
-            k_s = findroot(func, input_guess, solver='muller', tol=1.e-17)
+            k_s = findroot(func, input_guess, solver="muller", tol=1.0e-17)
             # Do not yield a wavenumber if the solution is not
             # valid for any reason.
             not_bound = np.imag(k_s) <= 0
             has_real_part = abs(np.real(k_s)) > tol
-            is_potential_minimum = k_s**2/2. == -complex(V0)  # artifact
-            if not ((bounds_only and not_bound) or
-                    has_real_part or is_potential_minimum):
+            is_potential_minimum = k_s ** 2 / 2.0 == -complex(V0)  # artifact
+            if not (
+                (bounds_only and not_bound) or has_real_part or is_potential_minimum
+            ):
                 yield complex(k_s)
         # If findroot does not converge, it throws a ValueError.
         # Catch it and do nothing.
@@ -783,16 +807,16 @@ def _res_ares_input_guess(re_kmax, re_hk, im_kmax, im_hk):
     """
     # grid extension along the real axis
     re_min = 0.0
-    re_max = re_kmax * (1.+re_hk*0.001)
+    re_max = re_kmax * (1.0 + re_hk * 0.001)
     # grid extension along the imaginary axis
     im_min = -abs(im_kmax)
-    im_max = 0.
+    im_max = 0.0
     # grid step along the imaginary axis
     if im_hk is None:
         im_hk = float(im_kmax / 2)
     # Create the input guess
     re_kgrid = np.arange(re_min, re_max, re_hk)
-    im_kgrid = 1.j*np.arange(im_min, im_max, im_hk)
+    im_kgrid = 1.0j * np.arange(im_min, im_max, im_hk)
     re, im = np.meshgrid(re_kgrid, im_kgrid)
     return (re + im).flatten()
 
@@ -828,8 +852,8 @@ def _find_res_ares_states(kgrid, dep_k, dop_k, wavenumbers, parities):
     """
     # Tolerance on the real and imaginary parts for two Siegert
     # states to be considered as different.
-    tol = 10**(-12)
-    for func, parity in ((dep_k, 'e'), (dop_k, 'o')):
+    tol = 10 ** (-12)
+    for func, parity in ((dep_k, "e"), (dop_k, "o")):
         res_ares = _res_ares_wavenumbers(kgrid, func)
         for k_s in res_ares:
             # Check that the solution was not already known
@@ -873,10 +897,9 @@ def _res_ares_wavenumbers(kgrid, func):
     for k_0 in kgrid:
         # Try to find a solution k_s from this starting point
         try:
-            k_s = findroot(func, k_0, solver='muller', tol=1.e-17)
+            k_s = findroot(func, k_0, solver="muller", tol=1.0e-17)
             # The wavenumber must be inside the user-defined area
-            if (re_min <= np.real(k_s) <= re_max and
-                    im_min <= np.imag(k_s) <= im_max):
+            if re_min <= np.real(k_s) <= re_max and im_min <= np.imag(k_s) <= im_max:
                 yield complex(k_s)
         # If findroot does not converge, it throws a ValueError.
         # Catch it and do nothing.

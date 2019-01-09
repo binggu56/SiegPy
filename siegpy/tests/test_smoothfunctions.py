@@ -2,6 +2,7 @@
 import numpy as np
 import pytest
 from siegpy.smoothfunctions import ErfSmoothFunction, TanhSmoothFunction
+
 # Uncomment the next lines to compare siegpy outputs with the analytic
 # results (beware: this makes the tests slower, due to sympy usage)
 # import scipy.special
@@ -12,101 +13,156 @@ lbda0 = 1
 sfe_no_grid = ErfSmoothFunction(x00, lbda0)
 sft_no_grid = TanhSmoothFunction(x00, lbda0)
 npts = 5
-xgrid = np.linspace(-2*x00, 2*x00, npts)
+xgrid = np.linspace(-2 * x00, 2 * x00, npts)
 sfe_grid = ErfSmoothFunction(x00, lbda0, grid=xgrid)
 sft_grid = TanhSmoothFunction(x00, lbda0, grid=xgrid)
 
 
-class TestErfSmoothFunction():
-
-    @pytest.mark.parametrize("value, expected", [
-        (sfe_no_grid.x0, x00), (sfe_no_grid.lbda, lbda0),
-        (sfe_no_grid.grid, None), (sfe_no_grid.values, None),
-        (sfe_no_grid.dx_values, None), (sfe_no_grid.dx2_values, None),
-        (sfe_no_grid.dx3_values, None),
-        (sfe_no_grid.dxi_values['x0'], None),
-        (sfe_no_grid.dx_dxi_values['x0'], None),
-        (sfe_no_grid.dxi_values['lbda'], None),
-        (sfe_no_grid.dx_dxi_values['lbda'], None)
-    ])
+class TestErfSmoothFunction:
+    @pytest.mark.parametrize(
+        "value, expected",
+        [
+            (sfe_no_grid.x0, x00),
+            (sfe_no_grid.lbda, lbda0),
+            (sfe_no_grid.grid, None),
+            (sfe_no_grid.values, None),
+            (sfe_no_grid.dx_values, None),
+            (sfe_no_grid.dx2_values, None),
+            (sfe_no_grid.dx3_values, None),
+            (sfe_no_grid.dxi_values["x0"], None),
+            (sfe_no_grid.dx_dxi_values["x0"], None),
+            (sfe_no_grid.dxi_values["lbda"], None),
+            (sfe_no_grid.dx_dxi_values["lbda"], None),
+        ],
+    )
     def test_init_without_grid(self, value, expected):
         assert value == expected
 
-    @pytest.mark.parametrize("values, expected", [
-        (sfe_grid.grid, xgrid),
-        (sfe_grid.values,
-         np.array([0.92136144, 0.50233887, 0.15729921,
-                   0.50233887, 0.92136144])),
-        (sfe_grid.dx_values,
-         np.array([-0.20748412, -0.55385609, 0., 0.55385609, 0.20748412])),
-        (sfe_grid.dx2_values,
-         np.array([-0.41468974, 0.04133397, 0.83021499,
-                   0.04133397, -0.41468974])),
-        (sfe_grid.dx3_values,
-         np.array([-0.4127402, 1.27304806, 0., -1.27304806, 0.4127402])),
-        (sfe_grid.dxi_values['x0'],
-         np.array([-0.20762338, -0.57452308, -0.4151075,
-                   -0.57452308, -0.20762338])),
-        (sfe_grid.dx_dxi_values['x0'],
-         np.array([-0.41552526, -0.04133397, -0., 0.04133397, 0.41552526])),
-        (sfe_grid.dxi_values['lbda'],
-         np.array([0.20734487, -0.02066699, -0.4151075,
-                   -0.02066699, 0.20734487])),
-        (sfe_grid.dx_dxi_values['lbda'],
-         np.array([0.2063701, -0.63652403, 0., 0.63652403, -0.2063701]))
-    ])
+    @pytest.mark.parametrize(
+        "values, expected",
+        [
+            (sfe_grid.grid, xgrid),
+            (
+                sfe_grid.values,
+                np.array([0.92136144, 0.50233887, 0.15729921, 0.50233887, 0.92136144]),
+            ),
+            (
+                sfe_grid.dx_values,
+                np.array([-0.20748412, -0.55385609, 0.0, 0.55385609, 0.20748412]),
+            ),
+            (
+                sfe_grid.dx2_values,
+                np.array(
+                    [-0.41468974, 0.04133397, 0.83021499, 0.04133397, -0.41468974]
+                ),
+            ),
+            (
+                sfe_grid.dx3_values,
+                np.array([-0.4127402, 1.27304806, 0.0, -1.27304806, 0.4127402]),
+            ),
+            (
+                sfe_grid.dxi_values["x0"],
+                np.array(
+                    [-0.20762338, -0.57452308, -0.4151075, -0.57452308, -0.20762338]
+                ),
+            ),
+            (
+                sfe_grid.dx_dxi_values["x0"],
+                np.array([-0.41552526, -0.04133397, -0.0, 0.04133397, 0.41552526]),
+            ),
+            (
+                sfe_grid.dxi_values["lbda"],
+                np.array(
+                    [0.20734487, -0.02066699, -0.4151075, -0.02066699, 0.20734487]
+                ),
+            ),
+            (
+                sfe_grid.dx_dxi_values["lbda"],
+                np.array([0.2063701, -0.63652403, 0.0, 0.63652403, -0.2063701]),
+            ),
+        ],
+    )
     def test_init_with_grid(self, values, expected):
         np.testing.assert_array_almost_equal(values, expected)
 
-    @pytest.mark.parametrize("to_evaluate", [
-        "ErfSmoothFunction(-0.5, 1)", "ErfSmoothFunction(0.5, -1)"
-    ])
+    @pytest.mark.parametrize(
+        "to_evaluate", ["ErfSmoothFunction(-0.5, 1)", "ErfSmoothFunction(0.5, -1)"]
+    )
     def test_init_raises_ValueError(self, to_evaluate):
         with pytest.raises(ValueError):
             eval(to_evaluate)
 
 
-class TestTanhSmoothFunction():
-
-    @pytest.mark.parametrize("value, expected", [
-        (sft_no_grid.x0, x00), (sft_no_grid.lbda, lbda0),
-        (sft_no_grid.grid, None), (sft_no_grid.values, None),
-        (sft_no_grid.dx_values, None), (sft_no_grid.dx2_values, None),
-        (sft_no_grid.dx3_values, None),
-        (sft_no_grid.dxi_values['x0'], None),
-        (sft_no_grid.dx_dxi_values['x0'], None),
-        (sft_no_grid.dxi_values['lbda'], None),
-        (sft_no_grid.dx_dxi_values['lbda'], None)])
+class TestTanhSmoothFunction:
+    @pytest.mark.parametrize(
+        "value, expected",
+        [
+            (sft_no_grid.x0, x00),
+            (sft_no_grid.lbda, lbda0),
+            (sft_no_grid.grid, None),
+            (sft_no_grid.values, None),
+            (sft_no_grid.dx_values, None),
+            (sft_no_grid.dx2_values, None),
+            (sft_no_grid.dx3_values, None),
+            (sft_no_grid.dxi_values["x0"], None),
+            (sft_no_grid.dx_dxi_values["x0"], None),
+            (sft_no_grid.dxi_values["lbda"], None),
+            (sft_no_grid.dx_dxi_values["lbda"], None),
+        ],
+    )
     def test_init_without_grid(self, value, expected):
         assert value == expected
 
-    @pytest.mark.parametrize("values, expected", [
-        (sft_grid.grid, xgrid),
-        (sft_grid.values,
-         np.array([0.8832697, 0.51798621, 0.23840584, 0.51798621, 0.8832697])),
-        (sft_grid.dx_values,
-         np.array([-0.20505415, -0.46467459, 0., 0.46467459, 0.20505415])),
-        (sft_grid.dx2_values,
-         np.array([-0.31003276, 0.06810934, 0.63970001, 0.06810934,
-                   -0.31003276])),
-        (sft_grid.dx3_values,
-         np.array([-0.29137328, 1.12632703, 0., -1.12632703, 0.29137328])),
-        (sft_grid.dxi_values['x0'],
-         np.array([-0.21492019, -0.53532541, -0.41997434, -0.53532541,
-                   -0.21492019])),
-        (sft_grid.dx_dxi_values['x0'],
-         np.array([-0.32966725, -0.06810934, -0., 0.06810934, 0.32966725])),
-        (sft_grid.dxi_values['lbda'],
-         np.array([0.19518812, -0.07065082, -0.41997434, -0.07065082,
-                   0.19518812])),
-        (sft_grid.dx_dxi_values['lbda'],
-         np.array([0.08534411, -0.60089328, 0., 0.60089328, -0.08534411]))])
+    @pytest.mark.parametrize(
+        "values, expected",
+        [
+            (sft_grid.grid, xgrid),
+            (
+                sft_grid.values,
+                np.array([0.8832697, 0.51798621, 0.23840584, 0.51798621, 0.8832697]),
+            ),
+            (
+                sft_grid.dx_values,
+                np.array([-0.20505415, -0.46467459, 0.0, 0.46467459, 0.20505415]),
+            ),
+            (
+                sft_grid.dx2_values,
+                np.array(
+                    [-0.31003276, 0.06810934, 0.63970001, 0.06810934, -0.31003276]
+                ),
+            ),
+            (
+                sft_grid.dx3_values,
+                np.array([-0.29137328, 1.12632703, 0.0, -1.12632703, 0.29137328]),
+            ),
+            (
+                sft_grid.dxi_values["x0"],
+                np.array(
+                    [-0.21492019, -0.53532541, -0.41997434, -0.53532541, -0.21492019]
+                ),
+            ),
+            (
+                sft_grid.dx_dxi_values["x0"],
+                np.array([-0.32966725, -0.06810934, -0.0, 0.06810934, 0.32966725]),
+            ),
+            (
+                sft_grid.dxi_values["lbda"],
+                np.array(
+                    [0.19518812, -0.07065082, -0.41997434, -0.07065082, 0.19518812]
+                ),
+            ),
+            (
+                sft_grid.dx_dxi_values["lbda"],
+                np.array([0.08534411, -0.60089328, 0.0, 0.60089328, -0.08534411]),
+            ),
+        ],
+    )
     def test_init_with_grid(self, values, expected):
         np.testing.assert_array_almost_equal(values, expected)
 
-    @pytest.mark.parametrize("to_evaluate", [
-        "TanhSmoothFunction(-0.5, 1)", "TanhSmoothFunction(0.5, -1)"
-    ])
+    @pytest.mark.parametrize(
+        "to_evaluate", ["TanhSmoothFunction(-0.5, 1)", "TanhSmoothFunction(0.5, -1)"]
+    )
     def test_init_raises_ValueError(self, to_evaluate):
         with pytest.raises(ValueError):
             eval(to_evaluate)

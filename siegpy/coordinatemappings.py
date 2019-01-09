@@ -78,7 +78,7 @@ class CoordMap(metaclass=ABCMeta):
     Base class of all the other coordinate mappings.
     """
 
-    PARAMETERS = ['theta']
+    PARAMETERS = ["theta"]
 
     def __init__(self, theta, grid, GCVT):
         r"""
@@ -428,9 +428,9 @@ class CoordMap(metaclass=ABCMeta):
             f = self.f_values
             f_dx = self.f_dx_values
             f_dx2 = self.f_dx2_values
-            self._V0_values = 1/4*f_dx2/f**3 - 5/8*f_dx**2/f**4
-            self._V1_values = f_dx/f**3
-            self._V2_values = 1/2 * (1 - 1/f**2)
+            self._V0_values = 1 / 4 * f_dx2 / f ** 3 - 5 / 8 * f_dx ** 2 / f ** 4
+            self._V1_values = f_dx / f ** 3
+            self._V2_values = 1 / 2 * (1 - 1 / f ** 2)
         else:
             self._V0_values = None
             self._V1_values = None
@@ -450,8 +450,8 @@ class CoordMap(metaclass=ABCMeta):
             # Initialize the GCVT potentials if required
             if self.grid is not None:
                 # The virial operator potentials are numpy arrays
-                self._U0_values = 1 - F*f_dx/f**2
-                self._U1_values = F/f
+                self._U0_values = 1 - F * f_dx / f ** 2
+                self._U1_values = F / f
             else:
                 self._U0_values = None
                 self._U1_values = None
@@ -462,18 +462,26 @@ class CoordMap(metaclass=ABCMeta):
             # parameter. They are all stored in a dictionary, whose keys
             # are the labels of the parameters.
             if self.grid is not None:
-                U0_factor = 1/2 * (f_dx**2/f**5 + 1/2*f_dx2/f**4)
-                U1_factor = - 1/2*f_dx/f**4
-                U2_factor = 1 / (2*f**3)
-                U11_factor = - 1 / (2*f**3)
-                self._U0_values = {param: U0_factor*self.f_dxi_values[param]
-                                   for param in self.PARAMETERS}
-                self._U1_values = {param: U1_factor*self.f_dxi_values[param]
-                                   for param in self.PARAMETERS}
-                self._U2_values = {param: U2_factor*self.f_dxi_values[param]
-                                   for param in self.PARAMETERS}
-                self._U11_values = {param: U11_factor*self.f_dxi_values[param]
-                                    for param in self.PARAMETERS}
+                U0_factor = 1 / 2 * (f_dx ** 2 / f ** 5 + 1 / 2 * f_dx2 / f ** 4)
+                U1_factor = -1 / 2 * f_dx / f ** 4
+                U2_factor = 1 / (2 * f ** 3)
+                U11_factor = -1 / (2 * f ** 3)
+                self._U0_values = {
+                    param: U0_factor * self.f_dxi_values[param]
+                    for param in self.PARAMETERS
+                }
+                self._U1_values = {
+                    param: U1_factor * self.f_dxi_values[param]
+                    for param in self.PARAMETERS
+                }
+                self._U2_values = {
+                    param: U2_factor * self.f_dxi_values[param]
+                    for param in self.PARAMETERS
+                }
+                self._U11_values = {
+                    param: U11_factor * self.f_dxi_values[param]
+                    for param in self.PARAMETERS
+                }
             else:
                 self._U0_values = {param: None for param in self.PARAMETERS}
                 self._U1_values = {param: None for param in self.PARAMETERS}
@@ -511,7 +519,7 @@ class UniformCoordMap(CoordMap):
         numpy array
             Values of the coordinate mapping with respect to :math:`x`.
         """
-        return self.grid * np.exp(1j*self.theta)
+        return self.grid * np.exp(1j * self.theta)
 
     def _get_f_values(self):
         r"""
@@ -521,7 +529,7 @@ class UniformCoordMap(CoordMap):
             Values of the first derivative of the coordinate mapping
             with respect to :math:`x`.
         """
-        return np.exp(1j*self.theta) * np.ones_like(self.grid)
+        return np.exp(1j * self.theta) * np.ones_like(self.grid)
 
     def _get_f_dx_values(self):
         r"""
@@ -551,7 +559,7 @@ class UniformCoordMap(CoordMap):
             Values of the first derivative of the coordinate mapping
             with respect to the coordinate mapping parameters.
         """
-        return {'theta': 1j * self.values}
+        return {"theta": 1j * self.values}
 
     def _get_f_dxi_values(self):
         r"""
@@ -562,7 +570,7 @@ class UniformCoordMap(CoordMap):
             coordinate mapping parameters of the first derivative with
             respect to :math:`x` of the coordinate mapping.
         """
-        return {'theta': 1j * self.f_values}
+        return {"theta": 1j * self.f_values}
 
 
 class SmoothExtCoordMap(CoordMap, metaclass=ABCMeta):
@@ -578,7 +586,7 @@ class SmoothExtCoordMap(CoordMap, metaclass=ABCMeta):
         function is actually required.
     """
 
-    PARAMETERS = CoordMap.PARAMETERS + ['x0', 'lbda']
+    PARAMETERS = CoordMap.PARAMETERS + ["x0", "lbda"]
 
     def __init__(self, theta, x0, lbda, GCVT, grid):
         r"""
@@ -763,7 +771,7 @@ class SimonCoordMap(SmoothFuncCoordMap, metaclass=ABCMeta):
             Values of the second derivative of the coordinate
             mapping with respect to :math:`x`.
         """
-        return self.grid + (np.exp(1j*self.theta) - 1) * m
+        return self.grid + (np.exp(1j * self.theta) - 1) * m
 
     def _get_f_values(self):
         r"""
@@ -773,7 +781,7 @@ class SimonCoordMap(SmoothFuncCoordMap, metaclass=ABCMeta):
             Values of the first derivative of the coordinate
             mapping with respect to :math:`x`.
         """
-        return 1 + (np.exp(1j*self.theta) - 1) * self.smooth_func.values
+        return 1 + (np.exp(1j * self.theta) - 1) * self.smooth_func.values
 
     def _get_f_dx_values(self):
         r"""
@@ -783,7 +791,7 @@ class SimonCoordMap(SmoothFuncCoordMap, metaclass=ABCMeta):
             Values of the second derivative of the coordinate
             mapping with respect to :math:`x`.
         """
-        return (np.exp(1j*self.theta) - 1) * self.smooth_func.dx_values
+        return (np.exp(1j * self.theta) - 1) * self.smooth_func.dx_values
 
     def _get_f_dx2_values(self):
         r"""
@@ -793,7 +801,7 @@ class SimonCoordMap(SmoothFuncCoordMap, metaclass=ABCMeta):
             Values of the third derivative of the coordinate
             mapping with respect to :math:`x`.
         """
-        return (np.exp(1j*self.theta) - 1) * self.smooth_func.dx2_values
+        return (np.exp(1j * self.theta) - 1) * self.smooth_func.dx2_values
 
     def _get_dxi_values(self, m, m_dx0, m_dl):
         r"""
@@ -814,10 +822,10 @@ class SimonCoordMap(SmoothFuncCoordMap, metaclass=ABCMeta):
             Values of the first derivative of the coordinate
             mapping with respect to the coordinate mapping parameters.
         """
-        F_dth = 1j * np.exp(1j*self.theta) * m
-        F_dx0 = (np.exp(1j*self.theta) - 1) * m_dx0
-        F_dl = (np.exp(1j*self.theta) - 1) * m_dl
-        return {'theta': F_dth, 'x0': F_dx0, 'lbda': F_dl}
+        F_dth = 1j * np.exp(1j * self.theta) * m
+        F_dx0 = (np.exp(1j * self.theta) - 1) * m_dx0
+        F_dl = (np.exp(1j * self.theta) - 1) * m_dl
+        return {"theta": F_dth, "x0": F_dx0, "lbda": F_dl}
 
     def _get_f_dxi_values(self):
         r"""
@@ -829,10 +837,10 @@ class SimonCoordMap(SmoothFuncCoordMap, metaclass=ABCMeta):
             respect to :math:`x` of the coordinate mapping.
         """
         sf = self.smooth_func
-        f_dth = 1j * np.exp(1j*self.theta) * sf.values
-        f_dx0 = (np.exp(1j*self.theta) - 1) * sf.dxi_values['x0']
-        f_dl = (np.exp(1j*self.theta) - 1) * sf.dxi_values['lbda']
-        return {'theta': f_dth, 'x0': f_dx0, 'lbda': f_dl}
+        f_dth = 1j * np.exp(1j * self.theta) * sf.values
+        f_dx0 = (np.exp(1j * self.theta) - 1) * sf.dxi_values["x0"]
+        f_dl = (np.exp(1j * self.theta) - 1) * sf.dxi_values["lbda"]
+        return {"theta": f_dth, "x0": f_dx0, "lbda": f_dl}
 
     @abstractmethod
     def _get_m_values(self, grid, lbda, gp, gm):  # pragma: no cover
@@ -949,7 +957,7 @@ class TanhSimonCoordMap(SimonCoordMap):
         numpy array
             The values of an intermediate function.
         """
-        return self.grid + np.log(np.cosh(gp)/np.cosh(gm)) / (2*self.lbda)
+        return self.grid + np.log(np.cosh(gp) / np.cosh(gm)) / (2 * self.lbda)
 
     def _get_m_dx0_values(self, gp, gm):
         r"""
@@ -966,7 +974,7 @@ class TanhSimonCoordMap(SimonCoordMap):
             The values of the first derivative with respect to
             :attr:`x0` of an intermediate function.
         """
-        return - (np.tanh(gp) + np.tanh(gm)) / 2
+        return -(np.tanh(gp) + np.tanh(gm)) / 2
 
     def _get_m_dl_values(self, gp, gm):
         r"""
@@ -984,8 +992,9 @@ class TanhSimonCoordMap(SimonCoordMap):
             the sharpness parameter :attr:`\lambda` of an intermediate
             function.
         """
-        return (gp*np.tanh(gp) - gm*np.tanh(gm)
-                - np.log(np.cosh(gp) / np.cosh(gm))) / (2*self.lbda**2)
+        return (
+            gp * np.tanh(gp) - gm * np.tanh(gm) - np.log(np.cosh(gp) / np.cosh(gm))
+        ) / (2 * self.lbda ** 2)
 
 
 class ErfSimonCoordMap(SimonCoordMap):
@@ -1030,9 +1039,9 @@ class ErfSimonCoordMap(SimonCoordMap):
         numpy array
             The values of an intermediate function.
         """
-        term1 = gp*erf(gp) - gm*erf(gm)
-        term2 = (np.exp(-gp**2) - np.exp(-gm**2)) / np.sqrt(np.pi)
-        return self.grid + (term1 + term2) / (2*self.lbda)
+        term1 = gp * erf(gp) - gm * erf(gm)
+        term2 = (np.exp(-gp ** 2) - np.exp(-gm ** 2)) / np.sqrt(np.pi)
+        return self.grid + (term1 + term2) / (2 * self.lbda)
 
     def _get_m_dx0_values(self, gp, gm):
         r"""
@@ -1049,7 +1058,7 @@ class ErfSimonCoordMap(SimonCoordMap):
             The values of the first derivative with respect to
             :attr:`x0` of an intermediate function.
         """
-        return - (erf(gp) + erf(gm)) / 2
+        return -(erf(gp) + erf(gm)) / 2
 
     def _get_m_dl_values(self, gp, gm):
         r"""
@@ -1067,7 +1076,7 @@ class ErfSimonCoordMap(SimonCoordMap):
             the sharpness parameter :attr:`\lambda` of an intermediate
             function.
         """
-        return (np.exp(-gm**2) - np.exp(-gp**2)) / (2*np.sqrt(np.pi)*self.lbda)
+        return (np.exp(-gm ** 2) - np.exp(-gp ** 2)) / (2 * np.sqrt(np.pi) * self.lbda)
 
 
 class KGCoordMap(SmoothFuncCoordMap):
@@ -1105,14 +1114,14 @@ class KGCoordMap(SmoothFuncCoordMap):
         """
         # Set some variables for readability
         a = self.smooth_func.values
-        a_dx0 = self.smooth_func.dxi_values['x0']
-        a_dl = self.smooth_func.dxi_values['lbda']
+        a_dx0 = self.smooth_func.dxi_values["x0"]
+        a_dl = self.smooth_func.dxi_values["lbda"]
         F = self.values
         # Set the properties
         F_dth = 1j * a * F
         F_dx0 = 1j * self.theta * F * a_dx0
         F_dl = 1j * self.theta * F * a_dl
-        self._dxi_values = {'theta': F_dth, 'x0': F_dx0, 'lbda': F_dl}
+        self._dxi_values = {"theta": F_dth, "x0": F_dx0, "lbda": F_dl}
         self._f_dxi_values = self._get_f_dxi_values(F, F_dth, F_dx0, F_dl)
 
     def _get_values(self):
@@ -1124,7 +1133,7 @@ class KGCoordMap(SmoothFuncCoordMap):
             mapping with respect to :math:`x`.
         """
         a = self.smooth_func.values
-        return self.grid * np.exp(1j*self.theta*a)
+        return self.grid * np.exp(1j * self.theta * a)
 
     def _get_f_values(self, F):
         r"""
@@ -1141,7 +1150,7 @@ class KGCoordMap(SmoothFuncCoordMap):
         """
         a = self.smooth_func.values
         a_dx = self.smooth_func.dx_values
-        return np.exp(1j*self.theta*a) + 1j*self.theta*a_dx*F
+        return np.exp(1j * self.theta * a) + 1j * self.theta * a_dx * F
 
     def _get_f_dx_values(self, F, f):
         r"""
@@ -1163,8 +1172,8 @@ class KGCoordMap(SmoothFuncCoordMap):
         a_dx = self.smooth_func.dx_values
         a_dx2 = self.smooth_func.dx2_values
         # Evaluate the derivative
-        factor = np.exp(1j*self.theta*a) + f
-        return 1j*self.theta * (a_dx*factor + a_dx2*F)
+        factor = np.exp(1j * self.theta * a) + f
+        return 1j * self.theta * (a_dx * factor + a_dx2 * F)
 
     def _get_f_dx2_values(self, F, f, f_dx):
         r"""
@@ -1190,9 +1199,17 @@ class KGCoordMap(SmoothFuncCoordMap):
         a_dx2 = self.smooth_func.dx2_values
         a_dx3 = self.smooth_func.dx3_values
         # Evaluate the derivative
-        factor = a_dx2 + 1j*self.theta*a_dx**2
-        return 1j*self.theta * (a_dx*f_dx + 2*a_dx2*f + a_dx3*F
-                                + factor*np.exp(1j*self.theta*a))
+        factor = a_dx2 + 1j * self.theta * a_dx ** 2
+        return (
+            1j
+            * self.theta
+            * (
+                a_dx * f_dx
+                + 2 * a_dx2 * f
+                + a_dx3 * F
+                + factor * np.exp(1j * self.theta * a)
+            )
+        )
 
     def _get_dxi_values(self, *args):  # pragma: no cover
         r"""
@@ -1228,15 +1245,17 @@ class KGCoordMap(SmoothFuncCoordMap):
         sf = self.smooth_func
         a = sf.values
         a_dx = sf.dx_values
-        a_dx0 = sf.dxi_values['x0']
-        a_dl = sf.dxi_values['lbda']
-        a_dx_dx0 = sf.dx_dxi_values['x0']
-        a_dx_dl = sf.dx_dxi_values['lbda']
+        a_dx0 = sf.dxi_values["x0"]
+        a_dl = sf.dxi_values["lbda"]
+        a_dx_dx0 = sf.dx_dxi_values["x0"]
+        a_dx_dl = sf.dx_dxi_values["lbda"]
         # Evaluate the derivatives
-        f_dth = 1j * (a*np.exp(1j*theta*a) + a_dx*(F + theta*F_dth))
-        f_dx0 = 1j*theta * (a_dx0*np.exp(1j*theta*a) + a_dx_dx0*F + a_dx*F_dx0)
-        f_dl = 1j*theta * (a_dl*np.exp(1j*theta*a) + a_dx_dl*F + a_dx*F_dl)
-        return {'theta': f_dth, 'x0': f_dx0, 'lbda': f_dl}
+        f_dth = 1j * (a * np.exp(1j * theta * a) + a_dx * (F + theta * F_dth))
+        f_dx0 = (
+            1j * theta * (a_dx0 * np.exp(1j * theta * a) + a_dx_dx0 * F + a_dx * F_dx0)
+        )
+        f_dl = 1j * theta * (a_dl * np.exp(1j * theta * a) + a_dx_dl * F + a_dx * F_dl)
+        return {"theta": f_dth, "x0": f_dx0, "lbda": f_dl}
 
 
 class TanhKGCoordMap(KGCoordMap):

@@ -23,8 +23,7 @@ import cmath
 import numpy as np
 from scipy.special import erf
 from siegpy import Gaussian, Rectangular, SWPotential
-from .analyticeigenstates import (AnalyticEigenstate, AnalyticSiegert,
-                                  AnalyticContinuum)
+from .analyticeigenstates import AnalyticEigenstate, AnalyticSiegert, AnalyticContinuum
 from .swputils import q, fem, fep, fom, fop, find_parity
 
 
@@ -40,7 +39,7 @@ class SWPEigenstate(AnalyticEigenstate, metaclass=ABCMeta):
       the continuum states of the same problem.
     """
 
-    PARITIES = {'e': "Even ", 'o': "Odd "}
+    PARITIES = {"e": "Even ", "o": "Odd "}
 
     def __init__(self, k, parity, potential, grid, analytic):
         r"""
@@ -102,7 +101,8 @@ class SWPEigenstate(AnalyticEigenstate, metaclass=ABCMeta):
             ``True`` if both eigenstates are the same.
         """
         return isinstance(other, SWPEigenstate) and (
-            self.parity == other.parity and super().__eq__(other))
+            self.parity == other.parity and super().__eq__(other)
+        )
 
     def __repr__(self):
         r"""
@@ -121,7 +121,7 @@ class SWPEigenstate(AnalyticEigenstate, metaclass=ABCMeta):
         bool
             ``True`` if the eigenstate is even.
         """
-        return self.parity == 'e'
+        return self.parity == "e"
 
     @property
     def is_odd(self):
@@ -131,7 +131,7 @@ class SWPEigenstate(AnalyticEigenstate, metaclass=ABCMeta):
         bool
             ``True`` if the eigenstate is odd.
         """
-        return self.parity == 'o'
+        return self.parity == "o"
 
     def _compute_values(self, grid):
         r"""
@@ -174,7 +174,7 @@ class SWPEigenstate(AnalyticEigenstate, metaclass=ABCMeta):
         elif self.is_odd:
             wf_1 = self._odd_wf_1(grid_1)
             wf_2 = self._odd_wf_2(grid_2)
-            wf_3 = - self._odd_wf_1(-grid_3)
+            wf_3 = -self._odd_wf_1(-grid_3)
         # Return the whole numpy array
         return np.concatenate((wf_1, wf_2, wf_3))
 
@@ -307,9 +307,10 @@ class SWPEigenstate(AnalyticEigenstate, metaclass=ABCMeta):
             else:
                 raise TypeError(
                     "You are trying to analytically compute a scalar product "
-                    "between a SWPSiegert and an object of type {}."
-                    .format(type(other)) + "\nThis can only be done with a "
-                    "Gaussian or Rectangular function")
+                    "between a SWPSiegert and an object of type {}.".format(type(other))
+                    + "\nThis can only be done with a "
+                    "Gaussian or Rectangular function"
+                )
         # Numerical scalar product
         else:
             if isinstance(self, AnalyticSiegert):
@@ -339,21 +340,21 @@ class SWPEigenstate(AnalyticEigenstate, metaclass=ABCMeta):
         sigma = gaussian.sigma
         k0 = gaussian.momentum
         # Exponentials for regions I and III
-        expkp = cmath.exp(1.j*xc*(k0+k) - (sigma*(k0+k))**2/2)
-        expkm = cmath.exp(1.j*xc*(k0-k) - (sigma*(k0-k))**2/2)
+        expkp = cmath.exp(1.0j * xc * (k0 + k) - (sigma * (k0 + k)) ** 2 / 2)
+        expkm = cmath.exp(1.0j * xc * (k0 - k) - (sigma * (k0 - k)) ** 2 / 2)
         # Expontentials for region II
-        expqp = cmath.exp(1.j*xc*(k0+qq) - (sigma*(k0+qq))**2/2)
-        expqm = cmath.exp(1.j*xc*(k0-qq) - (sigma*(k0-qq))**2/2)
+        expqp = cmath.exp(1.0j * xc * (k0 + qq) - (sigma * (k0 + qq)) ** 2 / 2)
+        expqm = cmath.exp(1.0j * xc * (k0 - qq) - (sigma * (k0 - qq)) ** 2 / 2)
         # erf arguments for regions I and III
-        zkpp = (xc+l/2+1.j*sigma**2*(k0+k)) / (sigma*math.sqrt(2))
-        zkmp = (xc-l/2+1.j*sigma**2*(k0+k)) / (sigma*math.sqrt(2))
-        zkpm = (xc+l/2+1.j*sigma**2*(k0-k)) / (sigma*math.sqrt(2))
-        zkmm = (xc-l/2+1.j*sigma**2*(k0-k)) / (sigma*math.sqrt(2))
+        zkpp = (xc + l / 2 + 1.0j * sigma ** 2 * (k0 + k)) / (sigma * math.sqrt(2))
+        zkmp = (xc - l / 2 + 1.0j * sigma ** 2 * (k0 + k)) / (sigma * math.sqrt(2))
+        zkpm = (xc + l / 2 + 1.0j * sigma ** 2 * (k0 - k)) / (sigma * math.sqrt(2))
+        zkmm = (xc - l / 2 + 1.0j * sigma ** 2 * (k0 - k)) / (sigma * math.sqrt(2))
         # erf arguments for regions II
-        zqpp = (xc+l/2+1.j*sigma**2*(k0+qq)) / (sigma*math.sqrt(2))
-        zqmp = (xc-l/2+1.j*sigma**2*(k0+qq)) / (sigma*math.sqrt(2))
-        zqpm = (xc+l/2+1.j*sigma**2*(k0-qq)) / (sigma*math.sqrt(2))
-        zqmm = (xc-l/2+1.j*sigma**2*(k0-qq)) / (sigma*math.sqrt(2))
+        zqpp = (xc + l / 2 + 1.0j * sigma ** 2 * (k0 + qq)) / (sigma * math.sqrt(2))
+        zqmp = (xc - l / 2 + 1.0j * sigma ** 2 * (k0 + qq)) / (sigma * math.sqrt(2))
+        zqpm = (xc + l / 2 + 1.0j * sigma ** 2 * (k0 - qq)) / (sigma * math.sqrt(2))
+        zqmm = (xc - l / 2 + 1.0j * sigma ** 2 * (k0 - qq)) / (sigma * math.sqrt(2))
         # The value of the scalar product depends on the parity of the
         # continuum Siegert state.
         if self.is_odd:
@@ -362,22 +363,74 @@ class SWPEigenstate(AnalyticEigenstate, metaclass=ABCMeta):
             if gaussian.is_even:
                 return 0.0
             else:
-                return self._sp_odd_gauss(gaussian, expkp, expkm, expqp, expqm,
-                                          zkpp, zkmp, zkpm, zkmm,
-                                          zqpp, zqmp, zqpm, zqmm)
+                return self._sp_odd_gauss(
+                    gaussian,
+                    expkp,
+                    expkm,
+                    expqp,
+                    expqm,
+                    zkpp,
+                    zkmp,
+                    zkpm,
+                    zkmm,
+                    zqpp,
+                    zqmp,
+                    zqpm,
+                    zqmm,
+                )
         else:
-            return self._sp_even_gauss(gaussian, expkp, expkm, expqp, expqm,
-                                       zkpp, zkmp, zkpm, zkmm,
-                                       zqpp, zqmp, zqpm, zqmm)
+            return self._sp_even_gauss(
+                gaussian,
+                expkp,
+                expkm,
+                expqp,
+                expqm,
+                zkpp,
+                zkmp,
+                zkpm,
+                zkmm,
+                zqpp,
+                zqmp,
+                zqpm,
+                zqmm,
+            )
 
     @abstractmethod
-    def _sp_odd_gauss(self, gaussian, expkp, expkm, expqp, expqm, zkpp, zkmp,
-                      zkpm, zkmm, zqpp, zqmp, zqpm, zqmm):  # pragma: no cover
+    def _sp_odd_gauss(
+        self,
+        gaussian,
+        expkp,
+        expkm,
+        expqp,
+        expqm,
+        zkpp,
+        zkmp,
+        zkpm,
+        zkmm,
+        zqpp,
+        zqmp,
+        zqpm,
+        zqmm,
+    ):  # pragma: no cover
         pass
 
     @abstractmethod
-    def _sp_even_gauss(self, gaussian, expkp, expkm, expqp, expqm, zkpp, zkmp,
-                       zkpm, zkmm, zqpp, zqmp, zqpm, zqmm):  # pragma: no cover
+    def _sp_even_gauss(
+        self,
+        gaussian,
+        expkp,
+        expkm,
+        expqp,
+        expqm,
+        zkpp,
+        zkmp,
+        zkpm,
+        zkmm,
+        zqpp,
+        zqmp,
+        zqpm,
+        zqmm,
+    ):  # pragma: no cover
         pass
 
     def _scal_prod_with_Rectangular(self, rect):
@@ -397,7 +450,7 @@ class SWPEigenstate(AnalyticEigenstate, metaclass=ABCMeta):
         # region of space)
         r_1, r_2, r_3 = rect.split(self.potential)
         # Compute the scalar product accordingly
-        scal_prod = 0.j
+        scal_prod = 0.0j
         if r_1 is not None:
             scal_prod += self._sp_R_1(r_1)
         if r_2 is not None:
@@ -482,7 +535,7 @@ class SWPEigenstate(AnalyticEigenstate, metaclass=ABCMeta):
         if self.is_even:
             return sp
         else:
-            return - sp
+            return -sp
 
 
 class SWPSiegert(SWPEigenstate, AnalyticSiegert):
@@ -519,7 +572,7 @@ class SWPSiegert(SWPEigenstate, AnalyticSiegert):
         # Set the _factor attribute (used for the discretization over a
         # grid)
         l = potential.width
-        self._factor = cmath.sqrt(-1.j*ks) / cmath.sqrt(1. - 1.j*ks*l/2)
+        self._factor = cmath.sqrt(-1.0j * ks) / cmath.sqrt(1.0 - 1.0j * ks * l / 2)
         # Find the type of the Siegert state from its wavenumber
         super().__init__(ks, parity, potential, grid, analytic)
 
@@ -542,8 +595,11 @@ class SWPSiegert(SWPEigenstate, AnalyticSiegert):
         ks = self.wavenumber
         qs = q(ks, self.potential.depth)
         l = self.potential.width
-        return self._factor * cmath.cos(qs*l/2) * (
-            np.exp(-1.j * ks * (grid_1 + l/2)))
+        return (
+            self._factor
+            * cmath.cos(qs * l / 2)
+            * (np.exp(-1.0j * ks * (grid_1 + l / 2)))
+        )
 
     def _even_wf_2(self, grid_2):
         r"""
@@ -583,8 +639,11 @@ class SWPSiegert(SWPEigenstate, AnalyticSiegert):
         ks = self.wavenumber
         qs = q(ks, self.potential.depth)
         l = self.potential.width
-        return - self._factor * cmath.sin(qs*l/2) * (
-            np.exp(-1.j * ks * (grid_1 + l/2)))
+        return (
+            -self._factor
+            * cmath.sin(qs * l / 2)
+            * (np.exp(-1.0j * ks * (grid_1 + l / 2)))
+        )
 
     def _odd_wf_2(self, grid_2):
         r"""
@@ -605,8 +664,22 @@ class SWPSiegert(SWPEigenstate, AnalyticSiegert):
         qs = q(self.wavenumber, self.potential.depth)
         return self._factor * np.sin(qs * grid_2)
 
-    def _sp_even_gauss(self, gaussian, expkp, expkm, expqp, expqm,
-                       zkpp, zkmp, zkpm, zkmm, zqpp, zqmp, zqpm, zqmm):
+    def _sp_even_gauss(
+        self,
+        gaussian,
+        expkp,
+        expkm,
+        expqp,
+        expqm,
+        zkpp,
+        zkmp,
+        zkpm,
+        zkmm,
+        zqpp,
+        zqmp,
+        zqpm,
+        zqmm,
+    ):
         r"""
         Parameters
         ----------
@@ -625,19 +698,37 @@ class SWPSiegert(SWPEigenstate, AnalyticSiegert):
         l = self.potential.width
         sigma = gaussian.sigma
         h = gaussian.amplitude
-        factor = cmath.sqrt(math.pi * ks / (2.j + ks*l))
-        factor1 = sigma * h * factor * cmath.exp(-1.j*ks*l/2)
+        factor = cmath.sqrt(math.pi * ks / (2.0j + ks * l))
+        factor1 = sigma * h * factor * cmath.exp(-1.0j * ks * l / 2)
         factor2 = sigma * h * factor / 2
         # Term for region I and III
-        term1 = factor1 * cmath.cos(qs*l/2) * (
-            expkp * (erf(zkmp) + 1) - expkm * (erf(zkpm) - 1))
+        term1 = (
+            factor1
+            * cmath.cos(qs * l / 2)
+            * (expkp * (erf(zkmp) + 1) - expkm * (erf(zkpm) - 1))
+        )
         # Term for region II
-        term2 = factor2 * (expqp * (erf(zqpp) - erf(zqmp)) -
-                           expqm * (erf(zqmm) - erf(zqpm)))
+        term2 = factor2 * (
+            expqp * (erf(zqpp) - erf(zqmp)) - expqm * (erf(zqmm) - erf(zqpm))
+        )
         return term1 + term2
 
-    def _sp_odd_gauss(self, gaussian, expkp, expkm, expqp, expqm,
-                      zkpp, zkmp, zkpm, zkmm, zqpp, zqmp, zqpm, zqmm):
+    def _sp_odd_gauss(
+        self,
+        gaussian,
+        expkp,
+        expkm,
+        expqp,
+        expqm,
+        zkpp,
+        zkmp,
+        zkpm,
+        zkmm,
+        zqpp,
+        zqmp,
+        zqpm,
+        zqmm,
+    ):
         r"""
         Parameters
         ----------
@@ -656,15 +747,21 @@ class SWPSiegert(SWPEigenstate, AnalyticSiegert):
         l = self.potential.width
         sigma = gaussian.sigma
         h = gaussian.amplitude
-        factor = cmath.sqrt(cmath.pi * ks / (2.j + ks*l))
-        factor1 = sigma * h * factor * cmath.exp(-1.j*ks*l/2)
+        factor = cmath.sqrt(cmath.pi * ks / (2.0j + ks * l))
+        factor1 = sigma * h * factor * cmath.exp(-1.0j * ks * l / 2)
         factor2 = sigma * h * factor / 2
         # Term for region I and III
-        term1 = factor1 * cmath.sin(qs*l/2) * (
-            expkp * (erf(zkmp) + 1) + expkm * (erf(zkpm) - 1))
+        term1 = (
+            factor1
+            * cmath.sin(qs * l / 2)
+            * (expkp * (erf(zkmp) + 1) + expkm * (erf(zkpm) - 1))
+        )
         # Term for region II
-        term2 = - 1.j * factor2 * (expqp * (erf(zqpp) - erf(zqmp)) +
-                                   expqm * (erf(zqmm) - erf(zqpm)))
+        term2 = (
+            -1.0j
+            * factor2
+            * (expqp * (erf(zqpp) - erf(zqmp)) + expqm * (erf(zqmm) - erf(zqpm)))
+        )
         return term1 + term2
 
     def _sp_R_1(self, rect):
@@ -688,16 +785,16 @@ class SWPSiegert(SWPEigenstate, AnalyticSiegert):
         k0 = rect.momentum
         xc = rect.center
         a = rect.width
-        factor1 = 2. * h * cmath.exp(-1.j * ks * l/2)
+        factor1 = 2.0 * h * cmath.exp(-1.0j * ks * l / 2)
         dk = ks - k0
-        factor2 = cmath.exp(-1.j*dk*xc) * cmath.sin(dk*a/2) / dk
-        norm = cmath.sqrt(ks/(1.j + ks*l/2))
+        factor2 = cmath.exp(-1.0j * dk * xc) * cmath.sin(dk * a / 2) / dk
+        norm = cmath.sqrt(ks / (1.0j + ks * l / 2))
         # Compute the scalar product depending on the parity of the
         # Siegert state.
         if self.is_odd:
-            parity_term = - cmath.sin(qs*l/2)
+            parity_term = -cmath.sin(qs * l / 2)
         else:
-            parity_term = cmath.cos(qs*l/2)
+            parity_term = cmath.cos(qs * l / 2)
         scal_prod = norm * factor1 * factor2 * parity_term
         return scal_prod
 
@@ -722,17 +819,17 @@ class SWPSiegert(SWPEigenstate, AnalyticSiegert):
         xc = rect.center
         h = rect.amplitude
         k0 = rect.momentum
-        factor = cmath.sqrt(ks / (1.j + ks*l/2))
+        factor = cmath.sqrt(ks / (1.0j + ks * l / 2))
         dkp = qs + k0
         dkm = qs - k0
         # Compute the scalar product depending on the parity of the
         # Siegert state.
-        term1 = cmath.sin(dkp*a/2) / dkp * cmath.exp(+1.j*dkp*xc)
-        term2 = cmath.sin(dkm*a/2) / dkm * cmath.exp(-1.j*dkm*xc)
+        term1 = cmath.sin(dkp * a / 2) / dkp * cmath.exp(+1.0j * dkp * xc)
+        term2 = cmath.sin(dkm * a / 2) / dkm * cmath.exp(-1.0j * dkm * xc)
         if self.is_even:
             return h * factor * (term1 + term2)
         else:
-            return -1.j * h * factor * (term1 - term2)
+            return -1.0j * h * factor * (term1 - term2)
 
     def MLE_strength_function(self, test, kgrid):
         r"""
@@ -756,7 +853,7 @@ class SWPSiegert(SWPEigenstate, AnalyticSiegert):
         ks = self.wavenumber
         sp = self.scal_prod(test)
         # Evaluate the strength function and return its imaginary part.
-        strength_func = - 1. / math.pi * sp**2 / (ks * (kgrid - ks))
+        strength_func = -1.0 / math.pi * sp ** 2 / (ks * (kgrid - ks))
         return strength_func.imag
 
 
@@ -795,13 +892,13 @@ class SWPContinuum(SWPEigenstate, AnalyticContinuum):
         # evaluating the wavefunction or some analytical scalar products
         l = potential.width
         qq = q(k, potential.depth)
-        if parity == 'e':
+        if parity == "e":
             self._jostm = fem(k, l, k2=qq)
             self._jostp = fep(k, l, k2=qq)
-        if parity == 'o':
+        if parity == "o":
             self._jostm = fom(k, l, k2=qq)
             self._jostp = fop(k, l, k2=qq)
-        self._factor = 1. / (2. * math.sqrt(math.pi) * self._jostp)
+        self._factor = 1.0 / (2.0 * math.sqrt(math.pi) * self._jostp)
         # Initialize all the other attributes
         super().__init__(k, parity, potential, grid, analytic)
 
@@ -822,8 +919,10 @@ class SWPContinuum(SWPEigenstate, AnalyticContinuum):
             region *I*.
         """
         k = self.wavenumber
-        return self._factor * (self._jostp * np.exp(1.j * k * grid_1) +
-                               self._jostm * np.exp(-1.j * k * grid_1))
+        return self._factor * (
+            self._jostp * np.exp(1.0j * k * grid_1)
+            + self._jostm * np.exp(-1.0j * k * grid_1)
+        )
 
     def _even_wf_2(self, grid_2):
         r"""
@@ -882,10 +981,24 @@ class SWPContinuum(SWPEigenstate, AnalyticContinuum):
             region *II*.
         """
         qq = q(self.wavenumber, self.potential.depth)
-        return - self._factor * np.sin(qq * grid_2)
+        return -self._factor * np.sin(qq * grid_2)
 
-    def _sp_even_gauss(self, gaussian, expkp, expkm, expqp, expqm,
-                       zkpp, zkmp, zkpm, zkmm, zqpp, zqmp, zqpm, zqmm):
+    def _sp_even_gauss(
+        self,
+        gaussian,
+        expkp,
+        expkm,
+        expqp,
+        expqm,
+        zkpp,
+        zkmp,
+        zkpm,
+        zkmm,
+        zqpp,
+        zqmp,
+        zqpm,
+        zqmm,
+    ):
         r"""
         Parameters
         ----------
@@ -906,13 +1019,13 @@ class SWPContinuum(SWPEigenstate, AnalyticContinuum):
         fm = fem(k, l, k2=qq)
         sigma = gaussian.sigma
         h = gaussian.amplitude
-        factor = sigma * h / (2 * math.sqrt(2.))
-        factor1 = -1. * factor
-        factor2 = factor / 2.
+        factor = sigma * h / (2 * math.sqrt(2.0))
+        factor1 = -1.0 * factor
+        factor2 = factor / 2.0
         # Scalar product evaluation:
         # - in region I and III
-        termk1 = expkp * (fp * (erf(zkpp) - 1.) - fm * (erf(zkmp) + 1.))
-        termk2 = expkm * (fm * (erf(zkpm) - 1.) - fp * (erf(zkmm) + 1.))
+        termk1 = expkp * (fp * (erf(zkpp) - 1.0) - fm * (erf(zkmp) + 1.0))
+        termk2 = expkm * (fm * (erf(zkpm) - 1.0) - fp * (erf(zkmm) + 1.0))
         term1 = factor1 * (termk1 + termk2)
         # - in region II
         termq1 = expqp * (erf(zqpp) - erf(zqmp))
@@ -920,8 +1033,22 @@ class SWPContinuum(SWPEigenstate, AnalyticContinuum):
         term2 = factor2 * (termq1 + termq2)
         return (term1 + term2) / fm
 
-    def _sp_odd_gauss(self, gaussian, expkp, expkm, expqp, expqm,
-                      zkpp, zkmp, zkpm, zkmm, zqpp, zqmp, zqpm, zqmm):
+    def _sp_odd_gauss(
+        self,
+        gaussian,
+        expkp,
+        expkm,
+        expqp,
+        expqm,
+        zkpp,
+        zkmp,
+        zkpm,
+        zkmm,
+        zqpp,
+        zqmp,
+        zqpm,
+        zqmm,
+    ):
         r"""
         Parameters
         ----------
@@ -942,18 +1069,18 @@ class SWPContinuum(SWPEigenstate, AnalyticContinuum):
         fm = fom(k, l, k2=qq)
         sigma = gaussian.sigma
         h = gaussian.amplitude
-        factor = sigma * h / (2 * math.sqrt(2.))
-        factor1 = -1. * factor
-        factor2 = factor / 2.
+        factor = sigma * h / (2 * math.sqrt(2.0))
+        factor1 = -1.0 * factor
+        factor2 = factor / 2.0
         # Scalar product evaluation:
         # - in region I and III
-        termk1 = expkp * (fp * (erf(zkpp) - 1.) + fm * (erf(zkmp) + 1.))
-        termk2 = expkm * (fm * (erf(zkpm) - 1.) + fp * (erf(zkmm) + 1.))
+        termk1 = expkp * (fp * (erf(zkpp) - 1.0) + fm * (erf(zkmp) + 1.0))
+        termk2 = expkm * (fm * (erf(zkpm) - 1.0) + fp * (erf(zkmm) + 1.0))
         term1 = factor1 * (termk1 + termk2)
         # - in region II
         termq1 = expqp * (erf(zqpp) - erf(zqmp))
         termq2 = expqm * (erf(zqmm) - erf(zqpm))
-        term2 = 1.j * factor2 * (termq1 + termq2)
+        term2 = 1.0j * factor2 * (termq1 + termq2)
         return (term1 + term2) / fm
 
     def _sp_R_1(self, rect):
@@ -983,8 +1110,8 @@ class SWPContinuum(SWPEigenstate, AnalyticContinuum):
         # Scalar product in the general case
         if k0 not in [k, -k]:
             factor = h / (math.sqrt(math.pi) * jostm)
-            term1 = jostp * cmath.exp(1.j*dkp*xc) * math.sin(dkp*a/2) / dkp
-            term2 = jostm * cmath.exp(-1.j*dkm*xc) * math.sin(dkm*a/2) / dkm
+            term1 = jostp * cmath.exp(1.0j * dkp * xc) * math.sin(dkp * a / 2) / dkp
+            term2 = jostm * cmath.exp(-1.0j * dkm * xc) * math.sin(dkm * a / 2) / dkm
             return factor * (term1 + term2)
         # Scalar product if the initial momentum would lead to a
         # division by zero in the general case
@@ -993,13 +1120,14 @@ class SWPContinuum(SWPEigenstate, AnalyticContinuum):
             if k0 == k:
                 sign = 1.0
                 f1 = 1.0
-                f2 = jostp/jostm
+                f2 = jostp / jostm
             else:
                 sign = -1.0
-                f1 = jostp/jostm
+                f1 = jostp / jostm
                 f2 = 1.0
             return factor * (
-                a*f1 + cmath.exp(sign*2.j*k*xc)*math.sin(k*a)/k*f2)
+                a * f1 + cmath.exp(sign * 2.0j * k * xc) * math.sin(k * a) / k * f2
+            )
 
     def _sp_R_2_other_cases(self, rect):
         r"""
@@ -1024,25 +1152,25 @@ class SWPContinuum(SWPEigenstate, AnalyticContinuum):
         k0 = rect.momentum
         if self.is_even:
             jost = fem(k, self.potential.width, k2=qq)
-            psign = +1.
-            im = 1.
+            psign = +1.0
+            im = 1.0
         else:
             jost = fom(k, self.potential.width, k2=qq)
-            psign = -1.
-            im = 1.j
+            psign = -1.0
+            im = 1.0j
         # Scalar product in the general case
         if k0 not in [qq, -qq]:
             factor = h / (2 * im * math.sqrt(math.pi) * jost)
             dkp = qq + k0
             dkm = qq - k0
-            term1 = math.sin(dkp*a/2) / dkp * cmath.exp(+1.j*dkp*xc)
-            term2 = math.sin(dkm*a/2) / dkm * cmath.exp(-1.j*dkm*xc)
-            return psign * factor * (term1 + psign*term2)
+            term1 = math.sin(dkp * a / 2) / dkp * cmath.exp(+1.0j * dkp * xc)
+            term2 = math.sin(dkm * a / 2) / dkm * cmath.exp(-1.0j * dkm * xc)
+            return psign * factor * (term1 + psign * term2)
         # Scalar product if the initial momentum would lead to a
         # division by zero in the general case
         else:
             factor = psign * h / (4 * im * math.sqrt(math.pi))
-            term = math.sin(qq*a)/qq * cmath.exp(2.j*qq*xc) + psign * a
+            term = math.sin(qq * a) / qq * cmath.exp(2.0j * qq * xc) + psign * a
             if k0 == qq:
                 return factor * term / jost
             else:
